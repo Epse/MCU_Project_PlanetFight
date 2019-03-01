@@ -15,6 +15,6 @@ int main(void)
 
   while (1)
   {
-
+    //Dit is de hoofdlus
   }
 }
