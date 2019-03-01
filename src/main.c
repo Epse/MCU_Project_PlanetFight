@@ -7,7 +7,6 @@ void setUp()
 {
   // global enable interrupt
   SREG |= _BV(7);
-  //dag stef
 }
 
 int main(void)
@@ -16,6 +15,5 @@ int main(void)
 
   while (1)
   {
-    //Dit is de hoofdlus
   }
 }
