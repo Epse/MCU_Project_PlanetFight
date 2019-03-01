@@ -1,0 +1,55 @@
+Lijst met pinnen
+
+PA0   (worden standaard gebruikt om LCD en LED's aan te zetten)
+PA1   (worden standaard gebruikt om LCD en LED's aan te zetten)
+PA2   (worden standaard gebruikt om LCD en LED's aan te zetten)
+PA3   (worden standaard gebruikt om LCD en LED's aan te zetten)
+PA4   (worden standaard gebruikt om LCD en LED's aan te zetten)
+PA5   (worden standaard gebruikt om LCD en LED's aan te zetten)
+PA6   (worden standaard gebruikt om LCD en LED's aan te zetten)
+PA7   (worden standaard gebruikt om LCD en LED's aan te zetten)
+
+PB0
+PB1   (LED 13 aansturen) (hangt aan ICSP pin 3: SCK)
+PB2   (hangt aan ICSP pin 4: MOSI)
+PB3   (hangt aan ICSP pin 1: MISO)
+PB4
+PB5
+PB6
+PB7
+
+PC0   (Servo 1)
+PC1   (Servo 2)
+PC2   (4A naar motor)
+PC3   (2A naar motor)
+PC4   (3A naar motor)
+PC5   (1A naar motor)
+PC6   
+PC7  (Center Button)
+
+PD0
+PD1
+PD2  (UART pin3)
+PD3  (UART pin4)
+PD4                   Input Capture Unit (Tijd ronddraaien meten)
+PD5
+PD6
+PD7
+
+PE0   (gebruikt om LCD scherm te resetten)
+PE1   (gebruikt om LCD scherm R/W aan te passen)
+PE2   (gebruikt voor LCD scherm)
+PE3
+PE4   (West Button)
+PE5   (South Button)
+PE6   (East Button)
+PE7   (North Button)
+
+PF0                   Klokpin voor LED's
+PF1                   Datapin voor LED's
+PF2
+PF3
+PF4
+PF5
+PF6
+PF7
