@@ -7,6 +7,7 @@ void setUp()
 {
   // global enable interrupt
   SREG |= _BV(7);
+  //dag stef
 }
 
 int main(void)
