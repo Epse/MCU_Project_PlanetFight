@@ -47,9 +47,9 @@ PE7   (North Button)
 
 PF0                   Klokpin voor LED's
 PF1                   Datapin voor LED's
-PF2
-PF3
-PF4
-PF5
+PF2                   Joystick(1)
+PF3                   Joystick(1)
+PF4                   Joystick(2)
+PF5                   Joystick(2)
 PF6
 PF7
