@@ -12,14 +12,14 @@ void setUp()
   // global enable interrupt
   SREG |= _BV(7);
   ledInit();
-  leds[1].intensity = 30;
-  leds[2].intensity = 30;
+  leds[0].intensity = 15;
+  leds[1].intensity = 15;
+  leds[0].red = 250;
+  leds[0].blue = 100;
+  leds[0].green = 0;
   leds[1].red = 250;
   leds[1].blue = 0;
   leds[1].green = 0;
-  leds[2].red = 250;
-  leds[2].blue = 0;
-  leds[2].green = 0;
 }
 
 int main(void)
