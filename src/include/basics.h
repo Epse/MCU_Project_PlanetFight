@@ -57,8 +57,9 @@
 #define SERVO1	PORTC0
 #define SERVO2	PORTC1
 
-//	Include libraries
-#include <avr/io.h>
-#include <avr/delay.h>
+// Some macros that make the code more readable
+#define output_low(port,pin) port &= ~(1<<pin)
+#define output_high(port,pin) port |= (1<<pin)
+#define set_output(portdir,pin) portdir |= (1<<pin)
 
 #endif	//DWENGUINO_BOARD_H_
