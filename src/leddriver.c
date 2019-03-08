@@ -29,7 +29,7 @@ void writeLed(struct Led led)
 void ledInit()
 {
   // Set clock and data to output
-  DDRB = _BV(PB2) | _BV(PB1);
+  DDRB |= _BV(PB2) | _BV(PB1);
   // Enable SPI, Master and clock to /64
   SPCR = _BV(SPE) | _BV(MSTR) | _BV(SPR1);
 }
