@@ -10,4 +10,5 @@ struct Led {
 };
 
 void ledDraw(struct Led *led, uint8_t count);
+void ledClear(uint8_t count);
 #endif

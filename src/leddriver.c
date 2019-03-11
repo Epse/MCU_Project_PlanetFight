@@ -51,3 +51,17 @@ void ledDraw(struct Led *leds, uint8_t count)
     bitBang(0);
   }
 }
+
+void ledClear(uint8_t count)
+{
+  for (; count > 0; count--) {
+    bitBang(0b11100000);
+    bitBang(0);
+    bitBang(0);
+    bitBang(0);
+  }
+  
+  for (uint8_t i = 0; i < 4; i++) {
+    bitBang(0);
+  }
+}
