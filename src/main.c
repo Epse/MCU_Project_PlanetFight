@@ -13,7 +13,7 @@ struct Led leds[2];
 uint8_t ledCount = 2;
 
 // Coordinate structure is buf[x][y]
-struct RGBI buf[16][16]
+struct RGBI buf[16][16];
 
 void setUp()
 {
