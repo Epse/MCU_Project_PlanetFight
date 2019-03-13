@@ -1,11 +1,20 @@
+#include <stdint.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include "include/basics.h"
 #include "include/leddriver.h"
+#include "include/graphics.h"
+
+// X_RES could be changed by switching leds faster
+#define X_RES 16
+#define Y_RES 16
 
 struct Led leds[2];
 uint8_t ledCount = 2;
+
+// Coordinate structure is buf[x][y]
+struct RGBI buf[16][16];
 
 void setUp()
 {

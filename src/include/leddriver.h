@@ -1,5 +1,6 @@
 #ifndef LEDDRIVER_H
 #define LEDDRIVER_H
+#include <stdint.h>
 void ledInit();
 
 struct Led {

@@ -16,7 +16,7 @@ PB3
 PB4
 PB5
 PB6
-PB7
+PB7   Motor PWM
 
 PC0   (Servo 1)
 PC1   (Servo 2)
@@ -24,7 +24,7 @@ PC2   (4A naar motor)
 PC3   (2A naar motor)
 PC4   (3A naar motor)
 PC5   (1A naar motor)
-PC6   
+PC6
 PC7  (Center Button)
 
 PD0                   Joystick(2) Left
