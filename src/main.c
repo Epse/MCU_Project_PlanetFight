@@ -14,7 +14,7 @@ struct Led leds[2];
 uint8_t ledCount = 2;
 
 // Coordinate structure is buf[x][y]
-struct RGBI buf[16][16];
+RGBI buf[16][16];
 
 void setUp()
 {
@@ -37,7 +37,7 @@ int main(void)
 
   while (1)
   {
-    ledDraw(&leds, ledCount);
+    ledDraw(ledCount, leds);
     _delay_ms(100);
   }
 }

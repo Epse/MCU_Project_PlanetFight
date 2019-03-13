@@ -36,7 +36,7 @@ void ledInit()
 
 // LED's are driven by sending 32 0-bits, then a frame per LED in order
 // then 32 1-bits
-void ledDraw(struct Led *leds, uint8_t count)
+void ledDraw(uint8_t count, struct Led *leds)
 {
   // Apparently this doesn't need the init sequence wut
   //for (uint8_t i = 0; i < 4; i++) {

@@ -3,10 +3,10 @@
 
 void motorInit() {
   // Set TIMER0 to fast PWM
-  TCCR0A = _BV(WGM00) | _BV(WGMO1);
+  TCCR0A = _BV(WGM00) | _BV(WGM01);
   TCCR0B = _BV(WGM02);
   // Falling edge on counter match (So counter limit is the pulse width)
-  TTCR0A |= _BV(COM0A1);
+  TCCR0A |= _BV(COM0A1);
   // Set OC01 to output
   DDRB |= _BV(DDB7);
   // Set pulse width to 50%
