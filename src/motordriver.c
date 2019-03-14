@@ -2,11 +2,11 @@
 #include "include/motordriver.h"
 
 void motorInit() {
-  // Set TIMER0 to fast PWM
-  TCCR0A = _BV(WGM00) | _BV(WGMO1);
+  // Set TIMER0 to phase accurate PWM
+  TCCR0A = _BV(WGM00);
   TCCR0B = _BV(WGM02);
   // Falling edge on counter match (So counter limit is the pulse width)
-  TTCR0A |= _BV(COM0A1);
+  TCCR0A |= _BV(COM0A1);
   // Set OC01 to output
   DDRB |= _BV(DDB7);
   // Set pulse width to 50%
@@ -15,7 +15,10 @@ void motorInit() {
 
 void motorOn() {
   // Turn Timer/Counter 0 on and let it run at fck without prescaler
-  TCCR0B |= _BV(CS00);
+  TCCR0B |= _BV(CS02) | _BV(CS01);
+  // TODO: write init sequence for driver
+  // Actually, scratch that, TODO all the things
+  // How do we get correct PWM frequency?
 }
 
 void motorOff() {
