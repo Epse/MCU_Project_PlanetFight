@@ -9,4 +9,6 @@ typedef struct RGBI {
   uint8_t I; // Intensity (the last 5 bits are used )
 } RGBI;
 
+RGBI newRGBI(uint8_t I, uint8_t B, uint8_t G, uint8_t R);
+
 #endif

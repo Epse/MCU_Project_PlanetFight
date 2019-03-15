@@ -4,7 +4,7 @@
 #include <util/delay.h>
 #include "include/basics.h"
 #include "include/leddriver.h"
-#include "include/graphics.h"
+#include "graphics.h"
 
 // X_RES could be changed by switching leds faster
 #define X_RES 16
