@@ -31,7 +31,8 @@ void ledInit()
   // Set clock and data to output
   DDRB |= _BV(PB2) | _BV(PB1);
   // Enable SPI, Master and clock to /64
-  SPCR = _BV(SPE) | _BV(MSTR) | _BV(SPR1);
+  SPCR = _BV(SPE) | _BV(MSTR);
+  SPSR |= _BV(SPI2X);
 }
 
 // LED's are driven by sending 32 0-bits, then a frame per LED in order
@@ -39,15 +40,15 @@ void ledInit()
 void ledDraw(uint8_t count, struct Led *leds)
 {
   // Apparently this doesn't need the init sequence wut
-  //for (uint8_t i = 0; i < 4; i++) {
-  //  bitBang(255);
-  //}
+  for (uint8_t i = 0; i < 4; i++) {
+    bitBang(0);
+  }
 
   for (uint8_t i = 0; i < count; i++) {
     writeLed(leds[i]);
   }
 
-  for (uint8_t i = 0; i < 4; i++) {
+  for (uint8_t i = 0; i < count; i++) {
     bitBang(0);
   }
 }
@@ -60,7 +61,7 @@ void ledClear(uint8_t count)
     bitBang(0);
     bitBang(0);
   }
-  
+
   for (uint8_t i = 0; i < 4; i++) {
     bitBang(0);
   }
