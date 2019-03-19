@@ -28,6 +28,14 @@ uint8_t pos(Position *dest, uint16_t angle, uint8_t radius) {
   return 0;
 }
 
+uint8_t add_radius(uint8_t a, uint8_t b) {
+  a += b;
+  if (a > R_LIMIT) {
+    return R_LIMIT;
+  }
+  return a;
+}
+
 uint8_t pos_add_radius(Position *a, uint8_t r) {
   if (r > R_LIMIT) {
     return INVALID_R;
@@ -37,9 +45,13 @@ uint8_t pos_add_radius(Position *a, uint8_t r) {
     return res;
   }
 
-  a->radius += r;
-  a->radius = a->radius % (R_LIMIT + 1);
+  a->radius = add_radius(a->radius, r);
   return 0;
+}
+
+uint16_t add_angle(uint16_t a, uint16_t b) {
+  a += b;
+  return a % (A_LIMIT + 1);
 }
 
 uint8_t pos_add_angle(Position *p, uint16_t a) {
@@ -51,7 +63,6 @@ uint8_t pos_add_angle(Position *p, uint16_t a) {
     return res;
   }
 
-  p->angle += a;
-  p->angle = p->angle % (A_LIMIT + 1);
+  p->angle = add_angle(p->angle, a);
   return 0;
 }
