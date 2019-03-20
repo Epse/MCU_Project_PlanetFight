@@ -1,14 +1,25 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 #include <stdint.h>
+#include <Position.h>
+#include "leddriver.h"
 
-typedef struct RGBI {
-  uint8_t R; // Red
-  uint8_t G; // Green
-  uint8_t B; // Blue
-  uint8_t I; // Intensity (the last 5 bits are used )
-} RGBI;
+typedef struct Sprite {
+  Position pos;
+  Led led;
+} Sprite;
 
-RGBI newRGBI(uint8_t I, uint8_t B, uint8_t G, uint8_t R);
+Sprite sprite(Position pos, Led led);
+
+typedef struct GraphicsSettings {
+  uint16_t rotationTime; // Time between zero points
+  uint8_t ledCount;
+  uint16_t delta; // How exact do we have to match an angle
+} GraphicsSettings;
+
+// time is time since last full rotation
+void draw(Sprite *objects, uint8_t count, uint16_t time, GraphicsSettings *set);
+
+void setEarthLeds(Led *topEarth, Led *bottomEarth);
 
 #endif

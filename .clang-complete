@@ -1,3 +1,5 @@
 -Iinclude
+-Ilib
+-Ilib/*
 -Isrc/include
 -Wno-unknown-attributes

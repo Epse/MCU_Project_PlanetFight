@@ -1,8 +1,8 @@
 #include <stdint.h>
 #include <util/delay.h>
 #include <avr/io.h>
-#include "include/leddriver.h"
-#include "include/basics.h"
+#include "leddriver.h"
+#include "basics.h"
 
 // LED_CLK_PIN: PB1
 // LED_DTA_PIN: PB2
@@ -51,6 +51,11 @@ void ledDraw(uint8_t count, struct Led *leds)
   for (uint8_t i = 0; i < count; i++) {
     bitBang(0);
   }
+}
+
+Led led(uint8_t i, uint8_t b, uint8_t g, uint8_t r) {
+  Led var = {.intensity = i, .blue = b, .green = g, .red = r};
+  return var;
 }
 
 void ledClear(uint8_t count)

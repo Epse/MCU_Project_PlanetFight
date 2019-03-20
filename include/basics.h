@@ -17,6 +17,8 @@
 #define LOW			0
 #define INPUT		0
 #define OUTPUT		1
+#define MAX_U8 (0xFF)
+#define MAX_U16 (0xFFFF)
 
 //	Data types
 #define BYTE unsigned char
