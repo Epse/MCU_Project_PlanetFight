@@ -104,3 +104,22 @@ uint8_t pos_sub_angle(Position *p, uint16_t a) {
   p->angle = sub_angle(p->angle, a);
   return 0;
 }
+
+uint8_t pos_adsub_radius(Position *p, int16_t r) {
+  if (r > R_LIMIT || r < -R_LIMIT) {
+    return INVALID_R;
+  }
+  uint8_t res = validate_pos(p);
+  if (res) {
+    return res;
+  }
+  int16_t newr =  (int16_t)p->radius + r;
+  if (newr < 0) {
+    newr = 0;
+  }
+  if (newr > R_LIMIT) {
+    newr = R_LIMIT;
+  }
+  p->radius = (uint8_t)newr;
+  return 0;
+}

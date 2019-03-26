@@ -22,5 +22,6 @@ uint8_t pos_add_radius(Position *a, uint8_t r);
 uint8_t pos_add_angle(Position *p, uint16_t a);
 uint8_t pos_sub_radius(Position *p, uint8_t r);
 uint8_t pos_sub_angle(Position *p, uint16_t a);
+uint8_t pos_adsub_radius(Position *p, int16_t r);
 
 #endif
