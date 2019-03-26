@@ -53,11 +53,6 @@ void ledDraw(uint8_t count, struct Led *leds)
   }
 }
 
-Led led(uint8_t i, uint8_t b, uint8_t g, uint8_t r) {
-  Led var = {.intensity = i, .blue = b, .green = g, .red = r};
-  return var;
-}
-
 void ledClear(uint8_t count)
 {
   for (; count > 0; count--) {
