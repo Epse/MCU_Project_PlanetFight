@@ -123,3 +123,7 @@ uint8_t pos_adsub_radius(Position *p, int16_t r) {
   p->radius = (uint8_t)newr;
   return 0;
 }
+
+uint8_t pos_equal(Position *a, Position *b) {
+  return a->angle == b->angle && a->radius == b->radius;
+}
