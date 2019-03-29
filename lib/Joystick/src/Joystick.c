@@ -12,7 +12,7 @@ void init() {
 
 void readOne() {
   uint8_t stat = ~PORTE;
-  stat = stat << 4;
+  stat = stat >> 4;
   // Silly thing to detect the difference
   risenOne = (statJoyOne ^ stat) & stat;
   statJoyOne = (JoyStatus) stat;
