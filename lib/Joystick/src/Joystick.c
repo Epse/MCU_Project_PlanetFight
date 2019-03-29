@@ -8,6 +8,8 @@ JoyStatus risenTwo;
 void init() {
   DDRD &= 0b00001111;
   PORTD |= 0b11110000;
+  DDRE &= 0b11110000;
+  PORTE |= 0b00001111;
 }
 
 void readOne() {
