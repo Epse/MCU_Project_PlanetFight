@@ -11,7 +11,7 @@ void init() {
 }
 
 void readOne() {
-  uint8_t stat = PORTE;
+  uint8_t stat = ~PORTE;
   stat = stat << 4;
   // Silly thing to detect the difference
   risenOne = (statJoyOne ^ stat) & stat;
@@ -19,7 +19,7 @@ void readOne() {
 }
 
 void readTwo() {
-  uint8_t stat = PORTD;
+  uint8_t stat = ~PORTD;
   stat &= 0b11110000;
   risenTwo = (statJoyTwo ^ stat) & stat;
   statJoyTwo = (JoyStatus) stat;
