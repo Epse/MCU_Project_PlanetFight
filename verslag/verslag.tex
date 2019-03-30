@@ -19,6 +19,7 @@
 \usepackage{xcolor}
 \usepackage{fontspec}
 \usepackage{titlesec}
+\usepackage{soul}
 \usepackage{tikz}
 \usepackage[pages=some]{background}
 % Gives me \intertext and \shortintertext
@@ -32,11 +33,11 @@
 % Clickable links
 \usepackage{hyperref}
 
-\newcommand{\TODO}{\large\textbf{TODO}}
+\newcommand{\TODO}{\textcolor{red}{\large\textbf{TODO}}}
 
 \definecolor{ublauw}{HTML}{1E64C8}
 \newfontfamily\panno{Panno Text}
-\newfontfamily\ptitle[Color=ublauw, SizeFeatures={Size=30}]{Panno Text Medium}
+\newfontfamily\ptitle[SizeFeatures={Size=30}]{Panno Text Medium}
 \newfontfamily\psec[Scale=1.3, Color=ublauw]{Panno Text Medium}
 \titleformat*{\section}{\Large\psec}
 \titleformat*{\subsection}{\large\psec}
@@ -48,11 +49,13 @@
 \begin{document}
 
 \begin{titlepage}
+  \setul{}{2pt} % Dikkere onderlijning
+  \setuldepth{j} % Beetje ruimte, maar niet zo bizar veel
   \includegraphics[height=1cm]{afbeeldingen/iwa.png}
   \vspace{2cm}
   \vfill
 
-  {\ptitle \underline{\uppercase{Verslag project microcontrollers}}}\\[1em]
+  \textcolor{ublauw}{\ptitle \uppercase{\ul{Verslag project microcontrollers}}}\\[1em]
   \Large{\panno Marieke Louage, Stef Pletinck, Scoutt Verhelle}
   \vfill
 
@@ -101,7 +104,7 @@ zichtbaar in figuur~\ref{fig:structuur}.
 
 
 \subsection{Werking display}
-Een schijf met gaten draait snel rond over LED's, verspreid in sectoren.
+Een schijf met gaten draait snel rond over LED's, verspreid in sectoren, zie figuur~\ref{fig:schijf}
 Door de LED's op de gepaste momenten in en uit te schakelen
 kan een zeer hoge resolutie bekomen worden rond het middelpunt.
 In de radiale richting is de resolutie beperkt door het aantal LED's,
@@ -111,7 +114,12 @@ Met deze aanpak is het mogelijk om willekeurig de resolutie te kiezen
 waarmee de hoek wordt beschreven. Hoe groter deze resolutie,
 hoe meer pixels. Deze waarde werd gekozen op 1024.
 
-\TODO : figuren van schijf, LED's ed
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{afbeeldingen/schijf.png}
+  \caption{Schema van de draaischijf}
+  \label{fig:schijf}
+\end{figure}
 
 \subsection{Aansturing LED's}
 De gebruikte LED's zijn ledstrips van het type \texttt{APA102}.
@@ -199,6 +207,15 @@ en een pulsbreedte tussen 1 en \SI{2}{\milli\second}.
 De PWM-modules die ingebouwd zitten in de microcontroller kunnen niet opereren
 in deze frequenties en pulsbreedtelimieten,
 het protocol werd dus volledig in software geïmplementeerd.
+Zie figuur~\ref{fig:motorpwm} voor een beeld het geproduceerde signaal.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{afbeeldingen/scoopcontrolesc.png}
+  \caption{Controlesignaal ESC}
+  \label{fig:motorpwm}
+\end{figure}
+
 
 Een extra moeilijkheid is de opstartprocedure van de ESC.
 De microcontroller moet opgestart zijn en een signaal sturen dat overeen komt
@@ -206,6 +223,16 @@ met \SI{0}{\percent} motorvermogen wanneer de ESC stroom krijgt en wordt
 ingeschakeld. De ESC produceert dan een serie tonen, gevolgd door een langere
 toon wanneer het signaal herkend wordt. Daarna kan de motor aangestuurd worden
 en het vermogen verhoogd, liefst langzaam gezien het hoge gewicht van de draaischijf.
+Uiteindelijk zal de ESC een driefasig signaal naar de motor sturen, zoals
+zichtbaar in figuur~\ref{fig:motoresc}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{afbeeldingen/scoopesc.png}
+  \caption{Vermogenssignaal naar de motor}
+  \label{fig:motoresc}
+\end{figure}
+
 
 Deze procedure maakt het moeilijk om microcontroller en ESC op één voeding te
 laten werken. Door de grote stroom is het ook lastig om bijvoorbeeld de ESC te
