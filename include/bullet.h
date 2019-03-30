@@ -10,6 +10,8 @@
 #define R_DROP_DELAY 5
 // How many ticks a bullet lives
 #define LIFETIME 200
+// How much of a radius between player and new bullet
+#define BULLET_OFFSET 5
 
 typedef struct Bullet {
   Position Pos;
@@ -18,7 +20,9 @@ typedef struct Bullet {
 
 void bullet_tick(Bullet *b);
 Sprite bullet_to_sprite(Bullet *b);
+// 'L' for left, 'R' for right
+Bullet bullet_shot(Position playerPosition, char direction);
 
-Bullet bullet(Position start);
+Bullet bullet(Position *start);
 
 #endif
