@@ -5,3 +5,4 @@ auto/
 *.out
 *.synctex.gz
 *.toc
+*.aux
