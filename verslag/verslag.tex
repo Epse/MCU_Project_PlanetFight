@@ -35,6 +35,8 @@
 
 \newcommand{\TODO}{\textcolor{red}{\large\textbf{TODO}}}
 
+\lstMakeShortInline[basicstyle=\ttfamily,language=C]{§}
+
 \definecolor{ublauw}{HTML}{1E64C8}
 \newfontfamily\panno{Panno Text}
 \newfontfamily\ptitle[SizeFeatures={Size=30}]{Panno Text Medium}
@@ -152,7 +154,7 @@ maar 0 is handig om te voorkomen dat er een LED op volle helderheid wit licht ge
 \end{figure}
 
 Er zijn twee mogelijke manieren om meerdere bytes te versturen over SPI,
-via een blokkerende \texttt{while}-lus en via een interrupt.
+via een blokkerende §while§-lus en via een interrupt.
 De eerste aanpak wordt getoond in codevoorbeeld~\ref{lst:spiblocking}.
 
 Het is echter ook mogelijk om een interrupt te ontvangen wanneer een byte is
@@ -161,7 +163,14 @@ om vervolgens een volgende byte te verzenden. Op die manier kan CPU-tijd
 uitgespaard worden maar dit blijkt zeer lastig foutloos te implementeren.
 Het spel gebruikt bijgevolg voorlopig nog de \textit{blocking} aanpak.
 
-\begin{lstlisting}[frame=tb,language=C,float,caption={Blocking SPI in C},label={lst:spiblocking}]
+Het is handig om te weten wat de maximale frequentie is waarmee alle LED's
+kunnen aangestuurd worden.
+Hiervoor is het belangrijk te weten dat de microcontroller
+een werkfrequentie heeft van \SI{16}{\mega\hertz}
+en er maximaal 1 bit per 2 klokcycli kan verstuurd worden over SPI.
+Er zijn 16 LED's, dit geeft een maximale frequentie van \SI{15625}{\hertz}.
+
+\begin{lstlisting}[frame=lines,language=C,float,caption={Blocking SPI in C},label={lst:spiblocking}]
   unsigned char data = {0xAB, 0xCD, 0x12, 0x34};
   for (unsigned char i = 4; i > 0; i--) {
     SPDR = data[i];
@@ -169,13 +178,6 @@ Het spel gebruikt bijgevolg voorlopig nog de \textit{blocking} aanpak.
     ;
   }
 \end{lstlisting}
-
-Het is handig om te weten wat de maximale frequentie is waarmee alle LED's
-kunnen aangestuurd worden.
-Hiervoor is het belangrijk te weten dat de microcontroller
-een werkfrequentie heeft van \SI{16}{\mega\hertz}
-en er maximaal 1 bit per 2 klokcycli kan verstuurd worden over SPI.
-Er zijn 16 LED's, dit geeft een maximale frequentie van \SI{15625}{\hertz}.
 
 \subsection{Timing LED's}
 \label{sec:ledtiming}
@@ -260,13 +262,13 @@ een gekozen richting actief is.
 
 \subsection{Game engine}
 De game engine werkt op een relatief eenvoudig principe,
-op regelmatige basis wordt de functie \texttt{uint8_t tick(uint16_t time_since_zero)}
+op regelmatige basis wordt de functie §uint8_t tick(uint16_t time_since_zero)§
 opgeroepen,
 deze voert enkele stappen uit:
 \begin{enumerate}
   \item \emph{Tick alle entities\footnote{Entities zijn bijvoorbeeld kogels en
-        spelers}}, hebben een \texttt{tick()} functie, bijvoorbeeld
-    \texttt{player_tick(Player *p)}, die ervoor zorgt dat de entity zich
+        spelers}}, entities hebben een §tick()§ functie,\\
+    bijvoorbeeld §player_tick(Player *p)§, die ervoor zorgt dat de entity zich
     verplaatst volgens zijn snelheid en eventueel reageert op invoer.
 
   \item \emph{Controleer voor botsingen}, in deze stap wordt getest of er
@@ -279,7 +281,7 @@ deze voert enkele stappen uit:
 
   \item \emph{Check voor het einde van het spel} door te controleren of beide
     spelers nog in leven zijn. Dit bepaalt de returnwaarde van deze functie,
-    \texttt{true} wanneer het spel moet verder gaan, anders \texttt{false}.
+    §true§ wanneer het spel moet verder gaan, anders §false§.
 \end{enumerate}
 
 Deze functie moet in theorie de tijd sinds ze laatst is opgeroepen in overweging
@@ -292,5 +294,8 @@ Na een eerste poging bleek dat de ESC de motor niet kon laten draaien.
 De motor gaf wat schokjes en de ESC produceerde niet de gewenste opstarttonen.
 Na de massakabel van de motor los te maken bleek alles correct te functioneren.
 Het is onbekend waarom dit een probleem gaf.
+
+\section{Taakverdeling}
+\TODO
 
 \end{document}
