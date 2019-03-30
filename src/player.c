@@ -21,6 +21,16 @@ void player_tick(Player *p) {
   }
 }
 
+void player_move(Player *p, char updown) {
+  if (updown == 'U') {
+    p->Velocity = P_MOVEMENT_SPEED;
+  } else if (updown == 'D') {
+    p->Velocity = -P_MOVEMENT_SPEED;
+  } else {
+    p->Velocity = 0;
+  }
+}
+
 Sprite player_to_sprite(Player *p) {
   Led l = led(30, 50 * p->Id, 0, 255 - (50*p->Id));
   return sprite(p->Pos, l);

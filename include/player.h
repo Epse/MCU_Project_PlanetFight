@@ -6,6 +6,7 @@
 
 #define START_HEALTH 200
 #define BULLET_DAMAGE 10
+#define P_MOVEMENT_SPEED 1
 
 typedef struct Player {
   uint8_t Id;
@@ -17,6 +18,8 @@ typedef struct Player {
 void player_tick(Player *p);
 void player_shot(Player *p);
 Sprite player_to_sprite(Player *p);
+// give it "U" if up, "D" if down
+void player_move(Player *p, char updown);
 
 Player player(uint8_t id);
 
