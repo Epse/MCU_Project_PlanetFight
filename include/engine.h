@@ -4,6 +4,7 @@
 #include <Position.h>
 #include <Led.h>
 #include <Sprite.h>
+#include <Joystick.h>
 #include "player.h"
 #include "bullet.h"
 #include "graphics.h"
