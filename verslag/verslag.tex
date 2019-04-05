@@ -1,7 +1,5 @@
 % Emacs, this is -*-latex-*-
 \documentclass[a4paper, 12pt]{article}
-\usepackage[utf8x]{inputenc}
-\usepackage[T1]{fontenc}
 \usepackage[dutch]{babel}
 \usepackage{parskip}
 \usepackage{amsfonts}
@@ -21,6 +19,7 @@
 \usepackage{titlesec}
 \usepackage{soul}
 \usepackage{tikz}
+\usepackage[dutch]{todonotes}
 \usepackage[pages=some]{background}
 % Gives me \intertext and \shortintertext
 \usepackage{mathtools}
@@ -33,7 +32,7 @@
 % Clickable links
 \usepackage{hyperref}
 
-\newcommand{\TODO}{\textcolor{red}{\large\textbf{TODO}}}
+\newcommand{\TODO}[1]{\textcolor{red}{\large\textbf{TODO}}\todo{#1}}
 
 \lstMakeShortInline[basicstyle=\ttfamily,language=C]{§}
 
@@ -45,27 +44,24 @@
 \titleformat*{\subsection}{\large\psec}
 \titleformat*{\subsubsection}{\itshape\psec}
 
-\title{Verslag Project Microcontrollers}
-\author{Marieke Louage \and Stef Pletinck \and Scoutt Verhelle}
-
 \begin{document}
 
 \begin{titlepage}
   \setul{}{2pt} % Dikkere onderlijning
   \setuldepth{j} % Beetje ruimte, maar niet zo bizar veel
-  \includegraphics[height=1cm]{afbeeldingen/iwa.png}
-  \vspace{2cm}
-  \vfill
+  \includegraphics[height=1cm]{img/iwa.png}
+  \vspace{2cm} \vfill
 
   \textcolor{ublauw}{\ptitle \uppercase{\ul{Verslag project microcontrollers}}}\\[1em]
   \Large{\panno Marieke Louage, Stef Pletinck, Scoutt Verhelle}
   \vfill
 
-  \includegraphics[height=3cm]{afbeeldingen/logo.png}
+  \includegraphics[height=3cm]{img/logo.png}
 
 \end{titlepage}
 
 \tableofcontents
+\listoftodos
 \newpage
 
 \section{Doelstellingen}
@@ -99,7 +95,7 @@ zichtbaar in figuur~\ref{fig:structuur}.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\textwidth]{afbeeldingen/structuur.jpg}
+  \includegraphics[width=0.8\textwidth]{img/structuur.jpg}
   \caption{Structuur van het microcontrollerprogramma}
   \label{fig:structuur}
 \end{figure}
@@ -118,7 +114,7 @@ hoe meer pixels. Deze waarde werd gekozen op 1024.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.6\textwidth]{afbeeldingen/schijf.png}
+  \includegraphics[width=0.6\textwidth]{img/schijf.png}
   \caption{Schema van de draaischijf}
   \label{fig:schijf}
 \end{figure}
@@ -141,14 +137,14 @@ maar 0 is handig om te voorkomen dat er een LED op volle helderheid wit licht ge
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.6\textwidth]{afbeeldingen/ledpakket.png}
+  \includegraphics[width=0.6\textwidth]{img/ledpakket.png}
   \caption{Schema van een led-pakket}
   \label{fig:ledpakket}
 \end{figure}
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\textwidth]{afbeeldingen/ledcontrol.png}
+  \includegraphics[width=0.8\textwidth]{img/ledcontrol.png}
   \caption{Schema van het aansturen van een ledstrip}
   \label{fig:ledcontrol}
 \end{figure}
@@ -195,7 +191,7 @@ als de tijd sinds de schijf het nulpunt is gepasseerd als argumenten.
 Daaruit kan namelijk de hoek waaronder de schijf staat bepaald worden.
 
 \subsection{Fysieke constructie}
-\TODO
+\TODO{Fysieke constructie}
 
 \subsection{Aansturing motor}
 De schijf draait rond met behulp van een brushless DC-motor uit een harde schijf.
@@ -213,7 +209,7 @@ Zie figuur~\ref{fig:motorpwm} voor een beeld het geproduceerde signaal.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.6\textwidth]{afbeeldingen/scoopcontrolesc.png}
+  \includegraphics[width=0.6\textwidth]{img/scoopcontrolesc.png}
   \caption{Controlesignaal ESC}
   \label{fig:motorpwm}
 \end{figure}
@@ -230,7 +226,7 @@ zichtbaar in figuur~\ref{fig:motoresc}.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.6\textwidth]{afbeeldingen/scoopesc.png}
+  \includegraphics[width=0.6\textwidth]{img/scoopesc.png}
   \caption{Vermogenssignaal naar de motor}
   \label{fig:motoresc}
 \end{figure}
@@ -245,7 +241,7 @@ gestoken worden.
 Op de schijf zit een optische sensor, die registreert wanneer een gaatje
 passeert. De microcontroller telt nauwkeurig op welk moment dit gebeurt,
 zodat afgeleid kan worden hoe snel de schijf draait.
-\TODO
+\TODO{Info toerenteller}
 
 \subsection{Joysticks}
 De beide joysticks zijn relatief eenvoudig om uit te lezen.
@@ -296,6 +292,6 @@ Na de massakabel van de motor los te maken bleek alles correct te functioneren.
 Het is onbekend waarom dit een probleem gaf.
 
 \section{Taakverdeling}
-\TODO
+\TODO{Taakverdeling}
 
 \end{document}
