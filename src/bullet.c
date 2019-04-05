@@ -32,6 +32,6 @@ Sprite bullet_to_sprite(Bullet *b) {
 }
 
 Bullet bullet(Position *start) {
-  Bullet b = {.Pos = start, .Lifetime = LIFETIME};
+  Bullet b = {.Pos = *start, .Lifetime = LIFETIME};
   return b;
 }
