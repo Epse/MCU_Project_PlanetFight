@@ -15,6 +15,8 @@ Position pos_unsafe(uint16_t angle, uint8_t radius) {
   return pos;
 }
 
+// Construct a Position, returns an error code
+// when radius or angle is invalid
 uint8_t pos(Position *dest, uint16_t angle, uint8_t radius) {
   if (radius > R_LIMIT) {
     return INVALID_R;
@@ -28,6 +30,8 @@ uint8_t pos(Position *dest, uint16_t angle, uint8_t radius) {
   return 0;
 }
 
+// Helper function to add radia together,
+// clamps them to the correct limit
 uint8_t add_radius(uint8_t a, uint8_t b) {
   a += b;
   if (a > R_LIMIT) {
@@ -36,6 +40,7 @@ uint8_t add_radius(uint8_t a, uint8_t b) {
   return a;
 }
 
+// Subtract radia, clamping to 0
 uint8_t sub_radius(uint8_t a, uint8_t b) {
   if (b > a) {
     return 0;
@@ -43,6 +48,7 @@ uint8_t sub_radius(uint8_t a, uint8_t b) {
   return a - b;
 }
 
+// Add a value onto the radius
 uint8_t pos_add_radius(Position *a, uint8_t r) {
   if (r > R_LIMIT) {
     return INVALID_R;
@@ -105,6 +111,8 @@ uint8_t pos_sub_angle(Position *p, uint16_t a) {
   return 0;
 }
 
+// Add a signed value onto the radius
+// Does some funky typecasting
 uint8_t pos_adsub_radius(Position *p, int16_t r) {
   if (r > R_LIMIT || r < -R_LIMIT) {
     return INVALID_R;
@@ -124,6 +132,7 @@ uint8_t pos_adsub_radius(Position *p, int16_t r) {
   return 0;
 }
 
+// Equality test
 uint8_t pos_equal(Position *a, Position *b) {
   return a->angle == b->angle && a->radius == b->radius;
 }

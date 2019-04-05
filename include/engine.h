@@ -11,7 +11,8 @@
 
 #define MAX_BULLETS 20
 
-// delta is the amount of ms since last tick
+// Updates basically everything and draws to screen
+// Should be called at a very constant pace
 // returns true if game not finished
 uint8_t tick(uint16_t time_since_zero);
 

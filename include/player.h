@@ -15,9 +15,15 @@ typedef struct Player {
   uint8_t Health;
 } Player;
 
+// Update the player,
+// which moves him along at his required velocity
 void player_tick(Player *p);
+
+// Player p has been shot, update his health
 void player_shot(Player *p);
 Sprite player_to_sprite(Player *p);
+
+// Update the player's velocity, move in desired direction
 // give it "U" if up, "D" if down
 void player_move(Player *p, char updown);
 
