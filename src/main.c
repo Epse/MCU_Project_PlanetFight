@@ -7,6 +7,8 @@
 #include "graphics.h"
 #include "leddriver.h"
 #include <Joystick.h>
+#include "dwenguinoBoard.h"
+#include "dwenguinoLCD.h"
 
 void setUp()
 {
@@ -14,6 +16,10 @@ void setUp()
   SREG |= _BV(7);
   ledInit();
   joyInit();
+  initBoard();
+  initLCD();
+  clearLCD();
+  backlightOn();
 }
 
 int main(void)
@@ -21,6 +27,8 @@ int main(void)
   setUp();
   while (1)
   {
-    _delay_ms(5);
+    clearLCD();
+    joyTick();
+    _delay_ms(50);
   }
 }
