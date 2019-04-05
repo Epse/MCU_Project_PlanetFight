@@ -16,13 +16,19 @@
 typedef struct Bullet {
   Position Pos;
   uint8_t Lifetime;
+  uint8_t Left; // Make true if move left
 } Bullet;
 
+// Update the referenced bullet,
+// decreases life and proceeds along it's path
 void bullet_tick(Bullet *b);
 Sprite bullet_to_sprite(Bullet *b);
+
+// Create a bullet, shot by a player at playerPosition,
+// in the correct direction
 // 'L' for left, 'R' for right
 Bullet bullet_shot(Position playerPosition, char direction);
 
-Bullet bullet(Position *start);
+Bullet bullet(Position *start, uint8_t left);
 
 #endif
