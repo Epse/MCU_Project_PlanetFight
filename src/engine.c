@@ -107,7 +107,7 @@ uint8_t tick(uint16_t time_since_zero) {
   return 1;
 }
 
-void setUp(uint16_t time) {
+void engine_setup(uint16_t time) {
   // Just basically init the players lol
   playerZero = player(0);
   playerOne = player(1);

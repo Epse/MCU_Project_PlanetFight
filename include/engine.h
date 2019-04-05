@@ -15,6 +15,6 @@
 // returns true if game not finished
 uint8_t tick(uint16_t time_since_zero);
 
-void setUp(uint16_t time_per_rotation);
+void engine_setup(uint16_t time_per_rotation);
 
 #endif
