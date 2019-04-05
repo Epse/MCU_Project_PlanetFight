@@ -15,9 +15,9 @@ uint8_t closeEnough(uint16_t realAngle, uint16_t angle, GraphicsSettings *set) {
   }
 }
 
-void setEarthLeds(Led *top, Led *bottom) {
-  topEarth = top;
-  bottomEarth = bottom;
+void setEarthLeds(Led top, Led bottom) {
+  topEarth = &top;
+  bottomEarth = &bottom;
 }
 
 // Mja dees is nie zo generiek
