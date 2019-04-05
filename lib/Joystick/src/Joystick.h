@@ -3,6 +3,9 @@
 #include <avr/io.h>
 #include <stdint.h>
 
+// Joystick 0 is connected with PORTE,
+// Joystick 1 with PORTD
+
 typedef uint8_t JoyStatus;
 
 void joyInit();

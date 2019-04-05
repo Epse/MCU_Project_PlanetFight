@@ -6,14 +6,14 @@ JoyStatus risenOne;
 JoyStatus risenTwo;
 
 void joyInit() {
-  DDRD &= 0b00001111;
-  PORTD |= 0b11110000;
-  DDRE &= 0b11110000;
-  PORTE |= 0b00001111;
+  DDRD &= 0b11110000;
+  PORTD |= 0b00001111;
+  DDRE &= 0b00001111;
+  PORTE |= 0b11110000;
 }
 
 void readOne() {
-  uint8_t stat = ~PORTE & 0b00001111;
+  uint8_t stat = (~PINE) & 0b11110000;
   stat = stat >> 4;
   // Silly thing to detect the difference
   risenOne = (statJoyOne ^ stat) & stat;
@@ -21,7 +21,7 @@ void readOne() {
 }
 
 void readTwo() {
-  uint8_t stat = ~PORTD;
+  uint8_t stat = ~PIND;
   stat &= 0b00001111;
   risenTwo = (statJoyTwo ^ stat) & stat;
   statJoyTwo = (JoyStatus) stat;
