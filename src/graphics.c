@@ -7,11 +7,6 @@
 Led *topEarth;
 Led *bottomEarth;
 
-Sprite sprite(Position pos, Led led) {
-  Sprite sprite = {.pos = pos, .led = led};
-  return sprite;
-}
-
 uint8_t closeEnough(uint16_t realAngle, uint16_t angle, GraphicsSettings *set) {
   if (realAngle > angle) {
     return realAngle - angle <= set->delta;
@@ -20,9 +15,9 @@ uint8_t closeEnough(uint16_t realAngle, uint16_t angle, GraphicsSettings *set) {
   }
 }
 
-void setEarthLeds(Led *top, Led *bottom) {
-  topEarth = top;
-  bottomEarth = bottom;
+void setEarthLeds(Led top, Led bottom) {
+  topEarth = &top;
+  bottomEarth = &bottom;
 }
 
 // Mja dees is nie zo generiek

@@ -36,6 +36,13 @@ uint8_t add_radius(uint8_t a, uint8_t b) {
   return a;
 }
 
+uint8_t sub_radius(uint8_t a, uint8_t b) {
+  if (b > a) {
+    return 0;
+  }
+  return a - b;
+}
+
 uint8_t pos_add_radius(Position *a, uint8_t r) {
   if (r > R_LIMIT) {
     return INVALID_R;
@@ -49,9 +56,28 @@ uint8_t pos_add_radius(Position *a, uint8_t r) {
   return 0;
 }
 
+uint8_t pos_sub_radius(Position *p, uint8_t r) {
+  uint8_t res = validate_pos(p);
+  if (res) {
+    return res;
+  }
+  if (r > R_LIMIT) {
+    return INVALID_R;
+  }
+  p->radius = sub_radius(p->radius, r);
+  return 0;
+}
+
 uint16_t add_angle(uint16_t a, uint16_t b) {
   a += b;
   return a % (A_LIMIT + 1);
+}
+
+uint16_t sub_angle(uint16_t a, uint16_t b) {
+  if (b > a) {
+    return 0;
+  }
+  return b-a;
 }
 
 uint8_t pos_add_angle(Position *p, uint16_t a) {
@@ -65,4 +91,39 @@ uint8_t pos_add_angle(Position *p, uint16_t a) {
 
   p->angle = add_angle(p->angle, a);
   return 0;
+}
+
+uint8_t pos_sub_angle(Position *p, uint16_t a) {
+  if (a > A_LIMIT) {
+    return INVALID_A;
+  }
+  uint8_t res = validate_pos(p);
+  if (res) {
+    return res;
+  }
+  p->angle = sub_angle(p->angle, a);
+  return 0;
+}
+
+uint8_t pos_adsub_radius(Position *p, int16_t r) {
+  if (r > R_LIMIT || r < -R_LIMIT) {
+    return INVALID_R;
+  }
+  uint8_t res = validate_pos(p);
+  if (res) {
+    return res;
+  }
+  int16_t newr =  (int16_t)p->radius + r;
+  if (newr < 0) {
+    newr = 0;
+  }
+  if (newr > R_LIMIT) {
+    newr = R_LIMIT;
+  }
+  p->radius = (uint8_t)newr;
+  return 0;
+}
+
+uint8_t pos_equal(Position *a, Position *b) {
+  return a->angle == b->angle && a->radius == b->radius;
 }

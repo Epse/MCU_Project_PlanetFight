@@ -2,14 +2,8 @@
 #define GRAPHICS_H
 #include <stdint.h>
 #include <Position.h>
+#include <Sprite.h>
 #include "leddriver.h"
-
-typedef struct Sprite {
-  Position pos;
-  Led led;
-} Sprite;
-
-Sprite sprite(Position pos, Led led);
 
 typedef struct GraphicsSettings {
   uint16_t rotationTime; // Time between zero points
@@ -20,6 +14,6 @@ typedef struct GraphicsSettings {
 // time is time since last full rotation
 void draw(Sprite *objects, uint8_t count, uint16_t time, GraphicsSettings *set);
 
-void setEarthLeds(Led *topEarth, Led *bottomEarth);
+void setEarthLeds(Led topEarth, Led bottomEarth);
 
 #endif
