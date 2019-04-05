@@ -32,7 +32,7 @@ void player_move(Player *p, char updown) {
 }
 
 Sprite player_to_sprite(Player *p) {
-  Led l = led(30, 50 * p->Id, 0, 255 - (50*p->Id));
+  Led l = led(30, 255 * p->Id, 0, 255 - (255*p->Id));
   return sprite(p->Pos, l);
 }
 
