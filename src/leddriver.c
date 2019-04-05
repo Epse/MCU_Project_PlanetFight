@@ -1,8 +1,4 @@
-#include <stdint.h>
-#include <util/delay.h>
-#include <avr/io.h>
 #include "leddriver.h"
-#include "basics.h"
 
 // LED_CLK_PIN: PB1
 // LED_DTA_PIN: PB2

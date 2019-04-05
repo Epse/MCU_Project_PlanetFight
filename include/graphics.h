@@ -4,6 +4,7 @@
 #include <Position.h>
 #include <Sprite.h>
 #include "leddriver.h"
+#include "basics.h"
 
 typedef struct GraphicsSettings {
   uint16_t rotationTime; // Time between zero points

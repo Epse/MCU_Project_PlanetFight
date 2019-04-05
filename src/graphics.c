@@ -1,8 +1,4 @@
-#include <stdint.h>
 #include "graphics.h"
-#include "leddriver.h"
-#include "basics.h"
-#include <Position.h>
 
 Led *topEarth;
 Led *bottomEarth;
