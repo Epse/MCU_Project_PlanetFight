@@ -10,12 +10,12 @@
 #include "dwenguinoBoard.h"
 #include "dwenguinoLCD.h"
 
-void setUp()
+void setup()
 {
   // global enable interrupt
   SREG |= _BV(7);
-  ledInit();
-  joyInit();
+  led_init();
+  joy_init();
   initBoard();
   initLCD();
   clearLCD();
@@ -24,11 +24,11 @@ void setUp()
 
 int main(void)
 {
-  setUp();
+  setup();
   while (1)
   {
     clearLCD();
-    joyTick();
+    joy_tick();
     _delay_ms(50);
   }
 }

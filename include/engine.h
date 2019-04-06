@@ -18,4 +18,6 @@ uint8_t tick(uint16_t time_since_zero);
 
 void engine_setup(uint16_t time_per_rotation);
 
+void set_rotation_time(uint16_t time);
+
 #endif

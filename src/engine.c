@@ -26,7 +26,7 @@ void render(uint16_t time) {
     sprites[i] = bullet_to_sprite(&(bullets[i]));
   }
 
-  setEarthLeds(playerHealthLed(&playerZero), playerHealthLed(&playerOne));
+  set_earth_leds(playerHealthLed(&playerZero), playerHealthLed(&playerOne));
 
   draw(sprites, count, time, &set);
 }
@@ -43,7 +43,7 @@ void add_bullet(Bullet b) {
 }
 
 // TODO: clean up
-void handleInput() {
+void handle_input() {
   JoyStatus zero = joystick_status(0);
   JoyStatus one = joystick_status(1);
   if (joystick_is_up(zero)) {
@@ -76,8 +76,8 @@ void handleInput() {
 
 uint8_t tick(uint16_t time_since_zero) {
   // Handle player inputs
-  joyTick();
-  handleInput();
+  joy_tick();
+  handle_input();
   // Tick everything
   player_tick(&playerZero);
   player_tick(&playerOne);
@@ -115,6 +115,6 @@ void engine_setup(uint16_t time) {
   set = s;
 }
 
-void setRotationTime(uint16_t time) {
+void set_rotation_time(uint16_t time) {
   set.rotationTime = time;
 }

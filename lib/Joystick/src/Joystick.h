@@ -8,8 +8,8 @@
 
 typedef uint8_t JoyStatus;
 
-void joyInit();
-void joyTick();
+void joy_init();
+void joy_tick();
 
 uint8_t joystick_is_up(JoyStatus s);
 uint8_t joystick_is_down(JoyStatus s);

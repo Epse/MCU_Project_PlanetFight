@@ -5,7 +5,7 @@ JoyStatus statJoyTwo;
 JoyStatus risenOne;
 JoyStatus risenTwo;
 
-void joyInit() {
+void joy_init() {
   DDRD &= 0b11110000;
   PORTD |= 0b00001111;
   DDRE &= 0b00001111;
@@ -27,7 +27,7 @@ void readTwo() {
   statJoyTwo = (JoyStatus) stat;
 }
 
-void joyTick() {
+void joy_tick() {
   readOne();
   readTwo();
 }

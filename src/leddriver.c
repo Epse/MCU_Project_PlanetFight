@@ -4,25 +4,25 @@
 // LED_DTA_PIN: PB2
 // LED_PORT: PORTB
 
-void bitBang(uint8_t data) {
+void bitbang(uint8_t data) {
   SPDR = data;
   while (!(SPSR & _BV(SPIF)))
     ;
 }
 
-void writeLed(struct Led led)
+void write_led(struct Led led)
 {
   // LED Frame structure:
   // 111IIIII BBBBBBBB GGGGGGGG RRRRRRRR with I intensity
 
   // Write 3 1-bits and intensity
-  bitBang(led.intensity | 0b11100000);
-  bitBang(led.blue);
-  bitBang(led.green);
-  bitBang(led.red);
+  bitbang(led.intensity | 0b11100000);
+  bitbang(led.blue);
+  bitbang(led.green);
+  bitbang(led.red);
 }
 
-void ledInit()
+void led_init()
 {
   // Set clock and data to output
   DDRB |= _BV(PB2) | _BV(PB1);
@@ -33,32 +33,32 @@ void ledInit()
 
 // LED's are driven by sending 32 0-bits, then a frame per LED in order
 // then 32 1-bits
-void ledDraw(uint8_t count, struct Led *leds)
+void led_draw(uint8_t count, struct Led *leds)
 {
   // Apparently this doesn't need the init sequence wut
   for (uint8_t i = 0; i < 4; i++) {
-    bitBang(0);
+    bitbang(0);
   }
 
   for (uint8_t i = 0; i < count; i++) {
-    writeLed(leds[i]);
+    write_led(leds[i]);
   }
 
   for (uint8_t i = 0; i < count; i++) {
-    bitBang(0);
+    bitbang(0);
   }
 }
 
-void ledClear(uint8_t count)
+void led_clear(uint8_t count)
 {
   for (; count > 0; count--) {
-    bitBang(0b11100000);
-    bitBang(0);
-    bitBang(0);
-    bitBang(0);
+    bitbang(0b11100000);
+    bitbang(0);
+    bitbang(0);
+    bitbang(0);
   }
 
   for (uint8_t i = 0; i < 4; i++) {
-    bitBang(0);
+    bitbang(0);
   }
 }

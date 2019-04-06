@@ -6,9 +6,9 @@
 #include <avr/io.h>
 #include "basics.h"
 
-void ledInit();
+void led_init();
 
-void ledDraw(uint8_t count, struct Led *led);
-void ledClear(uint8_t count);
+void led_draw(uint8_t count, struct Led *led);
+void led_clear(uint8_t count);
 
 #endif
