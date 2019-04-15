@@ -28,10 +28,10 @@ void setup()
   engine_setup();
 
   // Set up TC0 for ticking
-  // in CTC mode, max value 255 (which gives 60Hz update rate)
+  // in CTC mode, max value 255 (which gives 30Hz update rate)
   // this is kinda fast, but I can't go slower.
   TCCR0A = _BV(WGM01);
-  TCCR1A = _BV(CS02) | _BV(CS00);
+  TCCR0B = _BV(CS02) | _BV(CS00);
   OCR0A = 0xFF;
   TIMSK0 = _BV(OCIE0A);
 
@@ -43,7 +43,7 @@ void setup()
 
 void tick_interrupt() {
   //set_rotation_time(<sth>);
-  //tick();
+  tick();
   tick_count++;
 }
 
