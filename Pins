@@ -12,7 +12,7 @@ PA7   (worden standaard gebruikt om LCD en LED's aan te zetten)
 PB0             Pin voor motor
 PB1             Klokpin voor LED's
 PB2             Datapin voor LED's
-PB3  
+PB3
 PB4
 PB5
 PB6
@@ -45,11 +45,15 @@ PE5   (South Button)    Joystick(1) Down
 PE6   (East Button)     Joystick(1) Right
 PE7   (North Button)    Joystick(1) Up
 
-PF0                     
-PF1                     
-PF2                     
-PF3                     
-PF4                   
-PF5                   
+PF0
+PF1
+PF2
+PF3
+PF4
+PF5
 PF6
 PF7
+
+TC0   tick timing
+TC1   sensor
+TC3   motor driver
