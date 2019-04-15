@@ -36,9 +36,9 @@ void setup()
   TIMSK0 = _BV(OCIE0A);
 
   // Set the Center button to Input
-  DDRC &= ~_BV(7);
+  DDRC &= ~_BV(PC7);
   // Enable pullup
-  PORTC |= _BV(7);
+  PORTC |= _BV(PC7);
 }
 
 void tick_interrupt() {
