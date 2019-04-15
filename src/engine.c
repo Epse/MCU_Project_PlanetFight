@@ -74,7 +74,10 @@ void handle_input() {
   }
 }
 
-uint8_t tick(uint16_t time_since_zero) {
+uint8_t tick() {
+  if (set.rotationTime == 0) {
+    return 1; // Not initialized yet
+  }
   // Handle player inputs
   joy_tick();
   handle_input();
@@ -97,8 +100,6 @@ uint8_t tick(uint16_t time_since_zero) {
       player_shot(&playerOne);
     }
   }
-  // Render
-  render(time_since_zero);
   // Check for game end
   if (playerZero.Health == 0 || playerOne.Health == 0) {
     // TODO: Handle game end
@@ -107,11 +108,11 @@ uint8_t tick(uint16_t time_since_zero) {
   return 1;
 }
 
-void engine_setup(uint16_t time) {
+void engine_setup() {
   // Just basically init the players lol
   playerZero = player(0);
   playerOne = player(1);
-  GraphicsSettings s = {.rotationTime = time, .ledCount = 16, .delta = 5};
+  GraphicsSettings s = {.rotationTime = 0, .ledCount = 16, .delta = 5};
   set = s;
 }
 
