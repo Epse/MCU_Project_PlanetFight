@@ -63,6 +63,11 @@ int main(void)
     } else {
       if (center_pressed_for >= 20) { // If it has been pressed long enough
         normal_run = !normal_run; // Toggle between normal and debug
+        if (normal_run) {
+          TIMSK0 = _BV(OCIE0A);
+        } else {
+          TIMSK0 = 0;
+        }
       } else if (center_pressed_for && !normal_run) {
       // If the button had been pressed, but is now released
       // and we are not normally running
@@ -85,7 +90,5 @@ int main(void)
 }
 
 ISR(TIMER0_COMPA_vect) {
-  if (normal_run) {
-    tick_interrupt();
-  }
+  tick_interrupt();
 }
