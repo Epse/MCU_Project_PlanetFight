@@ -26,6 +26,11 @@
 \newfontfamily\ptitle[SizeFeatures={Size=30}]{\ugtitlefontname}
 \newfontfamily\psec[Scale=1.3, Color=ublauw]{\ugtitlefontname}
 
+\hypersetup{
+  pdftitle=\@title,
+  pdfauthor=\@author
+}
+
 % Setup headings
 \titleformat*{\section}{\Large\psec}
 \titleformat*{\subsection}{\large\psec}
