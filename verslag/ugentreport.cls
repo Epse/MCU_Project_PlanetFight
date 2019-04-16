@@ -7,6 +7,7 @@
 \RequirePackage{titlesec}
 \RequirePackage{graphicx}
 \RequirePackage{xspace}
+\RequirePackage{hyperref}
 
 \newcommand{\ugfontname}{Panno Text}
 \newcommand{\ugtitlefontname}{Panno Text Medium}
