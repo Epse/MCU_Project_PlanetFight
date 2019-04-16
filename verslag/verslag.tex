@@ -16,13 +16,8 @@
 \usepackage{graphicx}
 \usepackage{geometry}
 \usepackage{underscore}
-\usepackage{xcolor}
-\usepackage{fontspec}
-\usepackage{titlesec}
-\usepackage{soul}
 \usepackage{tikz}
 \usepackage[dutch]{todonotes}
-\usepackage[pages=some]{background}
 % Gives me \intertext and \shortintertext
 \usepackage{mathtools}
 \usepackage[european, siunitx]{circuitikz}
@@ -39,13 +34,14 @@
 \lstMakeShortInline[basicstyle=\ttfamily,language=C]{§}
 
 \title{Verslag Project Microcontrollers}
-\author{Marieke Louage, Stef Pletinck, Scoutt Verhelle}
+\author{Marieke Louage\and Stef Pletinck\and Scoutt Verhelle}
 
 \begin{document}
 
 \maketitle
 
 \tableofcontents
+\listoffigures
 \listoftodos
 \newpage
 
@@ -256,18 +252,14 @@ deze voert enkele stappen uit:
     kogels een schip geraakt hebben, en eventueel levens van deze speler worden
     afgenomen.
 
-  \item \emph{Render} is het bepalen van welke entities zichtbaar zijn en het
-    omzetten van deze entities naar LED-informatie. Deze gegevens worden dan
-    doorgestuurd naar de LED-timer (zie sectie~\ref{sec:ledtiming}) voor weergave.
-
   \item \emph{Check voor het einde van het spel} door te controleren of beide
     spelers nog in leven zijn. Dit bepaalt de returnwaarde van deze functie,
     §true§ wanneer het spel moet verder gaan, anders §false§.
 \end{enumerate}
 
-Deze functie moet in theorie de tijd sinds ze laatst is opgeroepen in overweging
-nemen, om te vermijden dat de schijnbare snelheid van objecten varieert,
-of de functie moet heel regelmatig opgeroepen worden.
+Deze functie wordt aan \SI{30}{\hertz} opgeroepen.
+Apart daarvan wordt zo snel mogelijk de §render(uint8_t time_since_zero)§
+functie opgeroepen, die de LED's schakelt.
 
 \section{Problemen}
 \subsection{ESC}

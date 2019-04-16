@@ -4,9 +4,9 @@
 \RequirePackage{xcolor}
 \RequirePackage{fontspec}
 \RequirePackage{soul}
-\RequirePackage{tikz}
 \RequirePackage{titlesec}
 \RequirePackage{graphicx}
+\RequirePackage{xspace}
 
 \newcommand{\ugfontname}{Panno Text}
 \newcommand{\ugtitlefontname}{Panno Text Medium}
@@ -31,6 +31,7 @@
 \titleformat*{\subsection}{\large\psec}
 \titleformat*{\subsubsection}{\itshape\psec}
 
+\renewcommand{\and}{,\xspace}
 \renewcommand{\maketitle}{%
   \begin{titlepage}
     \setul{}{2pt} % Dikkere onderlijning
