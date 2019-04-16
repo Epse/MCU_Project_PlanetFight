@@ -149,6 +149,18 @@ void appendIntToLCD(int i) {
   appendStringToLCDcharptr(buffer);
 }
 
+void appendUIntToLCD(uint16_t i) {
+	char buffer[6];
+	utoa(i, buffer, 10);
+	buffer[5] = 0;
+	appendStringToLCDcharptr(buffer);
+}
+
+void printUIntToLCD(uint16_t i, BYTE l, BYTE p) {
+	setCursorLCD(l, p);
+	appendUIntToLCD(i);
+}
+
 void printIntToLCD(int i, BYTE l, BYTE p) {
 	// set cursor to selected position
 	setCursorLCD(l,p);

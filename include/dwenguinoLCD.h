@@ -13,6 +13,7 @@
 #include <avr/io.h>
 #include <avr/delay.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 //	Properties
 #define LCD_WIDTH		16
@@ -83,6 +84,9 @@ void appendIntToLCD(int i);
     @param p position
 */
 void printIntToLCD(int i, BYTE l, BYTE p);
+
+void appendUIntToLCD(uint16_t i);
+void printUIntToLCD(uint16_t i, BYTE l, BYTE p);
 
 //	Structures
 /*

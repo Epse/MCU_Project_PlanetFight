@@ -82,7 +82,7 @@ int main(void)
       printStringToLCD("DEBUG", 0, 0);
     }
 
-    printIntToLCD((int) tick_count, 1, 0);
+    printUIntToLCD(tick_count, 1, 0);
 
     // Remove this when render works
     _delay_ms(50);
