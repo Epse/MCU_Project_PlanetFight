@@ -14,28 +14,28 @@ void self_test_loop() {
   }
   printCharToLCD('W', 1, 0);
   led_draw(18, &leds);
-  _delay_ms(500);
+  _delay_ms(1000);
 
   for (uint8_t i = 18; i > 0; i--) {
     leds[i] = led(30, 0xFF, 0, 0);
   }
   printCharToLCD('B', 1, 0);
   led_draw(18, &leds);
-  _delay_ms(500);
+  _delay_ms(1000);
 
   for (uint8_t i = 18; i > 0; i--) {
     leds[i] = led(30, 0, 0xFF, 0);
   }
   printCharToLCD('G', 1, 0);
   led_draw(18, &leds);
-  _delay_ms(500);
+  _delay_ms(1000);
 
   for (uint8_t i = 18; i > 0; i--) {
     leds[i] = led(30, 0, 0, 0xFF);
   }
   printCharToLCD('R', 1, 0);
   led_draw(18, &leds);
-  _delay_ms(500);
+  _delay_ms(1000);
 
   led_clear(18);
   clearLCD();
