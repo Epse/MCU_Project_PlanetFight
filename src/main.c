@@ -1,3 +1,5 @@
+#define DEBUG
+
 #include <stdint.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -10,6 +12,9 @@
 #include <Joystick.h>
 #include "dwenguinoBoard.h"
 #include "dwenguinoLCD.h"
+#ifdef DEBUG
+#include "selftest.h"
+#endif
 
 // Will be false when in debug mode
 uint8_t normal_run = 0xFF;
@@ -41,6 +46,18 @@ void setup()
   DDRC &= ~_BV(PC7);
   // Enable pullup
   PORTC |= _BV(PC7);
+
+  #ifdef DEBUG
+  if (~PINC & _BV(PC7)) {
+    // disable interrupts
+    SREG &= ~_BV(7);
+    // Disable tick timer
+    TCCR0B = 0;
+    // Go to self-test
+    // Reset the MCU to end it
+    self_test_loop();
+  }
+  #endif
 }
 
 void tick_interrupt() {
@@ -59,6 +76,7 @@ int main(void)
     //set_rotation_time(<sth>);
     //render(<time_since_zero>)
 
+    #ifdef DEBUG
     // If the center button is pressed..
     if ((~PINC) & _BV(7)) {
       center_pressed_for++;
@@ -85,6 +103,7 @@ int main(void)
     }
 
     printUIntToLCD(tick_count, 1, 0);
+    #endif
 
     // Remove this when render works
     _delay_ms(50);
