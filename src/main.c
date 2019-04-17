@@ -16,8 +16,10 @@
 #include "selftest.h"
 #endif
 
+#ifdef DEBUG
 // Will be false when in debug mode
 uint8_t normal_run = 0xFF;
+#endif
 // At 30Hz, this will overflow after about 36 minutes.
 // I think we can use this for anything, if necessary
 uint16_t tick_count = 0;
@@ -69,7 +71,9 @@ void tick_interrupt() {
 int main(void)
 {
   setup();
+  #ifdef DEBUG
   uint8_t center_pressed_for = 0;
+  #endif
   while (1)
   {
     clearLCD();
