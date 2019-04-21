@@ -10,6 +10,8 @@
 #include <Joystick.h>
 #include "dwenguinoBoard.h"
 #include "dwenguinoLCD.h"
+#include "snelheidssensor.h"
+#include "Motordriver.h"
 
 // Will be false when in debug mode
 uint8_t normal_run = 0xFF;
@@ -53,8 +55,14 @@ int main(void)
 {
   setup();
   uint8_t center_pressed_for = 0;
+  set_up_snelheidssensor();
+  set_up_motordriver();
+  _delay_ms(15010);//wacht 15 seconden -- opstartprocedure schijf
+  rotatie_snelheid(30); // 30 procent van de snelheid
   while (1)
   {
+
+
     clearLCD();
     //set_rotation_time(<sth>);
     //render(<time_since_zero>)
