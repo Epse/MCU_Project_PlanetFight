@@ -114,8 +114,21 @@ void engine_setup() {
   playerOne = player(1);
   GraphicsSettings s = {.rotationTime = 0, .ledCount = 18, .delta = 5};
   set = s;
+
+  // Set up TC0 for ticking
+  // in CTC mode, max value 255 (which gives 30Hz update rate)
+  // this is kinda fast, but I can't go slower.
+  TCCR0A = _BV(WGM01);
+  TCCR0B = _BV(CS02) | _BV(CS00);
+  OCR0A = 0xFF;
+  TIMSK0 = _BV(OCIE0A);
+
 }
 
 void set_rotation_time(uint16_t time) {
   set.rotationTime = time;
+}
+
+ISR(TIMER0_COMPA_vect) {
+  tick();
 }

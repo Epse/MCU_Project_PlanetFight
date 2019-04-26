@@ -1,5 +1,6 @@
 #ifndef ENGINE_H
 #define ENGINE_H
+#include <avr/interrupt.h>
 #include <stdint.h>
 #include <Position.h>
 #include <Led.h>
