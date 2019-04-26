@@ -33,7 +33,7 @@
 
 \lstMakeShortInline[basicstyle=\ttfamily,language=C]{§}
 
-\title{Verslag Project Microcontrollers}
+\title{Verslag Project\\[0.1em]Microcontrollers}
 \author{Marieke Louage\and Stef Pletinck\and Scoutt Verhelle}
 
 \begin{document}
@@ -252,8 +252,8 @@ De game engine werkt op een relatief eenvoudig principe.
 Op regelmatige basis wordt de functie §uint8_t tick(uint16_t time_since_zero)§
 opgeroepen, deze voert enkele stappen uit:
 \begin{enumerate}
-  \item \emph{Tick alle entities\footnote{Entities zijn bijvoorbeeld kogels en
-        spelers}}, entities hebben een §tick()§ functie,\\
+  \item \emph{Tick alle entities}\footnote{Entities zijn bijvoorbeeld kogels en
+        spelers}, entities hebben een §tick()§ functie,\\
     bijvoorbeeld §player_tick(Player *p)§, die ervoor zorgt dat de entity zich
     verplaatst volgens zijn snelheid en eventueel reageert op invoer.
 

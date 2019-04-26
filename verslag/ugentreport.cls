@@ -10,7 +10,7 @@
 \RequirePackage{ulem}
 
 \newcommand{\ugfontname}{UGent Panno Text}
-\newcommand{\ugtitlefontname}{UGent Panno Text SemiBold}
+\newcommand{\ugtitlefontname}{UGent Panno Text Medium}
 
 % Options
 \DeclareOption{arial}{\renewcommand{\ugfontname}{Arial}}
@@ -24,7 +24,7 @@
 
 % Font setups
 \newfontfamily\panno{\ugfontname}
-\newfontfamily\ptitle[SizeFeatures={Size=32}]{\ugtitlefontname}
+\newfontfamily\ptitle[SizeFeatures={Size=42}]{\ugtitlefontname}
 \newfontfamily\psec[Scale=1.3, Color=ublauw]{\ugtitlefontname}
 
 \hypersetup{
@@ -41,11 +41,10 @@
 \renewcommand{\maketitle}{%
   \begin{titlepage}
     % Dikkere onderlijning
-    \renewcommand{\ULthickness}{2pt}
+    \renewcommand{\ULthickness}{2pt}%
     \includegraphics[height=1cm]{img/iwa.png} % Logo van faculteit op juiste plaats
     \vspace{2cm} \vfill%
-
-    \textcolor{ublauw}{\ptitle \MakeUppercase{%
+    \textcolor{ublauw}{\ptitle\MakeUppercase{%
           \uline{\@title}%
         }}\\[1em]%
     \Large{\panno \@author }%
