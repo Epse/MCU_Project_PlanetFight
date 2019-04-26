@@ -65,6 +65,7 @@ int main(void)
   while (1)
   {
     clearLCD();
+
     //set_rotation_time(<sth>);
     //render(<time_since_zero>)
 
