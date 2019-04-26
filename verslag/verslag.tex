@@ -162,7 +162,7 @@ De juiste LED's moeten op correcte momenten aan en uit geschakeld worden
 om op de juiste plaats op de cirkel pixels op te laten lichten,
 en niet te lang zodat de pixels geen lijnen worden.
 
-Daartoe wordt voor elk weer te geven object elke \emph{tick} gecontroleerd of
+Daartoe wordt voor elk weer te geven object in een snelle lus gecontroleerd of het
 weer kan gegeven worden. Op de vergelijking van de hoek zit er een lichte marge,
 zodat elk element zeker wordt weergegeven ook al wordt het scherm niet snel
 genoeg opnieuw getekend.
@@ -173,8 +173,17 @@ Daaruit kan namelijk de hoek waaronder de schijf staat bepaald worden.
 
 \subsection{Fysieke constructie}
 \TODO{Fysieke constructie}
+De gehele constructie werd ontworpen in het CAD-pakket \textsc{Siemens NX 11} en
+uitgesneden op een lasercutter, met uitzondering van enkele kleine stukken die
+ge-3D-print\footnote{Dit is de correcte spelling volgens
+  \href{https://woordenlijst.org/#/?q=3D-printen}{het Groene Boekje}.} zijn.
+
+De draaischijf bestaat uit dunne zwarte ABS, de behuizing uit MDF. De
+reflectieve achtergrond en tussenschotten achter en tussen de LED's zijn uit een
+vel wit plastic gesneden.
 
 \subsection{Aansturing motor}
+\TODO{Keuze timers en verder aanvullen}
 De schijf draait rond met behulp van een brushless DC-motor uit een harde schijf.
 Om deze aan te sturen is een speciale ESC-module\footnote{ESC: Electronic Speed Control} nodig.
 
@@ -216,7 +225,9 @@ zichtbaar in figuur~\ref{fig:motoresc}.
 Deze procedure maakt het moeilijk om microcontroller en ESC op één voeding te
 laten werken. Door de grote stroom is het ook lastig om bijvoorbeeld de ESC te
 schakelen met een transistor. Voorlopig moet de ESC manueel in de stekker
-gestoken worden.
+gestoken worden. De driver wacht daartoe even met het opstarten van de motor,
+aangezien de stekker pas mag ingeplugd worden wanneer het stuursignaal reeds
+aanwezig is.
 
 \subsection{Toerenteller schijf}
 Op de schijf zit een optische sensor, die registreert wanneer een gaatje
@@ -238,10 +249,9 @@ Enkele gemaksfuncties werden toegevoegd om uit deze bitweergave te bepalen of
 een gekozen richting actief is.
 
 \subsection{Game engine}
-De game engine werkt op een relatief eenvoudig principe,
-op regelmatige basis wordt de functie §uint8_t tick(uint16_t time_since_zero)§
-opgeroepen,
-deze voert enkele stappen uit:
+De game engine werkt op een relatief eenvoudig principe.
+Op regelmatige basis wordt de functie §uint8_t tick(uint16_t time_since_zero)§
+opgeroepen, deze voert enkele stappen uit:
 \begin{enumerate}
   \item \emph{Tick alle entities\footnote{Entities zijn bijvoorbeeld kogels en
         spelers}}, entities hebben een §tick()§ functie,\\
@@ -257,7 +267,10 @@ deze voert enkele stappen uit:
     §true§ wanneer het spel moet verder gaan, anders §false§.
 \end{enumerate}
 
-Deze functie wordt aan \SI{30}{\hertz} opgeroepen.\\
+Deze functie wordt aan \SI{30}{\hertz} opgeroepen, met behulp van
+\texttt{Timer/Counter0}. De 8-bits resolutie is meer dan genoeg om een vrij
+groot bereik van mogelijke frequenties te bereiken met de prescaler op de
+maximale waarde van $1024$.
 Apart daarvan wordt zo snel mogelijk de §render(uint8_t time_since_zero)§
 functie opgeroepen, die de LED's schakelt.
 
@@ -268,7 +281,29 @@ De motor gaf wat schokjes en de ESC produceerde niet de gewenste opstarttonen.
 Na de massakabel van de motor los te maken bleek alles correct te functioneren.
 Het is onbekend waarom dit een probleem gaf.
 
+\subsection{Light bleed}
+Soms lichtten er pixels vaag op die niet moesten oplichten,
+dit bleek te zijn doordat er soms twee gaten over dezelfde sector hingen, wat
+mogelijk was omdat de scheiding tussen sectoren bestaat uit dun, reflectief
+plastic.
+
+Er werd besloten om de verticale resolutie te verlagen, zodat de sectoren op de
+draaischijf groter worden, maar de sectoren met de LED's ongewijzigd te houden.
+Een andere optie zou zijn om de wanden tussen de sectoren dikker te maken.
+
 \section{Taakverdeling}
-\TODO{\hspace{0pt}Taakverdeling}
+De motordriver werd geschreven door Marieke. Zij schreef ook de code die voor de
+juiste timing zorgt en de optische sensor uitleest.
+
+De game engine en aansturing van LED's werd gedaan door Stef,
+net zoals uitlezen van Joysticks en debugfunctionaliteit.
+
+Ontwerp en constructie van de behuizing is door Marieke.
+
+Scoutt was verantwoordelijk voor een deel van het bestand \texttt{Pins},
+dat bijhoudt welke pins op de microcontroller in gebruik zijn door welk systeem.
+Hij is ook verantwoordelijk voor commit
+\href{https://github.com/Epse/MCU_Project_PlanetFight/commit/142748a7c49a4552b92dfe5613a2f1f7b7a7eb75}{\texttt{142748a:}~\textit{Nuttelose
+    comment} (sic.)}.
 
 \end{document}
