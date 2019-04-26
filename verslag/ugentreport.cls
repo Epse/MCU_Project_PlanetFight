@@ -9,8 +9,8 @@
 \RequirePackage{xspace}
 \RequirePackage{hyperref}
 
-\newcommand{\ugfontname}{Panno Text}
-\newcommand{\ugtitlefontname}{Panno Text Medium}
+\newcommand{\ugfontname}{UGent Panno Text}
+\newcommand{\ugtitlefontname}{UGent Panno Text SemiBold}
 
 % Options
 \DeclareOption{arial}{\renewcommand{\ugfontname}{Arial}}
@@ -24,7 +24,7 @@
 
 % Font setups
 \newfontfamily\panno{\ugfontname}
-\newfontfamily\ptitle[SizeFeatures={Size=30}]{\ugtitlefontname}
+\newfontfamily\ptitle[SizeFeatures={Size=32}]{\ugtitlefontname}
 \newfontfamily\psec[Scale=1.3, Color=ublauw]{\ugtitlefontname}
 
 \hypersetup{
@@ -41,7 +41,6 @@
 \renewcommand{\maketitle}{%
   \begin{titlepage}
     \setul{}{2pt} % Dikkere onderlijning
-    \setuldepth{j} % Beetje ruimte, maar niet zo bizar veel
     \includegraphics[height=1cm]{img/iwa.png} % Logo van faculteit op juiste plaats
     \vspace{2cm} \vfill%
 
