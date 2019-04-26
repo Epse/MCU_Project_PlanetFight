@@ -8,6 +8,7 @@
 \RequirePackage{xspace}
 \RequirePackage{hyperref}
 \RequirePackage{ulem}
+\RequirePackage{setspace}
 
 \newcommand{\ugfontname}{UGent Panno Text}
 \newcommand{\ugtitlefontname}{UGent Panno Text Medium}
@@ -43,11 +44,19 @@
     % Dikkere onderlijning
     \renewcommand{\ULthickness}{2pt}%
     \includegraphics[height=1cm]{img/iwa.png} % Logo van faculteit op juiste plaats
-    \vspace{2cm} \vfill%
-    \textcolor{ublauw}{\ptitle\MakeUppercase{%
-          \uline{\@title}%
-        }}\\[1em]%
-    \Large{\panno \@author }%
+    \vspace{2cm}\vfill%
+    \begin{minipage}{\textwidth}%
+      \ptitle%
+      {%
+        \color{ublauw}%
+        \begin{flushleft}%
+          \begin{spacing}{3.5}% The underlines need absurd amounts of line stretch
+            \MakeUppercase{\uline{\@title}}%
+          \end{spacing}%
+        \end{flushleft}%
+      }\\%
+      \Large{\panno \@author }%
+    \end{minipage}%
     \vfill%
     \includegraphics[height=3cm]{img/logo.png} % Logo moet op de juiste plaats
   \end{titlepage}
