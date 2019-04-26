@@ -3,11 +3,11 @@
 \LoadClass[a4paper]{article}
 \RequirePackage{xcolor}
 \RequirePackage{fontspec}
-\RequirePackage{soul}
 \RequirePackage{titlesec}
 \RequirePackage{graphicx}
 \RequirePackage{xspace}
 \RequirePackage{hyperref}
+\RequirePackage{ulem}
 
 \newcommand{\ugfontname}{UGent Panno Text}
 \newcommand{\ugtitlefontname}{UGent Panno Text SemiBold}
@@ -40,15 +40,14 @@
 \renewcommand{\and}{,\xspace}
 \renewcommand{\maketitle}{%
   \begin{titlepage}
-    \setul{}{2pt} % Dikkere onderlijning
+    % Dikkere onderlijning
+    \renewcommand{\ULthickness}{2pt}
     \includegraphics[height=1cm]{img/iwa.png} % Logo van faculteit op juiste plaats
     \vspace{2cm} \vfill%
 
-    % The mbox is to make it never hyphenate (soul breaks on that)
-    % All of the comments are to avoid newline spacing
-    \textcolor{ublauw}{\ptitle \uppercase{\ul{%
-          \mbox{\@title}%
-        }}}\\[1em]%
+    \textcolor{ublauw}{\ptitle \MakeUppercase{%
+          \uline{\@title}%
+        }}\\[1em]%
     \Large{\panno \@author }%
     \vfill%
     \includegraphics[height=3cm]{img/logo.png} % Logo moet op de juiste plaats
