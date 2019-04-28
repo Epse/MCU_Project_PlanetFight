@@ -56,11 +56,12 @@ voor meer interactiviteit.
 Voor de weergave van het spel werden verschillende mogelijkheden overlopen.
 Een eerste mogelijkheid was het aansturen van een VGA-display,
 maar door de hoge klokfrequentie van VGA en de daaraan gelinkte problemen
-werd dit idee snel verworpen.\\
+werd dit idee snel verworpen.
 Een tweede idee was het gebruik van een LED-matrix.
 De lage resolutie hiervan was echter een groot nadeel,
 dus werd uiteindelijk gekozen voor een scherm dat gebruik maakt
-van het principe van een hardeschijfklok.
+van het principe van een hardeschijfklok. Een snel ronddraaiende ledstrip werd
+ook overwogen, maar dit is praktisch niet haalbaar.
 
 Het spel zelf vindt plaats in een baan rond de aarde, waar twee ruimteschepen
 elkaar rond de aarde achtervolgen en proberen neer te schieten.
@@ -114,7 +115,8 @@ zoals zichtbaar op figuur~\ref{fig:ledcontrol},
 een pakket per LED verstuurd worden gevolgd door
 nogmaals 32 bits om te zorgen dat alle data ver genoeg doorgeschoven is.
 De waarde van deze bits is onbelangrijk,
-maar 0 is handig om te voorkomen dat er een LED op volle helderheid wit licht geeft.
+maar 0 is handig om te voorkomen dat er een LED op volle helderheid wit licht
+geeft wanneer er niet naar elke LED gegevens worden gestuurd.
 
 \begin{figure}
   \centering
@@ -132,13 +134,11 @@ maar 0 is handig om te voorkomen dat er een LED op volle helderheid wit licht ge
 
 Er zijn twee mogelijke manieren om meerdere bytes te versturen over SPI,
 via een blokkerende §while§-lus en via een interrupt.
-De eerste aanpak wordt getoond in codevoorbeeld~\ref{lst:spiblocking}.
-
 Het is echter ook mogelijk om een interrupt te ontvangen wanneer een byte is
 verzonden,
 om vervolgens een volgende byte te verzenden. Op die manier kan CPU-tijd
-uitgespaard worden maar dit blijkt zeer lastig foutloos te implementeren.
-Het spel gebruikt bijgevolg voorlopig nog de \textit{blocking} aanpak.
+uitgespaard worden, maar dit blijkt zeer lastig foutloos te implementeren.
+Het spel gebruikt bijgevolg voorlopig nog de \emph{blocking} aanpak.
 
 Het is handig om te weten wat de maximale frequentie is waarmee alle LED's
 kunnen aangestuurd worden.
@@ -146,15 +146,6 @@ Hiervoor is het belangrijk te weten dat de microcontroller
 een werkfrequentie heeft van \SI{16}{\mega\hertz}
 en er maximaal 1 bit per 2 klokcycli kan verstuurd worden over SPI.
 Er zijn 16 LED's, dit geeft een maximale frequentie van \SI{15625}{\hertz}.
-
-\begin{lstlisting}[frame=lines,language=C,float,caption={Blocking SPI in C},label={lst:spiblocking}]
-  unsigned char data = {0xAB, 0xCD, 0x12, 0x34};
-  for (unsigned char i = 4; i > 0; i--) {
-    SPDR = data[i];
-    while (!(SPSR & _BV(SPIF)))
-    ;
-  }
-\end{lstlisting}
 
 \subsection{Timing LED's}
 \label{sec:ledtiming}
@@ -267,7 +258,7 @@ opgeroepen, deze voert enkele stappen uit:
 \end{enumerate}
 
 Deze functie wordt aan \SI{30}{\hertz} opgeroepen, met behulp van
-\texttt{Timer/Counter0}. De 8-bits resolutie is meer dan genoeg om een vrij
+\texttt{Timer/Counter0} in \emph{CTC} mode. De 8-bits resolutie is meer dan genoeg om een vrij
 groot bereik van mogelijke frequenties te bereiken met de prescaler op de
 maximale waarde van $1024$.
 Apart daarvan wordt zo snel mogelijk de §render(uint8_t time_since_zero)§
@@ -290,7 +281,18 @@ Er werd besloten om de verticale resolutie te verlagen, zodat de sectoren op de
 draaischijf groter worden, maar de sectoren met de LED's ongewijzigd te houden.
 Een andere optie zou zijn om de wanden tussen de sectoren dikker te maken.
 
-\section{Taakverdeling}
+\section{Openstaande Problemen}
+Er is nog wat werk aan de fysieke constructie van de schijf en we twijfelen nog
+over het aantal sectoren. Een groot deel van de code, zoals de \emph{game
+  engine} en de driver voor LED-timing, is dus nog niet getest.
+Dit testen en debuggen zal waarschijnlijk nog vrij veel tijd innemen.
+Verder zijn er nog enkele verbeteringen te maken in de \emph{game engine},
+zo wordt er nog geen melding gegeven wanneer een speler sterft en kan het spel
+niet herstart worden zonder de microcontroller te resetten.
+Het spel begint ook van zodra de controller opstart, in plaats van wanneer de
+spelers klaar zijn. Dit is geen wenselijke werking.
+
+\section{Taakverdeling en Samenwerking}
 De motordriver werd geschreven door Marieke. Zij schreef ook de code die voor de
 juiste timing zorgt en de optische sensor uitleest.
 
@@ -302,7 +304,14 @@ Ontwerp en constructie van de behuizing is door Marieke.
 Scoutt was verantwoordelijk voor een deel van het bestand \texttt{Pins},
 dat bijhoudt welke pins op de microcontroller in gebruik zijn door welk systeem.
 Hij is ook verantwoordelijk voor commit
-\href{https://github.com/Epse/MCU_Project_PlanetFight/commit/142748a7c49a4552b92dfe5613a2f1f7b7a7eb75}{\texttt{142748a:}~\textit{Nuttelose
+\href{https://github.com/Epse/MCU_Project_PlanetFight/commit/142748a7c49a4552b92dfe5613a2f1f7b7a7eb75}{\texttt{142748a:}~\emph{Nuttelose
     comment} (sic.)}.
+
+Onze samenwerking gebeurt via Git en
+\href{https://github.com/Epse/MCU_Project_PlanetFight}{GitHub}. Taken worden
+verdeeld via \emph{issues} op GitHub. Iedereen werkt aan een apart deel van de
+code of de hardware, die regelmatig samen worden gezet.
+
+\section{Conclusie en Toekomstig Werk}
 
 \end{document}
