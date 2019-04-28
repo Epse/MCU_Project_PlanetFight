@@ -7,7 +7,7 @@
 \RequirePackage{graphicx}
 \RequirePackage{xspace}
 \RequirePackage{hyperref}
-\RequirePackage{ulem}
+\RequirePackage[normalem]{ulem}
 \RequirePackage{setspace}
 
 \newcommand{\ugfontname}{UGent Panno Text}
@@ -54,7 +54,7 @@
             \MakeUppercase{\uline{\@title}}%
           \end{spacing}%
         \end{flushleft}%
-      }\\%
+      }%
       \Large{\panno \@author }%
     \end{minipage}%
     \vfill%
