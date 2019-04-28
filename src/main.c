@@ -58,12 +58,49 @@ int main(void)
   set_up_snelheidssensor();
   set_up_motordriver();
   _delay_ms(15010);//wacht 15 seconden -- opstartprocedure schijf
-  rotatie_snelheid(30); // 30 procent van de snelheid
+  rotatie_snelheid(27); // 30 procent van de snelheidS
+
+
+  void led_init();
+  //Led Test[1] = led(100,50,0,0);
+  Led leds[2];
+  int b = 0;
+  int g = 0;
+  int r = 0;
+  for (int i = 0; i < sizeof(leds); i++) {
+    if (i<5) {
+     b = 255;
+     g = 255;
+    }
+    else{
+      b = 0;
+      r+=20;
+    }
+    leds[i] = led(255,b,g,r);
+  }
+
+
+   led_draw(3, leds);
+   _delay_ms(2000);
+   led_clear(3);
+    _delay_ms(500);
+/*
+  led_draw(1, leds);
+  _delay_ms(2000);
+  led_clear(5);*/
+  /*Test.green = 50;
+  led_draw(4, &Test);
+  _delay_ms(2000);
+  void led_clear(uint8_t count);
+  _delay_ms(2000);
+  Test.green = 0;
+  Test.red=0;
+  Test.blue = 50;
+  led_draw(8, &Test);*/
+
   while (1)
   {
-
-
-    clearLCD();
+    //clearLCD();
     //set_rotation_time(<sth>);
     //render(<time_since_zero>)
 
@@ -87,7 +124,7 @@ int main(void)
     }
 
     if (normal_run) {
-      printStringToLCD("NORMAL", 0, 0);
+      //printStringToLCD("NORMAL", 0, 0);
     } else {
       printStringToLCD("DEBUG", 0, 0);
     }
