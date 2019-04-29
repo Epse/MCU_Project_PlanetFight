@@ -46,6 +46,7 @@
 \newpage
 
 \section{Doelstellingen}
+Voor een nauwkeurige specificatie, zie tabel~\ref{tbl:specs}.
 Doel van deze opgave was het maken van een spel op een microcontroller,
 specifiek een \emph{Dwenguino}.
 Verdere doelen van het vak zijn het leren lezen en interpreteren van datasheets
@@ -69,6 +70,25 @@ elkaar rond de aarde achtervolgen en proberen neer te schieten.
 Als invoer van de spelers werd gekozen voor arcade-joysticks.
 Deze bestaan uit vier microswitches per joystick.
 Er waren verder nog vele ideeën om het spel verder uit te breiden.
+
+\begin{table}
+  \centering
+  \begin{tabular}{l|c}
+    \hline
+    Parameter & Waarde\\
+    \hline
+    Ingangsspanning Microcontroller & \SI{5}{\volt}\\
+    Ingangsspanning ESC & \SI{12}{\volt}\\
+    Klokfrequentie & \SI{12}{\mega\hertz}\\
+    Aantal spelers & 2\\
+    Bediening & 2 Joysticks, 4 schakelaars elk\\
+    Minimale updatefrequentie & \SI{24}{\hertz}\\
+    Weergave & 13 LED's\\
+    \hline
+  \end{tabular}
+  \caption{Specificaties}
+  \label{tbl:specs}
+\end{table}
 
 \section{Praktische aanpak}
 De nodige functionaliteit werd opgedeeld in logische blokken die met elkaar
