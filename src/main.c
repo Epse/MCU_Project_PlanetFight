@@ -95,7 +95,8 @@ int main(void)
       printStringToLCD("DEBUG", 0, 0);
     }
     #endif
-
+	// Tick if required to do so
+	maybe_tick();
     // Remove this when render works
     _delay_ms(50);
   }
