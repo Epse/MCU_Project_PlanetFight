@@ -275,7 +275,11 @@ opgeroepen, deze voert enkele stappen uit:
 \end{enumerate}
 
 Deze functie wordt aan \SI{30}{\hertz} opgeroepen, met behulp van
-\texttt{Timer/Counter0} in \emph{CTC} mode. De 8-bits resolutie is meer dan genoeg om een vrij
+\texttt{Timer/Counter0} in \emph{CTC} mode. De counter geeft dan een interrupt
+telkens een ingestelde waarde wordt bereikt en begint vervolgens weer vanaf nul
+te tellen. Voorlopig telt de counter tot \num{255}, indien mogelijk kan dit
+later verlaagd worden om het spel sneller te maken.
+De 8-bits resolutie is meer dan genoeg om een vrij
 groot bereik van mogelijke frequenties te bereiken met de prescaler op de
 maximale waarde van $1024$.
 Apart daarvan wordt zo snel mogelijk de §render(uint8_t time_since_zero)§
