@@ -175,10 +175,8 @@ en niet te lang zodat de pixels geen lijnen worden.
 
 Daartoe wordt voor elk weer te geven object in een snelle lus gecontroleerd of het
 weer kan gegeven worden. Op de vergelijking van de hoek zit er een lichte marge,
-zodat elk element zeker wordt weergegeven ook al wordt het scherm niet snel
-genoeg opnieuw getekend.
-
-Daartoe krijgt de functie zowel de tijd voor één volledige rotatie,
+zodat elk element zeker wordt weergegeven, ook al wordt het scherm niet snel
+genoeg opnieuw getekend. Daartoe krijgt de functie zowel de tijd voor één volledige rotatie,
 als de tijd sinds de schijf het nulpunt is gepasseerd als argumenten.
 Daaruit kan namelijk de hoek waaronder de schijf staat bepaald worden.
 
@@ -190,7 +188,8 @@ ge-3D-print\footnote{Dit is de correcte spelling volgens het Groene Boekje.} zij
 
 De draaischijf bestaat uit dunne zwarte ABS, de behuizing uit MDF. De
 reflectieve achtergrond en tussenschotten achter en tussen de LED's zijn uit een
-vel wit plastic gesneden.
+vel wit plastic gesneden. Over de schijf zal een beschermende plaat transparant
+acryl geplaatst worden, met een afbeelding van de aarde in het midden.
 
 \subsection{Aansturing motor}
 \TODO{Keuze timers en verder aanvullen}
@@ -214,7 +213,6 @@ Zie figuur~\ref{fig:motorpwm} voor een beeld het geproduceerde signaal.
   \label{fig:motorpwm}
 \end{figure}
 
-
 Een extra moeilijkheid is de opstartprocedure van de ESC.
 De microcontroller moet opgestart zijn en een signaal sturen dat overeen komt
 met \SI{0}{\percent} motorvermogen wanneer de ESC stroom krijgt en wordt
@@ -231,7 +229,6 @@ zichtbaar in figuur~\ref{fig:motoresc}.
   \label{fig:motoresc}
 \end{figure}
 
-
 Deze procedure maakt het moeilijk om microcontroller en ESC op één voeding te
 laten werken. Door de grote stroom is het ook lastig om bijvoorbeeld de ESC te
 schakelen met een transistor. Voorlopig moet de ESC manueel in de stekker
@@ -247,9 +244,9 @@ zodat afgeleid kan worden hoe snel de schijf draait.
 
 \subsection{Joysticks}
 De beide joysticks zijn relatief eenvoudig om uit te lezen.
-Ze bestaan telkens uit vier NO schakelaars, één per richting.
+Ze bestaan telkens uit vier \emph{NO} schakelaars, één per richting.
 Aangezien elke joystick op een aparte \emph{port} van de microcontroller
-aangesloten is, kan met een simpele NOT operatie en enkele bitshifts een
+aangesloten is, kan met een simpele §NOT§ operatie en enkele bitshifts een
 consistente weergave gegenereerd worden, met 1 bit per richting die hoog is
 wanneer de schakelaar actief is. Hiertoe moeten ook de pullups geactiveerd
 worden. De driver voor de joysticks controleert ook welke schakelaars sinds de
