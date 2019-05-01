@@ -116,7 +116,7 @@ hoe meer pixels. Deze waarde werd gekozen op 1024.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.6\textwidth]{img/schijf.png}
+  \includegraphics[width=0.6\textwidth]{img/schijf.jpg}
   \caption{Schema van de draaischijf}
   \label{fig:schijf}
 \end{figure}
@@ -181,15 +181,55 @@ als de tijd sinds de schijf het nulpunt is gepasseerd als argumenten.
 Daaruit kan namelijk de hoek waaronder de schijf staat bepaald worden.
 
 \subsection{Fysieke constructie}
-\TODO{Fysieke constructie}
-De gehele constructie werd ontworpen in het CAD-pakket \textsc{Siemens NX 11} en
-uitgesneden op een lasercutter, met uitzondering van enkele kleine stukken die
-ge-3D-print\footnote{Dit is de correcte spelling volgens het Groene Boekje.} zijn.
 
-De draaischijf bestaat uit dunne zwarte ABS, de behuizing uit MDF. De
-reflectieve achtergrond en tussenschotten achter en tussen de LED's zijn uit een
-vel wit plastic gesneden. Over de schijf zal een beschermende plaat transparant
-acryl geplaatst worden, met een afbeelding van de aarde in het midden.
+De fysieke constructie is een rechtstaand licht hellend display met voldoende
+ruimte voor de elektronica en bedrading. De gehele constructie werd ontworpen
+in het CAD-pakket Siemens NX 11 en voornamelijk uitgesneden op een lasercutter,
+op een paar uitzonderingen na.
+
+De draaischijf is op de lasercutter gemaakt en bestaat uit 2mm dikke zwarte ABS.
+De schijf bevat 13 gaatjes, goed voor een straalresolutie van 13 pixels. De pixels
+zijn gerangschikt in twee spiralen opdat buren veraf van elkaar zouden liggen. Zo
+wordt de lichtvervuiling in een aangrenzend segmenten minimaal benadrukt door
+zover mogelijk verwijderd te zijn van een sprite.
+
+De segmenten zijn met cutter mes op een snijplank gemaakt uit een wit PVC vel.
+Er zijn 16 segmenten en elk segment heeft één led die gemonteerd is op een wand
+van de behuizing grenzend aan de cirkel. Het wit plastic zorgt voor een goede
+diffusie van het licht van de ledjes.
+
+Dat het aantal segmenten en gaten niet gelijk is aan elkaar komt doordat geen
+twee gaten zich tegelijkertijd in hetzelfde segment mogen bevinden. Waarom bij
+16 segmenten voor 13 gaten gekozen is wordt duidelijk gemaakt in figuur ~\ref{fig:duiding1316}. De
+rood aangeduide stukjes staan ter hoogte van het binnenste gaatje en zijn even
+lang, de oranje lijnen zijn tonen de segmenten.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/16vs13.jpg}
+  \caption{Duiding 16 segmenten 13 gaten}
+  \label{fig:duiding1316}
+\end{figure}
+
+De sensorhouder is een klein ge-3D-print \footnote{Dit is de correcte spelling volgens het Groene Boekje.} stuk dat de sensor op zijn plaats
+houdt. Dit is zichtbaar in figuur ~\ref{fig:sensorhouder}.
+
+De behuizing is gemaakt uit 3mm dik MDF plaatmateriaal en is volledig demonteerbaar.
+Op de behuizing kan een scherm uit een 3mm dikke plexiplaat geplaats worden. De plaat is te zien in figuur ~\ref{fig:plexiplaat}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/SensorHouder.jpg}
+  \caption{ge-3D-printe sensorhouder}
+  \label{fig:sensorhouder}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/PlexiPlaat.jpg}
+  \caption{Plexi scherm}
+  \label{fig:plexiplaat}
+\end{figure}
 
 \subsection{Aansturing motor}
 \TODO{Keuze timers en verder aanvullen}
@@ -205,6 +245,35 @@ De PWM-modules die ingebouwd zitten in de microcontroller kunnen niet opereren
 in deze frequenties en pulsbreedtelimieten,
 het protocol werd dus volledig in software geïmplementeerd.
 Zie figuur~\ref{fig:motorpwm} voor een beeld het geproduceerde signaal.
+
+Het PWM signaal wordt op pin D0 naar buiten gebracht. De software implementatie
+van het PWM signaal is met Timer/Counter3 in Clear Timer on Compare Match (CTC)
+modus verwezenlijkt. In het register OCR3A wordt een waarde ingesteld, wanneer de Timer/Counter
+deze waarde bereikt wordt de counter op nul gezet en wordt de interrupt ‘TIMER3_COMPA_vect’
+aangevraagd. Er wordt in de interrupt service routine een nieuwe waarde ingesteld
+in OCR3A en de output bit op pin D0 wordt geflipt.
+
+Om nul procent vermogen aan te sturen moet het signaal 1ms hoog zijn, om het
+maximale vermogen aan te sturen moet het signaal 2 ms hoog zijn. De Timer/Counter3
+heeft een frequentie van 2 MHz, dat is de I/O klok van 16 MHz verschaald met
+prescaler 8. Een cijfervoorbeeld van het PWM signaal dat overeenkomt met 0%
+motorvermogen is in tabel ~\ref{tbl:PWM} zichtbaar.
+
+\begin{table}
+  \centering
+  \begin{tabular}{l|c}
+    \hline
+      & Klokslagen & Tijd(ms)\\
+    \hline
+    Hoge puls & 12870 & 1\\
+    Lage puls & 38000 & 19\\
+    \hline
+    Periode & 40000 & 20\\
+    \hline
+  \end{tabular}
+  \caption{PWM generatie}
+  \label{tbl:PWM}
+\end{table}
 
 \begin{figure}
   \centering
@@ -237,10 +306,58 @@ aangezien de stekker pas mag ingeplugd worden wanneer het stuursignaal reeds
 aanwezig is.
 
 \subsection{Toerenteller schijf}
-Op de schijf zit een optische sensor, die registreert wanneer een gaatje
-passeert. De microcontroller telt nauwkeurig op welk moment dit gebeurt,
-zodat afgeleid kan worden hoe snel de schijf draait.
-\TODO{Info toerenteller}
+De hoeksnelheidsmeting component uit figuur 1 levert de hoeksnelheid en een
+ijkpunt van de draaibeweging van de schijf. Als input krijgt de component een
+puls van een stationaire optische sensor die gemonteerd is langs de rand van de
+schijf. In de schijf zit een gaatje waardoor de optische sensor getriggerd wordt
+als dit gaatje doorheen de sensor passeert. (Figuur ~\ref{fig:sensor})
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/Sensor.jpg}
+  \caption{Sensor gemonteerd aan de rand van de schijf}
+  \label{fig:sensor}
+\end{figure}
+
+De praktische realisatie berust op de Input Capture unit van Timer/Counter1.
+Dit vereist de alternate function van poort PD4, namelijk ICP1 of Timer/Counter1
+Input CaptureTrigger. Als een dalende of stijgende flank (dit is vrij te kiezen)
+geregistreerd wordt op pin ICP1 dan wordt de huidige waarde van timer/counter 1
+zo snel mogelijk gekopieerd in een register genaamd ICR1, waarna dat op zijn beurt
+kan bevraagd worden door de µC. Doordat een noise canceling optie aanstaat duurt
+het kopiëren vier systeemklokpulsen langer, wat geen probleem levert voor de
+accuraatheid. 
+
+De frequentie waarop Timer/Counter1 telt is 250GHz. Dit is de I/O klok van 16MHz
+verschaald met prescaler 64. 
+
+De Input Capture unit heeft de mogelijkheid tot het genereren van een interrupt.
+Indien ingesteld, wordt zodra de waarde in ICR1 gekopieerd is, de interrupt
+aangevraagd. In de interrupt routine wordt eerst de opgevangen waarde gekopieerd
+en vervolgens wordt met de waarde de tijd die verstreken is sinds de vorige interrupt
+bepaald. De eenheid van deze waarde is nog arbitrair om de hoge resolutie te bewaren,
+het is een verschaalde versie van het aantal increments.
+
+De Timer/Counter1 overflow interrupt wordt getriggerd wanneer de maximale waarde
+bereikt is en de telwaarde op nul wordt gezet. Elke keer dat de overflow vector
+getriggerd wordt moet het aantal increments met 216 verhoogd worden.
+
+In tabel ~\ref{tbl:toerental} is een meting van het aantal increments te zien. Voor een hoeksnelheid van 19 toeren per seconde
+is het aantal increments 12870. Elke 65536 increments vind een overflow plaats.
+De verhoudingen tussen kloksnelheid en schijfsnelheid zijn dus goed gedimensioneerd.
+
+\begin{table}
+  \centering
+  \begin{tabular}{l|c}
+    \hline
+    tijd per increment (µs) & aantal increments & hoeksnelheid(toeren/s)\\
+    \hline
+    4 & 12870 & 19,42502\\
+    \hline
+  \end{tabular}
+  \caption{Meting en berekening toerental}
+  \label{tbl:toerental}
+\end{table}
 
 \subsection{Joysticks}
 De beide joysticks zijn relatief eenvoudig om uit te lezen.
