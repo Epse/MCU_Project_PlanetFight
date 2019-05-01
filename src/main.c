@@ -1,3 +1,5 @@
+#define DEBUG
+
 #include <stdint.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -13,11 +15,11 @@
 #include "snelheidssensor.h"
 #include "Motordriver.h"
 
+#ifdef DEBUG
+#include "selftest.h"
 // Will be false when in debug mode
 uint8_t normal_run = 0xFF;
-// At 30Hz, this will overflow after about 36 minutes.
-// I think we can use this for anything, if necessary
-uint16_t tick_count = 0;
+#endif
 
 void setup()
 {
@@ -31,79 +33,43 @@ void setup()
   backlightOn();
   engine_setup();
 
-  // Set up TC0 for ticking
-  // in CTC mode, max value 255 (which gives 30Hz update rate)
-  // this is kinda fast, but I can't go slower.
-  TCCR0A = _BV(WGM01);
-  TCCR0B = _BV(CS02) | _BV(CS00);
-  OCR0A = 0xFF;
-  TIMSK0 = _BV(OCIE0A);
-
   // Set the Center button to Input
   DDRC &= ~_BV(PC7);
   // Enable pullup
   PORTC |= _BV(PC7);
-}
 
-void tick_interrupt() {
-  //set_rotation_time(<sth>);
-  tick();
-  tick_count++;
+  #ifdef DEBUG
+  // If center button pressed (during boot)
+  if (~PINC & _BV(PC7)) {
+    // disable interrupts
+    SREG &= ~_BV(7);
+    // Go to self-test
+    // Reset the MCU to end it
+    self_test_loop();
+  }
+  #endif
+
+  // Start motor ed.
+  set_up_snelheidssensor();
+  set_up_motordriver();
+  _delay_ms(15010);//wacht 15 seconden -- opstartprocedure schijf
+  rotatie_snelheid(30); // 30 procent van de snelheid
 }
 
 int main(void)
 {
   setup();
+  #ifdef DEBUG
   uint8_t center_pressed_for = 0;
-  set_up_snelheidssensor();
-  set_up_motordriver();
-  _delay_ms(15010);//wacht 15 seconden -- opstartprocedure schijf
-  rotatie_snelheid(27); // 30 procent van de snelheidS
-
-
-  void led_init();
-  //Led Test[1] = led(100,50,0,0);
-  Led leds[2];
-  int b = 0;
-  int g = 0;
-  int r = 0;
-  for (int i = 0; i < sizeof(leds); i++) {
-    if (i<5) {
-     b = 255;
-     g = 255;
-    }
-    else{
-      b = 0;
-      r+=20;
-    }
-    leds[i] = led(255,b,g,r);
-  }
-
-
-   led_draw(3, leds);
-   _delay_ms(2000);
-   led_clear(3);
-    _delay_ms(500);
-/*
-  led_draw(1, leds);
-  _delay_ms(2000);
-  led_clear(5);*/
-  /*Test.green = 50;
-  led_draw(4, &Test);
-  _delay_ms(2000);
-  void led_clear(uint8_t count);
-  _delay_ms(2000);
-  Test.green = 0;
-  Test.red=0;
-  Test.blue = 50;
-  led_draw(8, &Test);*/
-
+  #endif
   while (1)
   {
-    //clearLCD();
+    clearLCD();
+
     //set_rotation_time(<sth>);
     //render(<time_since_zero>)
 
+    #ifdef DEBUG
     // If the center button is pressed..
     if ((~PINC) & _BV(7)) {
       center_pressed_for++;
@@ -111,14 +77,14 @@ int main(void)
       if (center_pressed_for >= 20) { // If it has been pressed long enough
         normal_run = !normal_run; // Toggle between normal and debug
         if (normal_run) {
-          TIMSK0 = _BV(OCIE0A);
+          TIMSK0 = _BV(OCIE0A); // This is a hack, disabling the interrupt in engine.c
         } else {
           TIMSK0 = 0;
         }
       } else if (center_pressed_for && !normal_run) {
       // If the button had been pressed, but is now released
       // and we are not normally running
-        tick_interrupt(); // Manually tick
+      tick();
       }
       center_pressed_for = 0;
     }
@@ -128,14 +94,9 @@ int main(void)
     } else {
       printStringToLCD("DEBUG", 0, 0);
     }
-
-    printUIntToLCD(tick_count, 1, 0);
+    #endif
 
     // Remove this when render works
     _delay_ms(50);
   }
-}
-
-ISR(TIMER0_COMPA_vect) {
-  tick_interrupt();
 }

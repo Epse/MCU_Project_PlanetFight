@@ -100,7 +100,7 @@ ISR(TIMER1_CAPT_vect){
 
 
 ISR(TIMER1_OVF_vect){
-  PORTA ^= 0b11111111;
+  //PORTA ^= 0b11111111;
   rotationTimeX += 6554; // 2^16/10
 }
 
