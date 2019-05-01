@@ -261,15 +261,13 @@ motorvermogen is in tabel ~\ref{tbl:PWM} zichtbaar.
 
 \begin{table}
   \centering
-  \begin{tabular}{l|c}
-    \hline
-      & Klokslagen & Tijd(ms)\\
+  \begin{tabular}{r|SS}
+      & {Klokslagen} & {Tijd (\si{\milli\second})}\\
     \hline
     Hoge puls & 12870 & 1\\
     Lage puls & 38000 & 19\\
     \hline
     Periode & 40000 & 20\\
-    \hline
   \end{tabular}
   \caption{PWM generatie}
   \label{tbl:PWM}
@@ -348,12 +346,10 @@ De verhoudingen tussen kloksnelheid en schijfsnelheid zijn dus goed gedimensione
 
 \begin{table}
   \centering
-  \begin{tabular}{l|c}
+  \begin{tabular}{SSS}
+    {Tijd per increment (\si{\micro\second})} & {Aantal increments} & {Hoeksnelheid (toeren/s)}\\
     \hline
-    tijd per increment (µs) & aantal increments & hoeksnelheid(toeren/s)\\
-    \hline
-    4 & 12870 & 19,42502\\
-    \hline
+    4 & 12870 & 19.42502\\
   \end{tabular}
   \caption{Meting en berekening toerental}
   \label{tbl:toerental}
