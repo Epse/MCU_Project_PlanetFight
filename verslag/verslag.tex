@@ -187,20 +187,20 @@ ruimte voor de elektronica en bedrading. De gehele constructie werd ontworpen
 in het CAD-pakket Siemens NX 11 en voornamelijk uitgesneden op een lasercutter,
 op een paar uitzonderingen na.
 
-De draaischijf is op de lasercutter gemaakt en bestaat uit 2mm dikke zwarte ABS.
+De draaischijf is op de lasercutter gemaakt en bestaat uit \SI{2}{\milli\meter} dikke zwarte ABS.
 De schijf bevat 13 gaatjes, goed voor een straalresolutie van 13 pixels. De pixels
 zijn gerangschikt in twee spiralen opdat buren veraf van elkaar zouden liggen. Zo
 wordt de lichtvervuiling in een aangrenzend segmenten minimaal benadrukt door
 zover mogelijk verwijderd te zijn van een sprite.
 
-De segmenten zijn met cutter mes op een snijplank gemaakt uit een wit PVC vel.
+De segmenten zijn met een breekmes op een snijplank gemaakt uit een wit PVC vel.
 Er zijn 16 segmenten en elk segment heeft één led die gemonteerd is op een wand
 van de behuizing grenzend aan de cirkel. Het wit plastic zorgt voor een goede
 diffusie van het licht van de ledjes.
 
 Dat het aantal segmenten en gaten niet gelijk is aan elkaar komt doordat geen
 twee gaten zich tegelijkertijd in hetzelfde segment mogen bevinden. Waarom bij
-16 segmenten voor 13 gaten gekozen is wordt duidelijk gemaakt in figuur ~\ref{fig:duiding1316}. De
+16 segmenten voor 13 gaten gekozen is wordt duidelijk gemaakt in figuur~\ref{fig:duiding1316}. De
 rood aangeduide stukjes staan ter hoogte van het binnenste gaatje en zijn even
 lang, de oranje lijnen zijn tonen de segmenten.
 
@@ -212,10 +212,10 @@ lang, de oranje lijnen zijn tonen de segmenten.
 \end{figure}
 
 De sensorhouder is een klein ge-3D-print \footnote{Dit is de correcte spelling volgens het Groene Boekje.} stuk dat de sensor op zijn plaats
-houdt. Dit is zichtbaar in figuur ~\ref{fig:sensorhouder}.
+houdt. Dit is zichtbaar in figuur~\ref{fig:sensorhouder}.
 
 De behuizing is gemaakt uit 3mm dik MDF plaatmateriaal en is volledig demonteerbaar.
-Op de behuizing kan een scherm uit een 3mm dikke plexiplaat geplaats worden. De plaat is te zien in figuur ~\ref{fig:plexiplaat}.
+Op de behuizing kan een scherm uit een 3mm dikke plexiplaat geplaats worden. De plaat is te zien in figuur~\ref{fig:plexiplaat}.
 
 \begin{figure}
   \centering
@@ -232,7 +232,6 @@ Op de behuizing kan een scherm uit een 3mm dikke plexiplaat geplaats worden. De 
 \end{figure}
 
 \subsection{Aansturing motor}
-\TODO{Keuze timers en verder aanvullen}
 De schijf draait rond met behulp van een brushless DC-motor uit een harde schijf.
 Om deze aan te sturen is een speciale ESC-module\footnote{ESC: Electronic Speed Control} nodig.
 
@@ -240,31 +239,32 @@ Deze modules zijn ontworpen voor gebruik in quadcopters en verwachten bijgevolg
 een speciale aansturing.
 Het nodige signaal is een vorm van PWM, met een frequentie van 50 of
 \SI{60}{\hertz}
-en een pulsbreedte tussen 1 en \SI{2}{\milli\second}.
+en een pulsbreedte tussen $1$ en \SI{2}{\milli\second}.
 De PWM-modules die ingebouwd zitten in de microcontroller kunnen niet opereren
 in deze frequenties en pulsbreedtelimieten,
 het protocol werd dus volledig in software geïmplementeerd.
 Zie figuur~\ref{fig:motorpwm} voor een beeld het geproduceerde signaal.
 
-Het PWM signaal wordt op pin D0 naar buiten gebracht. De software implementatie
+Het PWM signaal wordt op pin §D0§ naar buiten gebracht. De software implementatie
 van het PWM signaal is met Timer/Counter3 in Clear Timer on Compare Match (CTC)
-modus verwezenlijkt. In het register OCR3A wordt een waarde ingesteld, wanneer de Timer/Counter
-deze waarde bereikt wordt de counter op nul gezet en wordt de interrupt ‘TIMER3_COMPA_vect’
+modus verwezenlijkt. In het register OCR3A wordt een waarde ingesteld, wanneer de \texttt{Timer/Counter}
+deze waarde bereikt wordt de counter op nul gezet en wordt de interrupt §TIMER3_COMPA_vect§
 aangevraagd. Er wordt in de interrupt service routine een nieuwe waarde ingesteld
-in OCR3A en de output bit op pin D0 wordt geflipt.
+in §OCR3A§ en de output bit op pin §D0§ wordt geflipt. Deze counter werd gekozen
+vanwege zijn 16-bits resolutie.
 
 Om nul procent vermogen aan te sturen moet het signaal 1ms hoog zijn, om het
 maximale vermogen aan te sturen moet het signaal 2 ms hoog zijn. De Timer/Counter3
-heeft een frequentie van 2 MHz, dat is de I/O klok van 16 MHz verschaald met
-prescaler 8. Een cijfervoorbeeld van het PWM signaal dat overeenkomt met 0%
-motorvermogen is in tabel ~\ref{tbl:PWM} zichtbaar.
+heeft een frequentie van \SI{2}{\mega\hertz}, dat is de \texttt{I/O} klok van \SI{16}{\mega\hertz} verschaald met
+prescaler $8$. Een cijfervoorbeeld van het PWM signaal dat overeenkomt met \SI{0}{\percent}
+motorvermogen is in tabel~\ref{tbl:PWM} zichtbaar.
 
 \begin{table}
   \centering
   \begin{tabular}{r|SS}
-      & {Klokslagen} & {Tijd (\si{\milli\second})}\\
+    & {Klokslagen} & {Tijd (\si{\milli\second})}\\
     \hline
-    Hoge puls & 12870 & 1\\
+    Hoge puls & 2000 & 1\\
     Lage puls & 38000 & 19\\
     \hline
     Periode & 40000 & 20\\
@@ -308,7 +308,7 @@ De hoeksnelheidsmeting component uit figuur 1 levert de hoeksnelheid en een
 ijkpunt van de draaibeweging van de schijf. Als input krijgt de component een
 puls van een stationaire optische sensor die gemonteerd is langs de rand van de
 schijf. In de schijf zit een gaatje waardoor de optische sensor getriggerd wordt
-als dit gaatje doorheen de sensor passeert. (Figuur ~\ref{fig:sensor})
+als dit gaatje doorheen de sensor passeert. (Figuur~\ref{fig:sensor})
 
 \begin{figure}
   \centering
@@ -318,19 +318,19 @@ als dit gaatje doorheen de sensor passeert. (Figuur ~\ref{fig:sensor})
 \end{figure}
 
 De praktische realisatie berust op de Input Capture unit van Timer/Counter1.
-Dit vereist de alternate function van poort PD4, namelijk ICP1 of Timer/Counter1
-Input CaptureTrigger. Als een dalende of stijgende flank (dit is vrij te kiezen)
-geregistreerd wordt op pin ICP1 dan wordt de huidige waarde van timer/counter 1
-zo snel mogelijk gekopieerd in een register genaamd ICR1, waarna dat op zijn beurt
-kan bevraagd worden door de µC. Doordat een noise canceling optie aanstaat duurt
+Dit vereist de alternate function van poort §PD4§, namelijk §ICP1§ of Timer/Counter1
+Input Capture Trigger. Als een dalende of stijgende flank (dit is vrij te kiezen)
+geregistreerd wordt op pin §ICP1§ dan wordt de huidige waarde van Timer/Counter1
+zo snel mogelijk gekopieerd in een register genaamd §ICR1§, waarna dat op zijn beurt
+kan bevraagd worden door de microcontroller. Doordat een noise-canceling optie aanstaat duurt
 het kopiëren vier systeemklokpulsen langer, wat geen probleem levert voor de
-accuraatheid. 
+accuraatheid.
 
-De frequentie waarop Timer/Counter1 telt is 250GHz. Dit is de I/O klok van 16MHz
-verschaald met prescaler 64. 
+De frequentie waarop Timer/Counter1 telt is \SI{250}{\kilo\hertz}. Dit is de \texttt{I/O} klok van \SI{16}{\mega\hertz}
+verschaald met prescaler 64.
 
 De Input Capture unit heeft de mogelijkheid tot het genereren van een interrupt.
-Indien ingesteld, wordt zodra de waarde in ICR1 gekopieerd is, de interrupt
+Indien ingesteld, wordt zodra de waarde in §ICR1§ gekopieerd is, de interrupt
 aangevraagd. In de interrupt routine wordt eerst de opgevangen waarde gekopieerd
 en vervolgens wordt met de waarde de tijd die verstreken is sinds de vorige interrupt
 bepaald. De eenheid van deze waarde is nog arbitrair om de hoge resolutie te bewaren,
@@ -338,10 +338,10 @@ het is een verschaalde versie van het aantal increments.
 
 De Timer/Counter1 overflow interrupt wordt getriggerd wanneer de maximale waarde
 bereikt is en de telwaarde op nul wordt gezet. Elke keer dat de overflow vector
-getriggerd wordt moet het aantal increments met 216 verhoogd worden.
+getriggerd wordt moet het aantal increments met $216$ verhoogd worden.
 
-In tabel ~\ref{tbl:toerental} is een meting van het aantal increments te zien. Voor een hoeksnelheid van 19 toeren per seconde
-is het aantal increments 12870. Elke 65536 increments vind een overflow plaats.
+In tabel~\ref{tbl:toerental} is een meting van het aantal increments te zien. Voor een hoeksnelheid van 19 toeren per seconde
+is het aantal increments \num{12870}. Elke \num{65536} increments vind een overflow plaats.
 De verhoudingen tussen kloksnelheid en schijfsnelheid zijn dus goed gedimensioneerd.
 
 \begin{table}
@@ -357,7 +357,7 @@ De verhoudingen tussen kloksnelheid en schijfsnelheid zijn dus goed gedimensione
 
 \subsection{Joysticks}
 De beide joysticks zijn relatief eenvoudig om uit te lezen.
-Ze bestaan telkens uit vier \emph{NO} schakelaars, één per richting.
+Ze bestaan telkens uit vier NO schakelaars, één per richting.
 Aangezien elke joystick op een aparte \emph{port} van de microcontroller
 aangesloten is, kan met een simpele §NOT§ operatie en enkele bitshifts een
 consistente weergave gegenereerd worden, met 1 bit per richting die hoog is
@@ -373,22 +373,22 @@ De game engine werkt op een relatief eenvoudig principe.
 Op regelmatige basis wordt de functie §uint8_t tick(uint16_t time_since_zero)§
 opgeroepen, deze voert enkele stappen uit:
 \begin{enumerate}
-  \item \emph{Tick alle entities}\footnote{Entities zijn bijvoorbeeld kogels en
-        spelers}, entities hebben een §tick()§ functie,\\
-    bijvoorbeeld §player_tick(Player *p)§, die ervoor zorgt dat de entity zich
-    verplaatst volgens zijn snelheid en eventueel reageert op invoer.
+\item \emph{Tick alle entities}\footnote{Entities zijn bijvoorbeeld kogels en
+    spelers}, entities hebben een §tick()§ functie,\\
+  bijvoorbeeld §player_tick(Player *p)§, die ervoor zorgt dat de entity zich
+  verplaatst volgens zijn snelheid en eventueel reageert op invoer.
 
-  \item \emph{Controleer voor botsingen}, in deze stap wordt getest of er
-    kogels een schip geraakt hebben, en eventueel levens van deze speler worden
-    afgenomen.
+\item \emph{Controleer voor botsingen}, in deze stap wordt getest of er
+  kogels een schip geraakt hebben, en eventueel levens van deze speler worden
+  afgenomen.
 
-  \item \emph{Check voor het einde van het spel} door te controleren of beide
-    spelers nog in leven zijn. Dit bepaalt de returnwaarde van deze functie,
-    §true§ wanneer het spel moet verder gaan, anders §false§.
+\item \emph{Check voor het einde van het spel} door te controleren of beide
+  spelers nog in leven zijn. Dit bepaalt de returnwaarde van deze functie,
+  §true§ wanneer het spel moet verder gaan, anders §false§.
 \end{enumerate}
 
 Deze functie wordt aan \SI{30}{\hertz} opgeroepen, met behulp van
-\texttt{Timer/Counter0} in \emph{CTC} mode. De counter geeft dan een interrupt
+Timer/Counter0 in \emph{CTC} mode. De counter geeft dan een interrupt
 telkens een ingestelde waarde wordt bereikt en begint vervolgens weer vanaf nul
 te tellen. Voorlopig telt de counter tot \num{255}, indien mogelijk kan dit
 later verlaagd worden om het spel sneller te maken.
@@ -435,7 +435,7 @@ net zoals uitlezen van Joysticks en debugfunctionaliteit.
 
 Ontwerp en constructie van de behuizing is door Marieke.
 
-Scoutt was verantwoordelijk voor een deel van het bestand \texttt{Pins},
+Scoutt was verantwoordelijk voor een deel van het bestand \emph{Pins},
 dat bijhoudt welke pins op de microcontroller in gebruik zijn door welk systeem.
 Hij is ook verantwoordelijk voor commit
 \href{https://github.com/Epse/MCU_Project_PlanetFight/commit/142748a7c49a4552b92dfe5613a2f1f7b7a7eb75}{\texttt{142748a:}~\emph{Nuttelose
