@@ -7,12 +7,14 @@
 #define START_HEALTH 200
 #define BULLET_DAMAGE 10
 #define P_MOVEMENT_SPEED 1
+#define AUTO_DROP_DELAY 30
 
 typedef struct Player {
   uint8_t Id;
   Position Pos;
   int16_t Velocity;
   uint8_t Health;
+  uint16_t Lifetime;
 } Player;
 
 // Update the player,

@@ -10,12 +10,24 @@ Player player(uint8_t id) {
   if (err) {
     // TODO: Handle error
   }
-  Player player = {.Id = id, .Pos = p, .Velocity = 0, .Health = START_HEALTH};
+  Player player = {.Id = id, .Pos = p, .Velocity = 0,
+    .Health = START_HEALTH, .Lifetime = 0};
   return player;
 }
 
 void player_tick(Player *p) {
   uint8_t err = pos_adsub_radius(&(p->Pos), p->Velocity);
+  p->Lifetime++;
+
+  if (p->Lifetime % AUTO_DROP_DELAY == 0) {
+    // If already at the bottom, take health away
+    if (p->Pos.radius == 0) {
+      p->Health--;
+    } else {
+      err = pos_sub_radius(&(p->Pos), 1);
+    }
+  }
+
   if (err) {
     // TODO: Handle error
   }
@@ -23,8 +35,14 @@ void player_tick(Player *p) {
 
 void player_move(Player *p, char updown) {
   if (updown == 'U') {
+    if (p->Pos.radius == R_LIMIT) {
+      p->Health--; // If you are already at the top, die stupid bitch
+    }
     p->Velocity = P_MOVEMENT_SPEED;
   } else if (updown == 'D') {
+    if (p->Pos.radius == 0) {
+      p->Health--; // Verder naar beneden? lol ga maar mooi dood
+    }
     p->Velocity = -P_MOVEMENT_SPEED;
   } else {
     p->Velocity = 0;
