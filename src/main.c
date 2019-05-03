@@ -90,7 +90,7 @@ int main(void)
     }
 
     if (normal_run) {
-      //printStringToLCD("NORMAL", 0, 0);
+      printStringToLCD("NORMAL", 0, 0);
     } else {
       printStringToLCD("DEBUG", 0, 0);
     }

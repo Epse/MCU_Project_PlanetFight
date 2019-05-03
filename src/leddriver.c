@@ -6,7 +6,6 @@
 
 void bitbang(uint8_t data) {
   SPDR = data;
-  // SPIF = end of transmition flag, sets after shifting one byte
   while (!(SPSR & _BV(SPIF)))
     ;
 }
@@ -25,13 +24,11 @@ void write_led(struct Led led)
 
 void led_init()
 {
-  // Don't disable SPI for power reduction
-  PRR0 &= ~_BV(PRSPI);
   // Set clock and data to output
   DDRB |= _BV(PB2) | _BV(PB1);
-  // Enable SPI, Master and clock to /64 (32)// To ensure correct sampling of the clock signal, the frequency of the SPI clock should never exceed fosc/4
-  SPCR |= _BV(SPE) | _BV(MSTR) | _BV(SPR1)|_BV(DORD);
-  //SPSR |= _BV(SPI2X);
+  // Enable SPI, Master and clock to /64
+  SPCR = _BV(SPE) | _BV(MSTR);
+  SPSR |= _BV(SPI2X);
 }
 
 // LED's are driven by sending 32 0-bits, then a frame per LED in order

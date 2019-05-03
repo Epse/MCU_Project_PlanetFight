@@ -85,8 +85,6 @@ void appendIntToLCD(int i);
 */
 void printIntToLCD(int i, BYTE l, BYTE p);
 
-
-
 void appendUIntToLCD(uint16_t i);
 void printUIntToLCD(uint16_t i, BYTE l, BYTE p);
 
