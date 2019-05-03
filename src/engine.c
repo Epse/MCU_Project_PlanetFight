@@ -3,7 +3,6 @@
 Player playerZero;
 Player playerOne;
 Bullet bullets[MAX_BULLETS];
-GraphicsSettings set;
 
 uint8_t gameState; // 0 is not yet started, 1 is running, 2 is game over.
 
@@ -39,8 +38,6 @@ void render(uint16_t time) {
   for (uint8_t i = 2; i < count; i++) {
     sprites[i] = bullet_to_sprite(&(bullets[i]));
   }
-
-  set_earth_leds(playerHealthLed(&playerZero), playerHealthLed(&playerOne));
 
   draw(sprites, count, time, &set);
 }
@@ -89,9 +86,6 @@ void tick() {
 			end_screen(&playerZero, &playerOne);
 		}
 	}
-  if (set.rotationTime == 0) {
-    return; // Not initialized yet
-  }
   // Handle player inputs
   joy_tick();
   handle_input();
@@ -124,8 +118,6 @@ void engine_setup() {
   // Just basically init the players lol
   playerZero = player(0);
   playerOne = player(1);
-  GraphicsSettings s = {.rotationTime = 0, .delta = 5};
-  set = s;
 
   // Set up TC0 for ticking
   // in CTC mode, max value 255 (which gives 30Hz update rate)
@@ -135,10 +127,6 @@ void engine_setup() {
   OCR0A = 0xFF;
   TIMSK0 = _BV(OCIE0A);
 
-}
-
-void set_rotation_time(uint16_t time) {
-  set.rotationTime = time;
 }
 
 ISR(TIMER0_COMPA_vect) {

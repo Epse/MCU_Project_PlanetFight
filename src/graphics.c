@@ -1,8 +1,5 @@
 #include "graphics.h"
 
-Led *topEarth;
-Led *bottomEarth;
-
 uint8_t close_enough(uint16_t realAngle, uint16_t angle, GraphicsSettings *set) {
   if (realAngle > angle) {
     return realAngle - angle <= set->delta;
@@ -11,14 +8,10 @@ uint8_t close_enough(uint16_t realAngle, uint16_t angle, GraphicsSettings *set) 
   }
 }
 
-void set_earth_leds(Led top, Led bottom) {
-  topEarth = &top;
-  bottomEarth = &bottom;
-}
-
 // Mja dees is nie zo generiek
 // ma afhankelijk van de schijf
 // Jammer dan
+// FIXME: Update for new disc
 uint8_t radius_lookup(uint8_t index) {
   // Dit is voor als de schijf rechtsom draait
   uint8_t lut[16] = {
@@ -30,7 +23,7 @@ uint8_t radius_lookup(uint8_t index) {
 
 void draw(Sprite *objects, uint8_t count, uint16_t time, GraphicsSettings *set) {
   uint16_t angle = (time * A_LIMIT)/set->rotationTime;
-  uint8_t offset = A_LIMIT / (set->ledCount-2);
+  uint8_t offset = A_LIMIT / (set->ledCount);
   Led leds[set->ledCount];
 
   for (uint8_t i = 0; i < set->ledCount - 2; i++) {
@@ -44,7 +37,5 @@ void draw(Sprite *objects, uint8_t count, uint16_t time, GraphicsSettings *set) 
       }
     }
   }
-  leds[set->ledCount - 2] = *topEarth;
-  leds[set->ledCount - 1] = *bottomEarth;
   led_draw(set->ledCount, leds);
 }
