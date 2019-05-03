@@ -5,6 +5,15 @@ Player playerOne;
 Bullet bullets[MAX_BULLETS];
 GraphicsSettings set;
 
+uint8_t should_tick = 0;
+
+void maybe_tick() {
+	if (should_tick) {
+		should_tick = 0;
+		tick();
+	}
+}
+
 Led playerHealthLed(Player *p) {
   return led(20, 0, p->Health, 255-p->Health);
 }
@@ -130,5 +139,5 @@ void set_rotation_time(uint16_t time) {
 }
 
 ISR(TIMER0_COMPA_vect) {
-  tick();
+	should_tick = 1;
 }
