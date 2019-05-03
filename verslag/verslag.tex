@@ -44,9 +44,8 @@
 \newpage
 
 \section{Doelstellingen}
-Voor een nauwkeurige specificatie, zie tabel~\ref{tbl:specs}.
 Doel van deze opgave was het maken van een spel op een microcontroller,
-specifiek een \emph{Dwenguino}.
+specifiek een \emph{AT90USB646} op een \emph{Dwenguino} ontwikkelbord.
 Verdere doelen van het vak zijn het leren lezen en interpreteren van datasheets
 en werken met de taal \emph{C}.
 Er werd besloten om een multiplayer spel te maken,
@@ -69,29 +68,27 @@ Als invoer van de spelers werd gekozen voor arcade-joysticks.
 Deze bestaan uit vier microswitches per joystick.
 Er waren verder nog vele ideeën om het spel verder uit te breiden.
 
-\begin{table}
-  \centering
-  \begin{tabular}{l|c}
-    \hline
-    Parameter & Waarde\\
-    \hline
-    Ingangsspanning Microcontroller & \SI{5}{\volt}\\
-    Ingangsspanning ESC & \SI{12}{\volt}\\
-    Klokfrequentie & \SI{12}{\mega\hertz}\\
-    Aantal spelers & 2\\
-    Bediening & 2 Joysticks, 4 schakelaars elk\\
-    Minimale updatefrequentie & \SI{24}{\hertz}\\
-    Weergave & 13 LED's\\
-    \hline
-  \end{tabular}
-  \caption{Specificaties}
-  \label{tbl:specs}
-\end{table}
-
 \section{Praktische aanpak}
 De nodige functionaliteit werd opgedeeld in logische blokken die met elkaar
 communiceren en op elkaar vertrouwen voor informatie. De bekomen structuur is
 zichtbaar in figuur~\ref{fig:structuur}.
+Op deze figuur staat hardware in een ovaal en software in rechthoekjes.
+
+Het motorsysteem staat los van alles, en genereert op basis van interrupts het
+controlesignaal voor de hardwarematige motordriver, die de hardeschijfmotor
+aanstuurt.
+
+Een optische sensor genereert interrupts, die worden geïnterpreteerd tot
+timinginformatie over de draaischijf. Deze worden gebruikt door het
+\emph{graphics} systeem om de juiste LED's te laten oplichten. Dit systeem wordt
+constant vanuit een lus in §main()§ opgeroepen, en geeft door welke LED's moeten
+oplichten aan de \emph{leddriver}, die de feitelijke seriële data genereert en
+blokkerend doorstuurt naar de LED's.
+
+De gegevens voor het \emph{graphics} systeem worden gegenereerd door de
+\emph{engine}, die via een interrupt 30 keer per seconde alle objecten in het
+spel ververst en doorgeeft aan \emph{graphics}. Daarvoor worden gegevens over de
+joysticks synchroon uitgelezen door het \emph{joysticks} systeem.
 
 \begin{figure}
   \centering
@@ -110,7 +107,7 @@ dit werd gekozen op 16 om de aansturing werkbaar te houden.
 
 Met deze aanpak is het mogelijk om willekeurig de resolutie te kiezen
 waarmee de hoek wordt beschreven. Hoe groter deze resolutie,
-hoe meer pixels. Deze waarde werd gekozen op 1024.
+hoe meer pixels. Deze waarde werd gekozen op 1024.\todo{Waarom 1024?}
 
 \begin{figure}
   \centering
@@ -164,9 +161,11 @@ Hiervoor is het belangrijk te weten dat de microcontroller
 een werkfrequentie heeft van \SI{16}{\mega\hertz}
 en er maximaal 1 bit per 2 klokcycli kan verstuurd worden over SPI.
 Er zijn 16 LED's, dit geeft een maximale frequentie van \SI{15625}{\hertz}.
+In de praktijk zal deze limiet dus waarschijnlijk nooit een probleem leveren.
 
 \subsection{Timing LED's}
 \label{sec:ledtiming}
+\todo{Meer uitleg over leds}
 De juiste LED's moeten op correcte momenten aan en uit geschakeld worden
 om op de juiste plaats op de cirkel pixels op te laten lichten,
 en niet te lang zodat de pixels geen lijnen worden.
@@ -179,7 +178,7 @@ als de tijd sinds de schijf het nulpunt is gepasseerd als argumenten.
 Daaruit kan namelijk de hoek waaronder de schijf staat bepaald worden.
 
 \subsection{Fysieke constructie}
-
+\todo{Waarom vierkante pixels?}
 De fysieke constructie is een rechtstaand licht hellend display met voldoende
 ruimte voor de elektronica en bedrading. De gehele constructie werd ontworpen
 in het CAD-pakket Siemens NX 11 en voornamelijk uitgesneden op een lasercutter,
@@ -209,7 +208,7 @@ lang, de oranje lijnen zijn tonen de segmenten.
   \label{fig:duiding1316}
 \end{figure}
 
-De sensorhouder is een klein ge-3D-print \footnote{Dit is de correcte spelling volgens het Groene Boekje.} stuk dat de sensor op zijn plaats
+De sensorhouder is een klein ge-3D-print stuk dat de sensor op zijn plaats
 houdt. Dit is zichtbaar in figuur~\ref{fig:sensorhouder}.
 
 De behuizing is gemaakt uit 3mm dik MDF plaatmateriaal en is volledig demonteerbaar.
@@ -259,13 +258,15 @@ motorvermogen is in tabel~\ref{tbl:PWM} zichtbaar.
 
 \begin{table}
   \centering
-  \begin{tabular}{r|SS}
+  \begin{tabular}{rSS}
+    \hline
     & {Klokslagen} & {Tijd (\si{\milli\second})}\\
     \hline
     Hoge puls & 2000 & 1\\
     Lage puls & 38000 & 19\\
     \hline
     Periode & 40000 & 20\\
+    \hline
   \end{tabular}
   \caption{PWM generatie}
   \label{tbl:PWM}
@@ -290,7 +291,7 @@ zichtbaar in figuur~\ref{fig:motoresc}.
 \begin{figure}
   \centering
   \includegraphics[width=0.6\textwidth]{img/scoopesc.png}
-  \caption{Vermogenssignaal naar de motor}
+  \caption{Spanning naar de motor}
   \label{fig:motoresc}
 \end{figure}
 
@@ -345,9 +346,11 @@ De verhoudingen tussen kloksnelheid en schijfsnelheid zijn dus goed gedimensione
 \begin{table}
   \centering
   \begin{tabular}{SSS}
+    \hline
     {Tijd per increment (\si{\micro\second})} & {Aantal increments} & {Hoeksnelheid (toeren/s)}\\
     \hline
     4 & 12870 & 19.42502\\
+    \hline
   \end{tabular}
   \caption{Meting en berekening toerental}
   \label{tbl:toerental}
@@ -396,23 +399,6 @@ maximale waarde van $1024$.
 Apart daarvan wordt zo snel mogelijk de §render(uint8_t time_since_zero)§
 functie opgeroepen, die de LED's schakelt.
 
-\section{Problemen}
-\subsection{ESC}
-Na een eerste poging bleek dat de ESC de motor niet kon laten draaien.
-De motor gaf wat schokjes en de ESC produceerde niet de gewenste opstarttonen.
-Na de massakabel van de motor los te maken bleek alles correct te functioneren.
-Het is onbekend waarom dit een probleem gaf.
-
-\subsection{Light bleed}
-Soms lichtten er pixels vaag op die niet moesten oplichten,
-dit bleek te zijn doordat er soms twee gaten over dezelfde sector hingen, wat
-mogelijk was omdat de scheiding tussen sectoren bestaat uit dun, reflectief
-plastic.
-
-Er werd besloten om de verticale resolutie te verlagen, zodat de sectoren op de
-draaischijf groter worden, maar de sectoren met de LED's ongewijzigd te houden.
-Een andere optie zou zijn om de wanden tussen de sectoren dikker te maken.
-
 \section{Openstaande Problemen}
 Er is nog wat werk aan de fysieke constructie van de schijf en we twijfelen nog
 over het aantal sectoren. Een groot deel van de code, zoals de \emph{game
@@ -445,5 +431,26 @@ verdeeld via \emph{issues} op GitHub. Iedereen werkt aan een apart deel van de
 code of de hardware, die regelmatig samen worden gezet.
 
 \section{Conclusie en Toekomstig Werk}
+Voor de specificatie van het project, zie tabel~\ref{tbl:specs}.
+
+\begin{table}
+  \centering
+  \begin{tabular}{l|c}
+    \hline
+    Parameter & Waarde\\
+    \hline
+    Ingangsspanning Microcontroller & \SI{5}{\volt}\\
+    Ingangsspanning ESC & \SI{12}{\volt}\\
+    Aantal spelers & 2\\
+    Bediening & 2 Joysticks, 4 schakelaars elk\\
+    Minimale updatefrequentie & \SI{24}{\hertz}\\
+    Weergave & 15 LED's\\
+    Radiale resolutie & 13\\
+    Omtrekresolutie & 1024\\
+    \hline
+  \end{tabular}
+  \caption{Specificaties}
+  \label{tbl:specs}
+\end{table}
 
 \end{document}
