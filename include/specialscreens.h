@@ -10,6 +10,6 @@
 // Returns 1 when start condition is met
 uint8_t start_screen();
 
-void end_screen(Player playerZero, Player playerOne);
+void end_screen(Player *playerZero, Player *playerOne);
 
 #endif

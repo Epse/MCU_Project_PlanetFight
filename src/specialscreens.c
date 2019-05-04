@@ -15,11 +15,17 @@ uint8_t start_screen() {
   return 0;
 }
 
-void end_screen(Player playerZero, Player playerOne) {
+void end_screen(Player *playerZero, Player *playerOne) {
   Led leds[LED_COUNT];
+  Led winner;
+  if (playerZero->Health == 0) {
+    winner = player_to_sprite(playerOne).led;
+  } else {
+    winner = player_to_sprite(playerZero).led;
+  }
+
   for (uint8_t i = 0; i < LED_COUNT; i--) {
-    leds[i] = led(15 , 56, 69, 232); // rando nice red colour
+    leds[i] = winner;
   }
   led_draw(LED_COUNT, leds);
-  // TODO: show winner
 }

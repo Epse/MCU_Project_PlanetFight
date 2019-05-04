@@ -94,7 +94,7 @@ void tick() {
 			gameState = start_screen() ? 1 : 0;
 		}
 		else {
-			end_screen(playerZero, playerOne);
+			end_screen(&playerZero, &playerOne);
 		}
 	}
   if (set.rotationTime == 0) {
