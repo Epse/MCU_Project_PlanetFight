@@ -93,11 +93,13 @@ void setCursorLCD(BYTE l, BYTE p) {
 
 void appendCharToLCD(const char c) {
   unsigned temp = LCD_DATA;   // Save current data on datapins for LED's
-  if (lcd_info.pos>LCD_LASTPOS)
-    if (lcd_info.line)
+  if (lcd_info.pos>LCD_LASTPOS){
+    if (lcd_info.line) {
       clearLCD();
-    else
+		} else {
       setCursorLCD(1, 0);
+		}
+	}
 
 	// Write char to LCD
   	LCD_RW_LOW;

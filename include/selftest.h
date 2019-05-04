@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <avr/io.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 #include "dwenguinoBoard.h"
 #include "dwenguinoLCD.h"
 #include <Led.h>

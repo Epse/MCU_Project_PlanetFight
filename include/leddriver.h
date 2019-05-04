@@ -8,7 +8,7 @@
 
 void led_init();
 
-void led_draw(uint8_t count, struct Led *led);
+void led_draw(uint8_t count, Led *led);
 void led_clear(uint8_t count);
 
 #endif

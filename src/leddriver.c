@@ -10,7 +10,7 @@ void bitbang(uint8_t data) {
     ;
 }
 
-void write_led(struct Led led)
+void write_led(Led led)
 {
   // LED Frame structure:
   // 111IIIII BBBBBBBB GGGGGGGG RRRRRRRR with I intensity
@@ -33,7 +33,7 @@ void led_init()
 
 // LED's are driven by sending 32 0-bits, then a frame per LED in order
 // then 32 1-bits
-void led_draw(uint8_t count, struct Led *leds)
+void led_draw(uint8_t count, Led *leds)
 {
   // Apparently this doesn't need the init sequence wut
   for (uint8_t i = 0; i < 4; i++) {

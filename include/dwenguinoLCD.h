@@ -11,7 +11,7 @@
 
 #include "dwenguinoBoard.h"
 #include <avr/io.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 #include <stdlib.h>
 #include <stdint.h>
 

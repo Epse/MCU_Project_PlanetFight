@@ -59,7 +59,7 @@
 
 //	Include libraries
 #include <avr/io.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 
 #ifndef NO_LCD
 #include "dwenguinoLCD.h"
