@@ -103,11 +103,18 @@ Een schijf met gaten draait snel rond over LED's, verspreid in sectoren, zie fig
 Door de LED's op de gepaste momenten in en uit te schakelen
 kan een zeer hoge resolutie bekomen worden rond het middelpunt.
 In de radiale richting is de resolutie beperkt door het aantal LED's,
-dit werd gekozen op 16 om de aansturing werkbaar te houden.
+dit werd oorspronkelijk gekozen op 16 om de aansturing werkbaar te houden.
+Er bleek dat er, door de dunne wanden tussen sectoren, soms twee ``pixels''
+zich boven dezelfde sector bevonden en \emph{spookpixels} weergaven,
+dus is het aantal sectoren behouden op 16,
+maar werd besloten om in de radiale richting naar 13 pixels te gaan.
 
 Met deze aanpak is het mogelijk om willekeurig de resolutie te kiezen
 waarmee de hoek wordt beschreven. Hoe groter deze resolutie,
-hoe meer pixels. Deze waarde werd gekozen op 1024.\todo{Waarom 1024?}
+hoe meer pixels. Deze waarde werd gekozen op 1024, dit als een goede balans
+tussen nauwkeurigheid van het display en haalbaarheid. Hoe hoger deze resolutie,
+hoe sneller de LED's namelijk ververst moeten worden om te zorgen dat alle
+objecten weergegeven worden.
 
 \begin{figure}
   \centering
@@ -168,14 +175,26 @@ In de praktijk zal deze limiet dus waarschijnlijk nooit een probleem leveren.
 \todo{Meer uitleg over leds}
 De juiste LED's moeten op correcte momenten aan en uit geschakeld worden
 om op de juiste plaats op de cirkel pixels op te laten lichten,
-en niet te lang zodat de pixels geen lijnen worden.
+en niet te lang zodat de pixels geen lijnen worden en alle mogelijke hoeken
+bereikt worden.
 
-Daartoe wordt voor elk weer te geven object in een snelle lus gecontroleerd of het
-weer kan gegeven worden. Op de vergelijking van de hoek zit er een lichte marge,
-zodat elk element zeker wordt weergegeven, ook al wordt het scherm niet snel
-genoeg opnieuw getekend. Daartoe krijgt de functie zowel de tijd voor één volledige rotatie,
-als de tijd sinds de schijf het nulpunt is gepasseerd als argumenten.
-Daaruit kan namelijk de hoek waaronder de schijf staat bepaald worden.
+Het \emph{graphics} systeem wordt daartoe zo snel mogelijk na elkaar opgeroepen
+in een lus in §main()§. In deze §render()§ functie, wordt voor elke
+\emph{entity} (bv. spelers, kogels, \dots) gecontroleerd of deze zich momenteel
+onder een gaatje in de schijf bevindt, en onder welk gat. Als dit zo is, wordt
+dit object omgezet in LED-informatie en krijgt de juiste LED deze waarden
+toegekend. De §Led§ struct die daarvoor wordt gebruikt bevat informatie over de
+algemene helderheid en hoeveelheid blauw, groen en rood.
+
+De controle of een object weergegeven kan worden is niet exact, er zit een
+lichte marge op de hoek om te voorkomen dat een tijdelijke vertraging in de code
+objecten laat verdwijnen. Op de straal is er geen zulke marge, aangezien deze
+slechts een klein aantal vaste waarden kan aannemen. Het \emph{graphics}-systeem
+heeft de hoek waaronder de schijf staat nodig om deze controle uit te kunnen
+voeren. Het systeem rekent dit zelf uit, gebaseerd op de tijd die nodig is voor
+één volledige rotatie van de schijf, en de tijd sinds de schijf laatst het
+nulpunt is gepasseerd. Deze waarden krijgt het uit de code die informatie
+verzamelt uit de optische sensor.
 
 \subsection{Fysieke constructie}
 \todo{Waarom vierkante pixels?}
@@ -370,12 +389,17 @@ Enkele gemaksfuncties werden toegevoegd om uit deze bitweergave te bepalen of
 een gekozen richting actief is.
 
 \subsection{Game engine}
+Intern wordt alles dat moet weergegeven worden, voorgesteld door een
+\emph{entity}, dit zijn bijvoorbeeld kogels en spelers. Een \emph{entity} bevat
+telkens informatie over de positie, in poolcoördinaten, en LED-informatie. De
+meeste \emph{entities} bevatten ook extra informatie die intern nodig is, zoals
+de levenskracht van een speler.
+
 De game engine werkt op een relatief eenvoudig principe.
 Op regelmatige basis wordt de functie §uint8_t tick(uint16_t time_since_zero)§
 opgeroepen, deze voert enkele stappen uit:
 \begin{enumerate}
-\item \emph{Tick alle entities}\footnote{Entities zijn bijvoorbeeld kogels en
-    spelers}, entities hebben een §tick()§ functie,\\
+\item \emph{Tick alle entities}, entities hebben een §tick()§ functie,\\
   bijvoorbeeld §player_tick(Player *p)§, die ervoor zorgt dat de entity zich
   verplaatst volgens zijn snelheid en eventueel reageert op invoer.
 
@@ -396,8 +420,15 @@ later verlaagd worden om het spel sneller te maken.
 De 8-bits resolutie is meer dan genoeg om een vrij
 groot bereik van mogelijke frequenties te bereiken met de prescaler op de
 maximale waarde van $1024$.
-Apart daarvan wordt zo snel mogelijk de §render(uint8_t time_since_zero)§
-functie opgeroepen, die de LED's schakelt.
+
+Alle kogels die op een moment in het spel zijn, worden weergegeven in een array
+met vaste grootte, momenteel is dit de willekeurig gekozen waarde 20. Wanneer
+er dus al 20 kogels in het spel zijn en een speler probeert te schieten, zal de
+oudste kogel verwijderd worden, en vervangen door een nieuwe. Om te voorkomen
+dat kogels te lang blijven rondvliegen, hebben ze een maximale levensduur,
+wanneer deze op nul komt, verdwijnt de kogel. Uiteindelijk willen we kogels
+langzaam laten donkerder worden wanneer ze deze limiet bereiken. Ze zakken apart
+daarvan langzaamaan naar beneden.
 
 \section{Openstaande Problemen}
 Er is nog wat werk aan de fysieke constructie van de schijf en we twijfelen nog
@@ -409,6 +440,8 @@ zo wordt er nog geen melding gegeven wanneer een speler sterft en kan het spel
 niet herstart worden zonder de microcontroller te resetten.
 Het spel begint ook van zodra de controller opstart, in plaats van wanneer de
 spelers klaar zijn. Dit is geen wenselijke werking.
+
+\todo{openstaande problemen uitbreiden}
 
 \section{Taakverdeling en Samenwerking}
 De motordriver werd geschreven door Marieke. Zij schreef ook de code die voor de
@@ -432,6 +465,9 @@ code of de hardware, die regelmatig samen worden gezet.
 
 \section{Conclusie en Toekomstig Werk}
 Voor de specificatie van het project, zie tabel~\ref{tbl:specs}.
+Dit project is bijzonder ambitieus, zeker voor een team bestaande uit twee
+personen.
+\todo{Alle ``voor als we tijd over hebben'' dingen opschrijven.}
 
 \begin{table}
   \centering
