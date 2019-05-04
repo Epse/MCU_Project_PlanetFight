@@ -9,6 +9,7 @@ uint8_t start_screen() {
 
   joy_tick();
   if (joystick_is_up(joystick_status(0)) && joystick_is_up(joystick_status(1))) {
+    led_clear(LED_COUNT);
     return 1;
   }
   return 0;
