@@ -15,10 +15,6 @@ void maybe_tick() {
 	}
 }
 
-static inline Led playerHealthLed(Player *p) {
-  return led(20, 0, p->Health, 255-p->Health);
-}
-
 void render(uint16_t time) {
 	if (gameState != 1 ) {
 		return; // The other game states do their own simple rendering in tick()
