@@ -13,7 +13,5 @@ void set_up_graphics();
 // Ledarray, length 16;
 Led* get_leds();
 
-// time is time since last full rotation
 void draw(Sprite *objects, uint8_t count);
-
 #endif
