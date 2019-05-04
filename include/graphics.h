@@ -6,9 +6,10 @@
 #include "leddriver.h"
 #include "basics.h"
 
+#define LED_COUNT 16
+
 typedef struct GraphicsSettings {
   uint16_t rotationTime; // Time between zero points
-  uint8_t ledCount;
   uint16_t delta; // How exact do we have to match an angle
 } GraphicsSettings;
 

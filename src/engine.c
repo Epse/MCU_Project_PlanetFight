@@ -91,14 +91,14 @@ void handle_input() {
 void tick() {
 	if (gameState != 1) {
 		if (gameState == 0) {
-			start_screen();
+			gameState = start_screen() ? 1 : 0;
 		}
 		else {
-			end_screen();
+			end_screen(playerZero, playerOne);
 		}
 	}
   if (set.rotationTime == 0) {
-    return 1; // Not initialized yet
+    return; // Not initialized yet
   }
   // Handle player inputs
   joy_tick();
