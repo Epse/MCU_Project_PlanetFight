@@ -5,6 +5,8 @@ Player playerOne;
 Bullet bullets[MAX_BULLETS];
 GraphicsSettings set;
 
+uint8_t gameState; // 0 is not yet started, 1 is running, 2 is game over.
+
 uint8_t should_tick = 0;
 
 void maybe_tick() {
@@ -19,6 +21,9 @@ Led playerHealthLed(Player *p) {
 }
 
 void render(uint16_t time) {
+	if (gameState != 1 ) {
+		return; // The other game states do their own simple rendering in tick()
+	}
   // Count visible bullets
   // I know I now have to iterate over the bullets twice..
   // I'm sorry for my sins
@@ -83,9 +88,17 @@ void handle_input() {
   }
 }
 
-uint8_t tick() {
+void tick() {
+	if (gameState != 1) {
+		if (gameState == 0) {
+			gameState = start_screen() ? 1 : 0;
+		}
+		else {
+			end_screen(&playerZero, &playerOne);
+		}
+	}
   if (set.rotationTime == 0) {
-    return 1; // Not initialized yet
+    return; // Not initialized yet
   }
   // Handle player inputs
   joy_tick();
@@ -111,17 +124,15 @@ uint8_t tick() {
   }
   // Check for game end
   if (playerZero.Health == 0 || playerOne.Health == 0) {
-    // TODO: Handle game end
-    return 0;
+		gameState++;
   }
-  return 1;
 }
 
 void engine_setup() {
   // Just basically init the players lol
   playerZero = player(0);
   playerOne = player(1);
-  GraphicsSettings s = {.rotationTime = 0, .ledCount = 18, .delta = 5};
+  GraphicsSettings s = {.rotationTime = 0, .delta = 5};
   set = s;
 
   // Set up TC0 for ticking

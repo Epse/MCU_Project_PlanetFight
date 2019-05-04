@@ -9,10 +9,11 @@
 #include "player.h"
 #include "bullet.h"
 #include "graphics.h"
+#include "specialscreens.h"
 
 #define MAX_BULLETS 20
 
-uint8_t tick();
+void tick();
 // Might tick, might not.
 // Ticks if required
 void maybe_tick();
