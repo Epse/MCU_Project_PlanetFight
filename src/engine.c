@@ -14,10 +14,6 @@ void maybe_tick() {
 	}
 }
 
-Led playerHealthLed(Player *p) {
-  return led(20, 0, p->Health, 255-p->Health);
-}
-
 void render(uint16_t time) {
   // Count visible bullets
   // I know I now have to iterate over the bullets twice..
@@ -34,8 +30,6 @@ void render(uint16_t time) {
   for (uint8_t i = 2; i < count; i++) {
     sprites[i] = bullet_to_sprite(&(bullets[i]));
   }
-
-  set_earth_leds(playerHealthLed(&playerZero), playerHealthLed(&playerOne));
 
   draw(sprites, count, time, &set);
 }
