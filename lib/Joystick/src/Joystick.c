@@ -13,17 +13,18 @@ void joy_init() {
 }
 
 void readOne() {
-  uint8_t stat = (~PINE) & 0b11110000;
-  stat = stat >> 4;
+  // All these casts are to force 8-bit operations
+  uint8_t stat = (uint8_t)(~PINE) & (uint8_t)0b11110000;
+  stat = (uint8_t) stat >> 4;
   // Silly thing to detect the difference
-  risenOne = (statJoyOne ^ stat) & stat;
+  risenOne = ((uint8_t)statJoyOne ^ (uint8_t)stat) & (uint8_t)stat;
   statJoyOne = (JoyStatus) stat;
 }
 
 void readTwo() {
-  uint8_t stat = ~PIND;
-  stat &= 0b00001111;
-  risenTwo = (statJoyTwo ^ stat) & stat;
+  uint8_t stat = (uint8_t)~PIND;
+  stat &= (uint8_t)0b00001111;
+  risenTwo = ((uint8_t)statJoyTwo ^ stat) & (uint8_t)stat;
   statJoyTwo = (JoyStatus) stat;
 }
 
@@ -53,17 +54,17 @@ JoyStatus joystick_status(uint8_t id) {
 }
 
 uint8_t joystick_is_up(JoyStatus s) {
-  return s &= _BV(3);
+  return s &= (uint8_t)_BV(3);
 }
 
 uint8_t joystick_is_down(JoyStatus s) {
-  return s &= _BV(1);
+  return s &= (uint8_t)_BV(1);
 }
 
 uint8_t joystick_is_left(JoyStatus s) {
-  return s &= _BV(0);
+  return s &= (uint8_t)_BV(0);
 }
 
 uint8_t joystick_is_right(JoyStatus s) {
-  return s &= _BV(2);
+  return s &= (uint8_t)_BV(2);
 }
