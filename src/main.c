@@ -13,7 +13,7 @@
 #include "dwenguinoBoard.h"
 #include "dwenguinoLCD.h"
 #include "snelheidssensor.h"
-#include "Motordriver.h"
+#include "motordriver.h"
 
 #ifdef DEBUG
 #include "selftest.h"

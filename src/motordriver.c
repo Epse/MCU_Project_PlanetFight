@@ -3,7 +3,7 @@
 #include <util/delay.h>
 #include "dwenguinoBoard.h"
 #include "dwenguinoLCD.h"
-#include "Motordriver.h"
+#include "motordriver.h"
 
 // Globale variabelen
 unsigned int hoog_glb = 3000;
