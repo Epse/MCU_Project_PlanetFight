@@ -56,36 +56,28 @@ static void add_bullet(Bullet b) {
   // Maybe eventually we might want to add a way of dumping the oldest bullet
 }
 
-// TODO: clean up
+static inline void input_dispatch(Player *player, uint8_t index) {
+	JoyStatus s = joystick_status(index);
+
+  if (joystick_is_up(s)) {
+    player_move(player, 'U');
+  } else if (joystick_is_down(s)) {
+    player_move(player, 'D');
+  } else {
+    player_move(player, 'N');
+  }
+
+	s = joystick_risen(index);
+  if (joystick_is_right(s)) {
+    add_bullet(bullet_shot(player->Pos, 'R'));
+  } else if (joystick_is_right(s)) {
+    add_bullet(bullet_shot(player->Pos, 'L'));
+  }
+}
+
 static inline void handle_input() {
-  JoyStatus zero = joystick_status(0);
-  JoyStatus one = joystick_status(1);
-  if (joystick_is_up(zero)) {
-    player_move(&playerZero, 'U');
-  } else if (joystick_is_down(zero)) {
-    player_move(&playerOne, 'D');
-  } else {
-    player_move(&playerOne, 'N');
-  }
-  if (joystick_is_up(zero)) {
-    player_move(&playerZero, 'U');
-  } else if (joystick_is_down(zero)) {
-    player_move(&playerOne, 'D');
-  } else {
-    player_move(&playerOne, 'N');
-  }
-  zero = joystick_risen(0);
-  one = joystick_risen(1);
-  if (joystick_is_right(zero)) {
-    add_bullet(bullet_shot(playerZero.Pos, 'R'));
-  } else if (joystick_is_right(zero)) {
-    add_bullet(bullet_shot(playerZero.Pos, 'L'));
-  }
-  if (joystick_is_right(one)) {
-    add_bullet(bullet_shot(playerOne.Pos, 'R'));
-  } else if (joystick_is_right(one)) {
-    add_bullet(bullet_shot(playerOne.Pos, 'L'));
-  }
+	input_dispatch(&playerZero, 0);
+	input_dispatch(&playerOne, 1);
 }
 
 void tick() {
