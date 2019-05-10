@@ -55,7 +55,7 @@ void set_up_motordriver()
 
 
 //vb hoog = 3000 & laag = 37000 > 1.5ms hoog 18.5ms laag
-void pwm_signaal_overrule(int hoog, int laag){
+static void pwm_signaal_overrule(int hoog, int laag){
   if (bool_h_l == 1) {
     OCR3A = hoog;
     PORTD|= _BV(DDD0);
@@ -70,7 +70,7 @@ void pwm_signaal_overrule(int hoog, int laag){
 }
 
 // neemt globale hoog_glb en laag_glb binnen
-void pwm_signaal(){
+static inline void pwm_signaal(){
   if (bool_h_l == 1) {
     OCR3A = hoog_glb;//hoog_glb;
     PORTD|= _BV(DDD0);
