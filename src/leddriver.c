@@ -4,13 +4,13 @@
 // LED_DTA_PIN: PB2
 // LED_PORT: PORTB
 
-void bitbang(uint8_t data) {
+static inline void bitbang(uint8_t data) {
   SPDR = data;
   while (!(SPSR & _BV(SPIF)))
     ;
 }
 
-void write_led(Led led)
+static inline void write_led(Led led)
 {
   // LED Frame structure:
   // 111IIIII BBBBBBBB GGGGGGGG RRRRRRRR with I intensity

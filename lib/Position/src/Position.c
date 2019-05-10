@@ -1,6 +1,6 @@
 #include "Position.h"
 
-uint8_t validate_pos(Position *a) {
+static uint8_t validate_pos(Position *a) {
   if (a->radius > R_LIMIT) {
     return INVALID_R;
   }
@@ -32,7 +32,7 @@ uint8_t pos(Position *dest, uint16_t angle, uint8_t radius) {
 
 // Helper function to add radia together,
 // clamps them to the correct limit
-uint8_t add_radius(uint8_t a, uint8_t b) {
+static inline uint8_t add_radius(uint8_t a, uint8_t b) {
   a += b;
   if (a > R_LIMIT) {
     return R_LIMIT;
@@ -41,7 +41,7 @@ uint8_t add_radius(uint8_t a, uint8_t b) {
 }
 
 // Subtract radia, clamping to 0
-uint8_t sub_radius(uint8_t a, uint8_t b) {
+static inline uint8_t sub_radius(uint8_t a, uint8_t b) {
   if (b > a) {
     return 0;
   }
@@ -74,12 +74,12 @@ uint8_t pos_sub_radius(Position *p, uint8_t r) {
   return 0;
 }
 
-uint16_t add_angle(uint16_t a, uint16_t b) {
+static inline uint16_t add_angle(uint16_t a, uint16_t b) {
   a += b;
   return a % (A_LIMIT + 1);
 }
 
-uint16_t sub_angle(uint16_t a, uint16_t b) {
+static inline uint16_t sub_angle(uint16_t a, uint16_t b) {
   if (b > a) {
     return 0;
   }
@@ -133,6 +133,6 @@ uint8_t pos_adsub_radius(Position *p, int16_t r) {
 }
 
 // Equality test
-uint8_t pos_equal(Position *a, Position *b) {
+inline uint8_t pos_equal(Position *a, Position *b) {
   return a->angle == b->angle && a->radius == b->radius;
 }

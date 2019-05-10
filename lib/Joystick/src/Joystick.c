@@ -12,7 +12,7 @@ void joy_init() {
   PORTE |= 0b11110000;
 }
 
-void readOne() {
+static inline void readOne() {
   // All these casts are to force 8-bit operations
   uint8_t stat = (uint8_t)(~PINE) & (uint8_t)0b11110000;
   stat = (uint8_t) stat >> 4;
@@ -21,7 +21,7 @@ void readOne() {
   statJoyOne = (JoyStatus) stat;
 }
 
-void readTwo() {
+static inline void readTwo() {
   uint8_t stat = (uint8_t)~PIND;
   stat &= (uint8_t)0b00001111;
   risenTwo = ((uint8_t)statJoyTwo ^ stat) & (uint8_t)stat;

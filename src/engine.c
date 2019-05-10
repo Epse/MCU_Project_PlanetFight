@@ -16,7 +16,7 @@ void maybe_tick() {
 	}
 }
 
-Led playerHealthLed(Player *p) {
+static inline Led playerHealthLed(Player *p) {
   return led(20, 0, p->Health, 255-p->Health);
 }
 
@@ -45,7 +45,7 @@ void render(uint16_t time) {
   draw(sprites, count, time, &set);
 }
 
-void add_bullet(Bullet b) {
+static void add_bullet(Bullet b) {
   for (uint8_t i = MAX_BULLETS; i > 0; i--) {
     if (bullets[i].Lifetime == 0) {
       bullets[i] = b;
@@ -57,7 +57,7 @@ void add_bullet(Bullet b) {
 }
 
 // TODO: clean up
-void handle_input() {
+static inline void handle_input() {
   JoyStatus zero = joystick_status(0);
   JoyStatus one = joystick_status(1);
   if (joystick_is_up(zero)) {
