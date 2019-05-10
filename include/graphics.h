@@ -24,6 +24,4 @@ GraphicsSettings graphics_settings();
 // time is time since last full rotation
 void draw(Sprite *objects, uint8_t count, uint16_t time, GraphicsSettings *set);
 
-void set_earth_leds(Led topEarth, Led bottomEarth);
-
 #endif
