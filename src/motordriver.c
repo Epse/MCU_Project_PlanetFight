@@ -5,6 +5,8 @@
 #include "dwenguinoLCD.h"
 #include "motordriver.h"
 
+// PinD0
+
 // Globale variabelen
 unsigned int hoog_glb = 3000;
 unsigned int laag_glb = 37000;

@@ -40,8 +40,8 @@ void led_draw(uint8_t count, Led *leds)
     bitbang(0);
   }
 
-  for (uint8_t i = 0; i < count; i++) {
-    write_led(leds[i]);
+  for (int i = 0; i < count; i++) {
+    write_led(led[i]);
   }
 
   for (uint8_t i = 0; i < count; i++) {
@@ -49,13 +49,17 @@ void led_draw(uint8_t count, Led *leds)
   }
 }
 
+void write_zero_led() {
+  bitbang(0b11100000);
+  bitbang(0);
+  bitbang(0);
+  bitbang(0);
+}
+
 void led_clear(uint8_t count)
 {
   for (; count > 0; count--) {
-    bitbang(0b11100000);
-    bitbang(0);
-    bitbang(0);
-    bitbang(0);
+    write_zero_led();
   }
 
   for (uint8_t i = 0; i < 4; i++) {

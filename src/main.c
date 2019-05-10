@@ -32,6 +32,8 @@ static inline void setup()
   clearLCD();
   backlightOn();
   engine_setup();
+  set_up_graphics();
+  set_up_snelheidssensor();
 
   // Set the Center button to Input
   DDRC &= ~_BV(PC7);
@@ -49,11 +51,13 @@ static inline void setup()
   }
   #endif
 
+
+
   // Start motor ed.
-  set_up_snelheidssensor();
   set_up_motordriver();
   _delay_ms(15010);//wacht 15 seconden -- opstartprocedure schijf
   rotatie_snelheid(30); // 30 procent van de snelheid
+  clearLCD();
 }
 
 int main(void)
@@ -62,12 +66,11 @@ int main(void)
   #ifdef DEBUG
   uint8_t center_pressed_for = 0;
   #endif
+
+
   while (1)
   {
     clearLCD();
-
-    //set_rotation_time(<sth>);
-    //render(<time_since_zero>)
 
     #ifdef DEBUG
     // If the center button is pressed..
@@ -98,6 +101,6 @@ int main(void)
 	// Tick if required to do so
 	maybe_tick();
     // Remove this when render works
-    _delay_ms(50);
+    refresh_graphics();
   }
 }

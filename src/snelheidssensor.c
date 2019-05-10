@@ -1,50 +1,14 @@
-/*#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
-#include "dwenguinoBoard.h"
-#include "dwenguinoLCD.h"
-#include "snelheidssensor.h"
-
-//#include <stdint.h>
-
-//#include <Position.h>
-#include "basics.h"
-
-#include "leddriver.h"*/
-
-#include <stdint.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-#include <Position.h>
-#include "basics.h"
-#include "graphics.h"
-#include "engine.h"
-#include "leddriver.h"
-#include <Joystick.h>
 #include "dwenguinoBoard.h"
 #include "dwenguinoLCD.h"
 #include "snelheidssensor.h"
-#include "Motordriver.h"
-
-
-
 
 //Pin ICP1 : PD4
 
-unsigned int last_value = 0;
-unsigned int new_value = 0;
-Led leds[3];//led(100,50,0,0);
-
 void set_up_snelheidssensor()
 {
-  int b = 255;
-  int g = 255;
-  int r = 0;
-  for (int i = 0; i < sizeof(leds); i++) {
-    leds[i] = led(255,b,g,r);
-  }
-
   initBoard();
   initLCD();
   clearLCD();
@@ -66,10 +30,6 @@ TCCR1B |= _BV(ICNC1)|_BV(ICES1);
 // not disable TCNT1
 PRR0 &= ~_BV(PRTIM1);
 
-// ledjes op output
-DDRA = 0b11111111;
-PORTA = 0b00010000;
-
 //port PD4 (ICP1) op Input met pullup
 DDRD &= ~_BV(DDD4);
 PORTD |= _BV(PORTD4);
@@ -77,34 +37,64 @@ PORTD |= _BV(PORTD4);
 
 //Overflowvlag
 TIMSK1 |= _BV(TOIE1);
+
+TIMSK1 |= _BV(OCIE1A);
+TIMSK1 |= _BV(OCIE1B);
 }
 
+uint16_t ijkpunt = 0;
+uint16_t old_ijkpunt = 0;
+uint16_t time_span; // bereken volgende rotation_time
+uint16_t rotation_time; // rare eenheid
+uint8_t new_round_flag = 0;
 
+// tijd sinds ijkpunt
+uint16_t get_time()
+{
+  int TCNT_value = TCNT1 >> 3;
+  int time;
+  if ( TCNT_value > ijkpunt) {
+    time = TCNT_value - ijkpunt;
+  } else {
+    time = 8192; //2^16 >> 3
+    time += TCNT_value;
+    time -= ijkpunt;
+  }
+  return time;
+}
 
-long rotationTimeX; // rare eenheid
-long rotationTimeMs; // miliseconden
-// DEZE INTERRUPT IS IJKINGSPUNT VOOR COMPONENT DIE LEDJES AANSTUURT
+uint16_t get_rotation_time()
+{
+  return rotation_time;
+}
+
+//boolean, om nieuwe berekeningen te doen
+uint8_t new_round()
+{
+    if (new_round_flag) {
+      return 1;
+      new_round_flag = 0;
+    }
+    else{
+      return 0;
+    }
+}
+
+// ijkingspunt voor graphics
 ISR(TIMER1_CAPT_vect){
-  new_value = ICR1;
-  //PORTA = 0b11111111;
-  rotationTimeX += new_value/10 - last_value/10;
-  //rotationTimeMs = rotationTimeX * 0.04;
-  //clearLCD();
-  //printUIntToLCD(rotationTimeX, 0, 10);
-  last_value = new_value;
-  rotationTimeX = 0;
-  //led_draw(3, leds);
-  //_delay_us(20);
-  //led_clear(3);
+  // bitshift to fit in integer
+  ijkpunt = ICR1 >> 3;
+  if (ijkpunt != 0) {
+    time_span += ijkpunt;// - old_ijkpunt;
+    //old_ijkpunt = ijkpunt;
+    rotation_time = time_span;
+    time_span = 0;
+    TCNT1 = 0;
+    new_round_flag = 1;
+  }
+  new_round_flag = 1;
 }
-
 
 ISR(TIMER1_OVF_vect){
-  //PORTA ^= 0b11111111;
-  rotationTimeX += 6554; // 2^16/10
+  time_span += 8192; //2^16 >> 3
 }
-
-
-/*ISR(TIMER1_COMPA_vect ){
-  //PORTA ^= 0b11111111;
-}*/
