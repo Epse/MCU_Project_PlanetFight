@@ -121,7 +121,7 @@ void engine_setup() {
   // Just basically init the players lol
   playerZero = player(0);
   playerOne = player(1);
-  GraphicsSettings s = {.rotationTime = 0, .ledCount = 16, .delta = 5};
+  GraphicsSettings s = {.rotationTime = 0, .ledCount = 16};
   set = s;
 
   // Set up TC0 for ticking
