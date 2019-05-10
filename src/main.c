@@ -21,7 +21,7 @@
 uint8_t normal_run = 0xFF;
 #endif
 
-void setup()
+static inline void setup()
 {
   // global enable interrupt
   SREG |= _BV(7);
