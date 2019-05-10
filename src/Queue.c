@@ -2,12 +2,12 @@
 #include "stddef.h"
 
 Queue_item queue_item(){
-  Queue_item queue_item = { .index = 0, .led = NULL, .timing = 0 };
+  Queue_item queue_item = { .index = 0, .timing = 0 };
   return queue_item;
 }
 
 Queue queue(){
-  Queue queue = { .front = -1, .data = NULL, .count = 0 };
+  Queue queue = { .front = -1, .count = 0 };
   return queue;
 }
 
