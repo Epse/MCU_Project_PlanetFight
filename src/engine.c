@@ -35,7 +35,7 @@ void render(uint16_t time) {
     sprites[i] = bullet_to_sprite(&(bullets[i]));
   }
 
-  draw(sprites, count, time, &set);
+  draw(sprites, count);
 }
 
 static void add_bullet(Bullet b) {
