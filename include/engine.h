@@ -11,7 +11,7 @@
 #include "graphics.h"
 #include "specialscreens.h"
 
-#define MAX_BULLETS 20
+#define MAX_BULLETS 5
 
 void tick();
 // Might tick, might not.
