@@ -3,7 +3,6 @@
 Player playerZero;
 Player playerOne;
 Bullet bullets[MAX_BULLETS];
-GraphicsSettings set;
 
 uint8_t should_tick = 0;
 
@@ -31,7 +30,7 @@ void render(uint16_t time) {
     sprites[i] = bullet_to_sprite(&(bullets[i]));
   }
 
-  draw(sprites, count, time, &set);
+  draw(sprites, count);
 }
 
 void add_bullet(Bullet b) {
@@ -78,9 +77,6 @@ void handle_input() {
 }
 
 uint8_t tick() {
-  if (set.rotationTime == 0) {
-    return 1; // Not initialized yet
-  }
   // Handle player inputs
   joy_tick();
   handle_input();
@@ -126,10 +122,6 @@ void engine_setup() {
   OCR0A = 0xFF;
   TIMSK0 = _BV(OCIE0A);
 
-}
-
-void set_rotation_time(uint16_t time) {
-  set.rotationTime = time;
 }
 
 ISR(TIMER0_COMPA_vect) {

@@ -23,8 +23,6 @@ void render(uint16_t time_since_zero);
 
 void engine_setup();
 
-void set_rotation_time(uint16_t time);
-
 void maybe_tick();
 
 #endif
