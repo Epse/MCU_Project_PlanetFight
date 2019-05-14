@@ -1,13 +1,13 @@
 #include "Queue.h"
-#include "stddef.h"
+
 
 Queue_item queue_item(){
-  Queue_item queue_item = { .index = 0, .led = NULL, .timing = 0 };
+  Queue_item queue_item = { .index = 0, .timing = 0 };
   return queue_item;
 }
 
 Queue queue(){
-  Queue queue = { .front = -1, .data = NULL, .count = 0 };
+  Queue queue = { .front = -1, .count = 0 };
   return queue;
 }
 
@@ -28,23 +28,40 @@ Queue_item next(Queue *queue){
 
 void sort(Queue *queue){
   if (queue->count > 1) {
-  Queue_item swap;
-    for (int i = 0; i < queue->count; ++i)
+    Queue_item swap;
+    for (int i = 0; i < queue->count; ++i){
+      for (int j = i + 1; j < queue->count; ++j)
+      {
+        if (queue->data[i].timing < queue->data[j].timing)
         {
-            for (int j = i + 1; j < queue->count; ++j)
-            {
-                if (queue->data[i].timing < queue->data[j].timing)
-                {
-                    swap = queue->data[i];
-                    queue->data[i] = queue->data[j];
-                    queue->data[j] = swap;
-                }
-            }
+            swap = queue->data[i];
+            queue->data[i] = queue->data[j];
+            queue->data[j] = swap;
         }
+      }
     }
+  }
 }
 
 uint16_t next_timing(Queue queue){
   uint8_t current_index = queue.front;
   return queue.data[current_index].timing;
+}
+
+//int queue
+Queue_int queue_int(){
+  Queue_int queue_int = { .front = -1, .count = 0 };
+  return queue_int;
+}
+
+uint16_t dequeue_int(Queue_int *queue){
+  uint16_t integer = queue->data[queue->front];
+  queue->front--;
+  queue->count--;
+  return integer;
+}
+void enqueue_int(Queue_int *queue, uint16_t integer){
+  queue->front++;
+  queue->data[queue->front] = integer;
+  queue->count++;
 }

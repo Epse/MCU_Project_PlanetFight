@@ -56,10 +56,10 @@ void setup()
 
   // Start motor ed.
 
-  // set_up_motordriver();
-  // _delay_ms(15010);//wacht 15 seconden -- opstartprocedure schijf
-  // rotatie_snelheid(30); // 30 procent van de snelheid
-  // clearLCD();
+  set_up_motordriver();
+  _delay_ms(15010);//wacht 15 seconden -- opstartprocedure schijf
+  rotatie_snelheid(28); // 30 procent van de snelheid
+  clearLCD();
 }
 
 int main(void)
@@ -82,6 +82,7 @@ int main(void)
   //GraphicsSettings set = graphics_settings(300);
   Sprite sprite1 = sprite(position_p1, led_p1);
 
+  led_draw(1,&led_p1);
 
   while (1)
   {
@@ -122,6 +123,7 @@ int main(void)
     // Remove this when render works
     //draw(&sprite1, 0, 0, &set);
     refresh_graphics();
+    //_delay_ms(100);
     //testcode Graphics
     //printUIntToLCD(get_rotation_time(), 0, 5);
     //printUIntToLCD(get_time(), 1, 5);

@@ -3,152 +3,154 @@
 #include "snelheidssensor.h"
 #include "Queue.h"
 
-// 360 deg = 32768 (2^15)
+// 360 deg = 3600 (2^15)
 
 Led leds[16];
 
 // Queue voor ledjes die aan moeten
 Queue queue_on;
-Queue queue_off;
 
-//returns zero led
-Led off_led(){
-  return led(0, 0, 0, 0);
+// array voor indexen die uit moeten
+Queue_int queue_int_off;
+
+// Opzoektabel, afwijking graden tov ijkpunt in functie van straal_1
+uint16_t straal_1_afwijking[12] = { 0, 554, 1108, 1662, 2215, 2769, 277, 831, 1385, 1938, 2492, 3046};
+
+// Bepaal index led ahv aantal graden
+uint16_t get_segment(uint16_t degrees){
+  return degrees/225;
 }
 
+//returns zero led
+Led off_led;
+
+
 void set_up_graphics() {
-  // enable interrupt comparematch A and B
+
+
+  // globale uit-led
+  off_led = led(0, 0, 0, 0);
 
   for (int i = 0; i < sizeof(leds); i++) {
-    leds[i] = off_led();
+    leds[i] = off_led;
   }
 
   OCR1A = 1000;
   OCR1B = OCR1A + 100;
 
   queue_on = queue();
-  queue_off = queue();
 
   //temp hardcoded values
   Queue_item Q_item1 = queue_item();
-  Queue_item Q_item1_off = queue_item();
+  Queue_item Q_item2 = queue_item();
 
   Q_item1.led = led(30, 255, 255, 0);
   Q_item1.index = 5;
   Q_item1.timing = 89;
 
-  Q_item1_off.led = led(0, 0, 0, 0);
-  Q_item1_off.index = 5;
-  Q_item1_off.timing = 289;
+  Q_item2.led = led(30, 255, 0, 255);
+  Q_item2.index = 5;
+  Q_item2.timing = 1000;
 
   enqueue(&queue_on, Q_item1);
-  enqueue(&queue_off, Q_item1_off);
+  enqueue(&queue_on, Q_item2);
 }
 
 Led* get_leds(){
   return leds;
 }
 
-
-
-// GraphicsSettings graphics_settings(uint16_t ledCount)
-// {
-//   GraphicsSettings graphics_settings = {.rotationTime = get_rotation_time(), .ledCount = 16};
-//   return graphics_settings;
-// }
-
-// uint8_t close_enough(uint16_t realAngle, uint16_t angle, GraphicsSettings *set) {
-//   uint16_t x;
-//   if (realAngle > angle) {
-//     x = realAngle - angle;
-//     return  x <= set->delta;
-//   } else {
-//     x = angle - realAngle;
-//     return  x<= set->delta;
-//   }
-// }
-
-uint16_t calc_real_angle(GraphicsSettings *set){
+uint16_t calc_real_angle_1(GraphicsSettings *set){
   float time = (float)get_time();
   float part = get_time()/(float)set->rotationTime;
   return (uint16_t)(32768 * part);
 }
 
+uint16_t get_timing(uint16_t angle_1, uint8_t straal_1){
+  // compensatie plaats sensor 188
+  angle_1 = angle_1 > 240? angle_1 - 240 : angle_1 + 3600 - 240;
+
+  // compensatie plaats gaatje
+  uint16_t afwijking = straal_1_afwijking[straal_1];
+  angle_1 = afwijking < angle_1? angle_1 - afwijking : angle_1 + 3600 - afwijking;
+
+  float prct = (float)angle_1/ 3600;
+  return (int)(prct * get_rotation_time());
+}
+
 uint8_t nextA_flag = 0;
 uint8_t nextB_flag = 0;
 
+
+int straal_1 = 1;
+int straal_2 = 2;
+uint16_t angle_1 = 225;
+uint16_t angle_2 = 225;
+uint8_t activity_signalled = 0;
+int inactivity_counter = 5;
 void refresh_graphics() {
-  // calculate timing
-  // if (nextA_flag) {
-  //   OCR1A = next_timing(queue_on);
-  //   printUIntToLCD(OCR1A,0,0);
-  //   nextA_flag = 0;
-  // }
-  // if (nextB_flag) {
-  //   OCR1B = next_timing(queue_off);
-  //       printUIntToLCD(OCR1B,1,0);
-  //   nextB_flag = 0;
-  // }
-
+  //
   if (new_round()) {
+    angle_1+= 30;
+    angle_2+=30;
+    if(angle_1 >= 3600){
+      angle_1 = 0;
+      straal_1++;
+      if (straal_1 == 11) {
+        straal_1 = 1;
+      }
+    }
+    if(angle_2 >= 3600){
+      angle_2 = 0;
+      straal_2++;
+      if (straal_2 == 11) {
+        straal_2 = 1;
+      }
+    }
 
 
-    uint32_t angle = 200 * 1000;
-    uint32_t prct = angle/3600;
-    uint16_t timing = (uint16_t)(prct * (uint32_t)get_rotation_time()/1000);
-    // float angle = (float)200;
-    // float prct = angle/3600;
-    // uint16_t timing = (int)(prct * get_rotation_time());
 
-    printStringToLCD("hoi",1,0);
-    printIntToLCD(timing,0,0);
+    uint16_t timing_1 = get_timing(angle_1, straal_1);
+    uint16_t timing_2 = get_timing(angle_2, straal_2);
 
-    queue_on.data[0].timing = timing;
-    queue_off.data[0].timing = timing + 100;
+    queue_on.data[0].timing = timing_1;
+    //queue_off.data[0].timing_1 = timing_1 + 100;
+    queue_on.data[0].index = get_segment(angle_1);
+    //queue_off.data[0].index = get_segment(angle_1);
+    queue_on.data[1].timing = timing_2;
+    queue_on.data[1].index = get_segment(angle_2);
+
+    sort(&queue_on);
+
+    if (activity_signalled) {
+      activity_signalled = 0;
+    } else {
+      inactivity_counter--;
+      if (inactivity_counter == 0) {
+        inactivity_counter = 5;
+        led_clear(16);
+        nextA_flag = 1;
+        nextB_flag = 1;
+      }
+    }
+
+
   }
-    led_draw(16, leds);
+  led_draw(16, leds);
 
+  if (nextA_flag) {
+    uint16_t next = next_timing(queue_on);
+    OCR1A = next;
+    nextA_flag = 0;
+  }
 
-    if (nextA_flag) {
-      uint16_t next = next_timing(queue_on);
-      OCR1A = next;
-      nextA_flag = 0;
-      printIntToLCD(next,0,5);
-
-    }
-    if (nextB_flag) {
-      uint16_t next = next_timing(queue_off);
-      OCR1B = next;
-      nextB_flag = 0;
-      printIntToLCD(next,1,5);
-    }
-
+  // if (nextB_flag) {
+  //   uint16_t next = next_timing_1(queue_off);
+  //   OCR1B = next;
+  //   nextB_flag = 0;
+  //   activity_signalled = 1;
+  // }
 }
-
-// void draw(Sprite *objects, uint8_t count, uint16_t time, GraphicsSettings *set) {
-//
-//   // correct setting rotationtime
-//   set->rotationTime = get_rotation_time();
-//
-//   // check if sprite in angle range
-//   uint16_t real_angle = calc_real_angle(set);
-//   Position *position = &objects->pos;
-//
-//   //printIntToLCD(close_enough(real_angle, position->angle, set),0,0);
-//
-//   if (close_enough(real_angle, position->angle, set)) {
-//
-//
-//     led_draw(4, &objects->led);
-//   }
-//   else{
-//
-//
-//     led_clear(16);
-//   }
-// }
-
-
 
 
 ISR(TIMER1_COMPA_vect){
@@ -156,13 +158,23 @@ ISR(TIMER1_COMPA_vect){
     Queue_item item = next(&queue_on);
     leds[item.index] = item.led;
     nextA_flag = 1;
+    // led uit binnen 100 slagen
+    OCR1B = OCR1A + 100;
+    enqueue_int(&queue_int_off, item.index);
   }
 }
 
 ISR(TIMER1_COMPB_vect){
-  if (!nextB_flag) {
-  Queue_item item = next(&queue_off);
-    leds[item.index] = item.led;
-    nextB_flag = 1;
+
+  while (queue_int_off.count > 0) {
+    uint16_t index = dequeue_int(&queue_int_off);
+    leds[index] = off_led;
   }
+
+
+  // if (!nextB_flag) {
+  // Queue_item item = next(&queue_off);
+  //   leds[item.index] = item.led;
+  //   nextB_flag = 1;
+  // }
 }
