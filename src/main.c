@@ -56,7 +56,7 @@ static inline void setup()
   // Start motor ed.
   set_up_motordriver();
   _delay_ms(15010);//wacht 15 seconden -- opstartprocedure schijf
-  rotatie_snelheid(30); // 30 procent van de snelheid
+  rotatie_snelheid(28); // 30 procent van de snelheid
   clearLCD();
 }
 
@@ -67,6 +67,7 @@ int main(void)
   uint8_t center_pressed_for = 0;
   #endif
 
+  led_draw(1,&led_p1);
 
   while (1)
   {
@@ -102,5 +103,4 @@ int main(void)
 	maybe_tick();
     // Remove this when render works
     refresh_graphics();
-  }
 }

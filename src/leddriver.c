@@ -6,8 +6,7 @@
 
 static inline void bitbang(uint8_t data) {
   SPDR = data;
-  while (!(SPSR & _BV(SPIF)))
-    ;
+  while (!(SPSR & _BV(SPIF)));
 }
 
 static inline void write_led(Led led)
@@ -43,7 +42,6 @@ void led_draw(uint8_t count, Led *leds)
   for (int i = 0; i < count; i++) {
     write_led(led[i]);
   }
-
   for (uint8_t i = 0; i < count; i++) {
     bitbang(0);
   }

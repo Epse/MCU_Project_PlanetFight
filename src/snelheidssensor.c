@@ -42,11 +42,11 @@ TIMSK1 |= _BV(OCIE1A);
 TIMSK1 |= _BV(OCIE1B);
 }
 
-uint16_t ijkpunt = 0;
-uint16_t old_ijkpunt = 0;
-uint16_t time_span; // bereken volgende rotation_time
-uint16_t rotation_time; // rare eenheid
-uint8_t new_round_flag = 0;
+volatile uint16_t ijkpunt = 0;
+volatile uint16_t old_ijkpunt = 0;
+volatile uint16_t time_span; // bereken volgende rotation_time
+volatile uint16_t rotation_time; // rare eenheid
+volatile uint8_t new_round_flag = 0;
 
 // tijd sinds ijkpunt
 uint16_t get_time()
@@ -56,7 +56,7 @@ uint16_t get_time()
   if ( TCNT_value > ijkpunt) {
     time = TCNT_value - ijkpunt;
   } else {
-    time = 8192; //2^16 >> 3
+    time = 16384; //2^16 >> 3
     time += TCNT_value;
     time -= ijkpunt;
   }
@@ -65,25 +65,34 @@ uint16_t get_time()
 
 uint16_t get_rotation_time()
 {
-  return rotation_time;
+  return rotation_time << 2;
 }
 
+
+int round_count = 0;
 //boolean, om nieuwe berekeningen te doen
 uint8_t new_round()
 {
-    if (new_round_flag) {
+  if (new_round_flag != 0) {
+    new_round_flag = 0;
+    round_count++;
+    if (round_count >= 1) {
+      round_count = 0;
       return 1;
-      new_round_flag = 0;
     }
-    else{
+    else {
       return 0;
     }
+  }
+  else{
+    return 0;
+  }
 }
 
 // ijkingspunt voor graphics
 ISR(TIMER1_CAPT_vect){
   // bitshift to fit in integer
-  ijkpunt = ICR1 >> 3;
+  ijkpunt = ICR1 >> 2;
   if (ijkpunt != 0) {
     time_span += ijkpunt;// - old_ijkpunt;
     //old_ijkpunt = ijkpunt;
@@ -92,9 +101,8 @@ ISR(TIMER1_CAPT_vect){
     TCNT1 = 0;
     new_round_flag = 1;
   }
-  new_round_flag = 1;
 }
 
 ISR(TIMER1_OVF_vect){
-  time_span += 8192; //2^16 >> 3
+  time_span += 16384; //2^16 >> 2
 }
