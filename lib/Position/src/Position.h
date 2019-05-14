@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#define R_LIMIT 15
-#define A_LIMIT 1023
+#define R_LIMIT 11
+#define A_LIMIT 3599
 
 // Error codes
 #define INVALID_R 1

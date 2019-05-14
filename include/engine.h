@@ -10,7 +10,7 @@
 #include "bullet.h"
 #include "graphics.h"
 
-#define MAX_BULLETS 20
+#define MAX_BULLETS 5
 
 uint8_t tick();
 // Might tick, might not.
