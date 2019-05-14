@@ -132,7 +132,15 @@ uint8_t pos_adsub_radius(Position *p, int16_t r) {
   return 0;
 }
 
+inline uint8_t angle_close(uint16_t a, uint16_t b) {
+  if (a > b) {
+    return (a - b) <= A_DELTA;
+  } else {
+    return (b - a) <= A_DELTA;
+  }
+}
+
 // Equality test
 inline uint8_t pos_equal(Position *a, Position *b) {
-  return a->angle == b->angle && a->radius == b->radius;
+  return angle_close(a->angle, b->angle) && a->radius == b->radius;
 }
