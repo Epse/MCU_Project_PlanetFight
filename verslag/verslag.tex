@@ -396,8 +396,15 @@ meeste \emph{entities} bevatten ook extra informatie die intern nodig is, zoals
 de levenskracht van een speler.
 
 De game engine werkt op een relatief eenvoudig principe.
-Op regelmatige basis wordt de functie §uint8_t tick(uint16_t time_since_zero)§
-opgeroepen, deze voert enkele stappen uit:
+Op regelmatige basis wordt de functie §uint8_t tick()§
+opgeroepen. Dit gebeurt door continu een functie §maybe_tick()§ op te roepen,
+die controleert of een variabele aan staat, en een tick uitvoert indien dit zo
+is. Deze \emph{flag} wordt aangezet door een interrupt die 30 keer per seconde
+activeert, met behulp van Timer/Counter0 in CTC mode. Met de telwaarde van $255$
+en prescaler van $1024$ wordt ongeveer \SI{30}{\hertz} bekomen. Indien mogelijk
+kan dit versneld worden. De 8 bits zijn hiervoor meer dan voldoende.
+
+In een \emph{tick} gebeurt het volgende:
 \begin{enumerate}
 \item \emph{Tick alle entities}, entities hebben een §tick()§ functie,\\
   bijvoorbeeld §player_tick(Player *p)§, die ervoor zorgt dat de entity zich
@@ -412,19 +419,10 @@ opgeroepen, deze voert enkele stappen uit:
   §true§ wanneer het spel moet verder gaan, anders §false§.
 \end{enumerate}
 
-Deze functie wordt aan \SI{30}{\hertz} opgeroepen, met behulp van
-Timer/Counter0 in \emph{CTC} mode. De counter geeft dan een interrupt
-telkens een ingestelde waarde wordt bereikt en begint vervolgens weer vanaf nul
-te tellen. Voorlopig telt de counter tot \num{255}, indien mogelijk kan dit
-later verlaagd worden om het spel sneller te maken.
-De 8-bits resolutie is meer dan genoeg om een vrij
-groot bereik van mogelijke frequenties te bereiken met de prescaler op de
-maximale waarde van $1024$.
-
 Alle kogels die op een moment in het spel zijn, worden weergegeven in een array
 met vaste grootte, momenteel is dit de willekeurig gekozen waarde 20. Wanneer
-er dus al 20 kogels in het spel zijn en een speler probeert te schieten, zal de
-oudste kogel verwijderd worden, en vervangen door een nieuwe. Om te voorkomen
+er dus al 20 kogels in het spel zijn en een speler probeert te schieten, zal er
+niks gebeuren. Om te voorkomen
 dat kogels te lang blijven rondvliegen, hebben ze een maximale levensduur,
 wanneer deze op nul komt, verdwijnt de kogel. Uiteindelijk willen we kogels
 langzaam laten donkerder worden wanneer ze deze limiet bereiken. Ze zakken apart
@@ -445,9 +443,10 @@ spelers klaar zijn. Dit is geen wenselijke werking.
 
 \section{Taakverdeling en Samenwerking}
 De motordriver werd geschreven door Marieke. Zij schreef ook de code die voor de
-juiste timing zorgt en de optische sensor uitleest en ontwierp en bouwde de behuizingen.
+juiste timing zorgt en de optische sensor uitleest en ontwierp en bouwde de
+behuizingen. Na de aanpassing van de schijf, herschreef zij het \emph{graphics}-systeem.
 
-De game engine en aansturing van LED's werd gedaan door Stef,
+De game engine werd gedaan door Stef,
 net zoals uitlezen van joysticks en debugfunctionaliteit.
 
 De structuur en layout van het verslag is door Stef, de inhoud werd verdeeld
