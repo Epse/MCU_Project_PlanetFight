@@ -123,130 +123,6 @@ objecten weergegeven worden.
   \label{fig:schijf}
 \end{figure}
 
-\subsection{Aansturing LED's}
-De gebruikte LED's zijn ledstrips van het type \texttt{APA102}.
-Deze kunnen vrij eenvoudig via SPI data ontvangen.
-Elke LED krijgt een pakket bestaande uit 32 bits, zie
-figuur~\ref{fig:ledpakket}.
-Deze data moet byte per byte en bit per bit verzonden worden over één datalijn,
-met een kloksignaal.
-
-De ledstrip luistert naar nieuwe commando's na een startpakket
-bestaande uit 32 0-bits. Vervolgens moet,
-zoals zichtbaar op figuur~\ref{fig:ledcontrol},
-een pakket per LED verstuurd worden gevolgd door
-nogmaals 32 bits om te zorgen dat alle data ver genoeg doorgeschoven is.
-De waarde van deze bits is onbelangrijk,
-maar 0 is handig om te voorkomen dat er een LED op volle helderheid wit licht
-geeft wanneer er niet naar elke LED gegevens worden gestuurd.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.6\textwidth]{img/ledpakket.png}
-  \caption{Schema van een led-pakket}
-  \label{fig:ledpakket}
-\end{figure}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.8\textwidth]{img/ledcontrol.png}
-  \caption{Schema van het aansturen van een ledstrip}
-  \label{fig:ledcontrol}
-\end{figure}
-
-Er zijn twee mogelijke manieren om meerdere bytes te versturen over SPI,
-via een blokkerende §while§-lus en via een interrupt.
-Het is echter ook mogelijk om een interrupt te ontvangen wanneer een byte is
-verzonden,
-om vervolgens een volgende byte te verzenden. Op die manier kan CPU-tijd
-uitgespaard worden, maar dit blijkt zeer lastig foutloos te implementeren.
-Het spel gebruikt bijgevolg voorlopig nog de \emph{blocking} aanpak.
-
-Het is handig om te weten wat de maximale frequentie is waarmee alle LED's
-kunnen aangestuurd worden.
-Hiervoor is het belangrijk te weten dat de microcontroller
-een werkfrequentie heeft van \SI{16}{\mega\hertz}
-en er maximaal 1 bit per 2 klokcycli kan verstuurd worden over SPI.
-Er zijn 16 LED's, dit geeft een maximale frequentie van \SI{15625}{\hertz}.
-In de praktijk zal deze limiet dus waarschijnlijk nooit een probleem leveren.
-
-\subsection{Timing LED's}
-\label{sec:ledtiming}
-\todo{Meer uitleg over leds}
-De juiste LED's moeten op correcte momenten aan en uit geschakeld worden
-om op de juiste plaats op de cirkel pixels op te laten lichten,
-en niet te lang zodat de pixels geen lijnen worden en alle mogelijke hoeken
-bereikt worden.
-
-Het \emph{graphics} systeem wordt daartoe zo snel mogelijk na elkaar opgeroepen
-in een lus in §main()§. In deze §render()§ functie, wordt voor elke
-\emph{entity} (bv. spelers, kogels, \dots) gecontroleerd of deze zich momenteel
-onder een gaatje in de schijf bevindt, en onder welk gat. Als dit zo is, wordt
-dit object omgezet in LED-informatie en krijgt de juiste LED deze waarden
-toegekend. De §Led§ struct die daarvoor wordt gebruikt bevat informatie over de
-algemene helderheid en hoeveelheid blauw, groen en rood.
-
-De controle of een object weergegeven kan worden is niet exact, er zit een
-lichte marge op de hoek om te voorkomen dat een tijdelijke vertraging in de code
-objecten laat verdwijnen. Op de straal is er geen zulke marge, aangezien deze
-slechts een klein aantal vaste waarden kan aannemen. Het \emph{graphics}-systeem
-heeft de hoek waaronder de schijf staat nodig om deze controle uit te kunnen
-voeren. Het systeem rekent dit zelf uit, gebaseerd op de tijd die nodig is voor
-één volledige rotatie van de schijf, en de tijd sinds de schijf laatst het
-nulpunt is gepasseerd. Deze waarden krijgt het uit de code die informatie
-verzamelt uit de optische sensor.
-
-\subsection{Fysieke constructie}
-\todo{Waarom vierkante pixels?}
-De fysieke constructie is een rechtstaand licht hellend display met voldoende
-ruimte voor de elektronica en bedrading. De gehele constructie werd ontworpen
-in het CAD-pakket Siemens NX 11 en voornamelijk uitgesneden op een lasercutter,
-op een paar uitzonderingen na.
-
-De draaischijf is op de lasercutter gemaakt en bestaat uit \SI{2}{\milli\meter} dikke zwarte ABS.
-De schijf bevat 13 gaatjes, goed voor een straalresolutie van 13 pixels. De pixels
-zijn gerangschikt in twee spiralen opdat buren veraf van elkaar zouden liggen. Zo
-wordt de lichtvervuiling in een aangrenzend segmenten minimaal benadrukt door
-zover mogelijk verwijderd te zijn van een sprite.
-
-De segmenten zijn met een breekmes op een snijplank gemaakt uit een wit PVC vel.
-Er zijn 16 segmenten en elk segment heeft één led die gemonteerd is op een wand
-van de behuizing grenzend aan de cirkel. Het wit plastic zorgt voor een goede
-diffusie van het licht van de ledjes.
-
-Dat het aantal segmenten en gaten niet gelijk is aan elkaar komt doordat geen
-twee gaten zich tegelijkertijd in hetzelfde segment mogen bevinden. Waarom bij
-16 segmenten voor 13 gaten gekozen is wordt duidelijk gemaakt in figuur~\ref{fig:duiding1316}. De
-rood aangeduide stukjes staan ter hoogte van het binnenste gaatje en zijn even
-lang, de oranje lijnen zijn tonen de segmenten.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.6\textwidth]{img/16vs13.jpg}
-  \caption{Duiding 16 segmenten 13 gaten}
-  \label{fig:duiding1316}
-\end{figure}
-
-De sensorhouder is een klein ge-3D-print stuk dat de sensor op zijn plaats
-houdt. Dit is zichtbaar in figuur~\ref{fig:sensorhouder}.
-
-De behuizing is gemaakt uit 3mm dik MDF plaatmateriaal en is volledig demonteerbaar.
-Op de behuizing kan een scherm uit een 3mm dikke plexiplaat geplaats worden. De plaat is te zien in figuur~\ref{fig:plexiplaat}.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.6\textwidth]{img/SensorHouder.jpg}
-  \caption{ge-3D-printe sensorhouder}
-  \label{fig:sensorhouder}
-\end{figure}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.6\textwidth]{img/PlexiPlaat.jpg}
-  \caption{Plexi scherm}
-  \label{fig:plexiplaat}
-\end{figure}
-
 \subsection{Aansturing motor}
 De schijf draait rond met behulp van een brushless DC-motor uit een harde schijf.
 Om deze aan te sturen is een speciale ESC-module\footnote{ESC: Electronic Speed Control} nodig.
@@ -375,18 +251,67 @@ De verhoudingen tussen kloksnelheid en schijfsnelheid zijn dus goed gedimensione
   \label{tbl:toerental}
 \end{table}
 
-\subsection{Joysticks}
-De beide joysticks zijn relatief eenvoudig om uit te lezen.
-Ze bestaan telkens uit vier NO schakelaars, één per richting.
-Aangezien elke joystick op een aparte \emph{port} van de microcontroller
-aangesloten is, kan met een simpele §NOT§ operatie en enkele bitshifts een
-consistente weergave gegenereerd worden, met 1 bit per richting die hoog is
-wanneer de schakelaar actief is. Hiertoe moeten ook de pullups geactiveerd
-worden. De driver voor de joysticks controleert ook welke schakelaars sinds de
-laatste tick actief zijn geworden, en slaat deze apart op.
 
-Enkele gemaksfuncties werden toegevoegd om uit deze bitweergave te bepalen of
-een gekozen richting actief is.
+\subsection{Aansturing LED's}
+De gebruikte LED's zijn ledstrips van het type \texttt{APA102}.
+Deze kunnen vrij eenvoudig via SPI data ontvangen.
+Elke LED krijgt een pakket bestaande uit 32 bits, zie
+figuur~\ref{fig:ledpakket}.
+Deze data moet byte per byte en bit per bit verzonden worden over één datalijn,
+met een kloksignaal.
+
+De ledstrip luistert naar nieuwe commando's na een startpakket
+bestaande uit 32 0-bits. Vervolgens moet,
+zoals zichtbaar op figuur~\ref{fig:ledcontrol},
+een pakket per LED verstuurd worden gevolgd door
+nogmaals 32 bits om te zorgen dat alle data ver genoeg doorgeschoven is.
+De waarde van deze bits is onbelangrijk,
+maar 0 is handig om te voorkomen dat er een LED op volle helderheid wit licht
+geeft wanneer er niet naar elke LED gegevens worden gestuurd.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/ledpakket.png}
+  \caption{Schema van een led-pakket}
+  \label{fig:ledpakket}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/ledcontrol.png}
+  \caption{Schema van het aansturen van een ledstrip}
+  \label{fig:ledcontrol}
+\end{figure}
+
+Er zijn twee mogelijke manieren om meerdere bytes te versturen over SPI,
+via een blokkerende §while§-lus en via een interrupt.
+Het is echter ook mogelijk om een interrupt te ontvangen wanneer een byte is
+verzonden,
+om vervolgens een volgende byte te verzenden. Op die manier kan CPU-tijd
+uitgespaard worden, maar dit blijkt zeer lastig foutloos te implementeren.
+Het spel gebruikt bijgevolg voorlopig nog de \emph{blocking} aanpak.
+
+Het is handig om te weten wat de maximale frequentie is waarmee alle LED's
+kunnen aangestuurd worden.
+Hiervoor is het belangrijk te weten dat de microcontroller
+een werkfrequentie heeft van \SI{16}{\mega\hertz}
+en er maximaal 1 bit per 2 klokcycli kan verstuurd worden over SPI.
+Er zijn 16 LED's, dit geeft een maximale frequentie van \SI{15625}{\hertz}.
+In de praktijk zal deze limiet dus waarschijnlijk nooit een probleem leveren.
+
+Dit systeem wordt aangestuurd door het volgende, het \emph{graphics} systeem.
+
+\subsection{Timing LED's}
+\label{sec:ledtiming}
+\todo{Meer uitleg over leds}
+De juiste LED's moeten op correcte momenten aan en uit geschakeld worden
+om op de juiste plaats op de cirkel pixels op te laten lichten,
+en niet te lang zodat de pixels geen lijnen worden en alle mogelijke hoeken
+bereikt worden. De \emph{game engine} geeft aan dit systeem door welke kleuren
+op welke posities moeten komen, met behulp van een \emph{sprite}, dat bestaat
+uit RGB-informatie en een positie.
+
+HIER AAN TE VULLEN evt met verwijzing naar volgende
 
 \subsection{Game engine}
 Intern wordt alles dat moet weergegeven worden, voorgesteld door een
@@ -428,16 +353,88 @@ wanneer deze op nul komt, verdwijnt de kogel. Uiteindelijk willen we kogels
 langzaam laten donkerder worden wanneer ze deze limiet bereiken. Ze zakken apart
 daarvan langzaamaan naar beneden.
 
+\subsubsection{Start- en eindschermen}
+De game engine is ook verantwoordelijk voor het tonen van een opstart- en
+eindscherm. Het startscherm is een eenvoudig groen scherm dat het
+graphicssysteem omzeilt. Waneer beide joysticks omhoog geduwd worden, start het
+spel.
+
+Wanneer een speler wint, krijgt het hele scherm de kleur van deze speler. Om te
+herstarten, moet de microcontroller herstart worden. De game engine houdt
+daarvoor bij in welke fase het spel zich bevindt.
+
+\subsection{Joysticks}
+De \emph{game engine} moet weten in welke posities de joysticks staan,
+deze zijn relatief eenvoudig om uit te lezen.
+Ze bestaan telkens uit vier NO schakelaars, één per richting.
+Aangezien elke joystick op een aparte \emph{port} van de microcontroller
+aangesloten is, kan met een simpele §NOT§ operatie en enkele bitshifts een
+consistente weergave gegenereerd worden, met 1 bit per richting die hoog is
+wanneer de schakelaar actief is. Hiertoe moeten ook de pullups geactiveerd
+worden. De driver voor de joysticks controleert ook welke schakelaars sinds de
+laatste tick actief zijn geworden, en slaat deze apart op.
+
+Enkele gemaksfuncties werden toegevoegd om uit deze bitweergave te bepalen of
+een gekozen richting actief is.
+
+\subsection{Fysieke constructie}
+\todo{Waarom vierkante pixels?}
+De fysieke constructie is een rechtstaand licht hellend display met voldoende
+ruimte voor de elektronica en bedrading. De gehele constructie werd ontworpen
+in het CAD-pakket Siemens NX 11 en voornamelijk uitgesneden op een lasercutter,
+op een paar uitzonderingen na.
+
+De draaischijf is op de lasercutter gemaakt en bestaat uit \SI{2}{\milli\meter} dikke zwarte ABS.
+De schijf bevat 13 gaatjes, goed voor een straalresolutie van 13 pixels. De pixels
+zijn gerangschikt in twee spiralen opdat buren veraf van elkaar zouden liggen. Zo
+wordt de lichtvervuiling in een aangrenzend segmenten minimaal benadrukt door
+zover mogelijk verwijderd te zijn van een sprite.
+
+De segmenten zijn met een breekmes op een snijplank gemaakt uit een wit PVC vel.
+Er zijn 16 segmenten en elk segment heeft één led die gemonteerd is op een wand
+van de behuizing grenzend aan de cirkel. Het wit plastic zorgt voor een goede
+diffusie van het licht van de ledjes.
+
+Dat het aantal segmenten en gaten niet gelijk is aan elkaar komt doordat geen
+twee gaten zich tegelijkertijd in hetzelfde segment mogen bevinden. Waarom bij
+16 segmenten voor 13 gaten gekozen is wordt duidelijk gemaakt in figuur~\ref{fig:duiding1316}. De
+rood aangeduide stukjes staan ter hoogte van het binnenste gaatje en zijn even
+lang, de oranje lijnen zijn tonen de segmenten.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/16vs13.jpg}
+  \caption{Duiding 16 segmenten 13 gaten}
+  \label{fig:duiding1316}
+\end{figure}
+
+De sensorhouder is een klein ge-3D-print stuk dat de sensor op zijn plaats
+houdt. Dit is zichtbaar in figuur~\ref{fig:sensorhouder}.
+
+De behuizing is gemaakt uit 3mm dik MDF plaatmateriaal en is volledig demonteerbaar.
+Op de behuizing kan een scherm uit een 3mm dikke plexiplaat geplaats worden. De plaat is te zien in figuur~\ref{fig:plexiplaat}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/SensorHouder.jpg}
+  \caption{ge-3D-printe sensorhouder}
+  \label{fig:sensorhouder}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/PlexiPlaat.jpg}
+  \caption{Plexi scherm}
+  \label{fig:plexiplaat}
+\end{figure}
+
 \section{Openstaande Problemen}
 Er is nog wat werk aan de fysieke constructie van de schijf en we twijfelen nog
 over het aantal sectoren. Een groot deel van de code, zoals de \emph{game
   engine} en de driver voor LED-timing, is dus nog niet getest.
 Dit testen en debuggen zal waarschijnlijk nog vrij veel tijd innemen.
 Verder zijn er nog enkele verbeteringen te maken in de \emph{game engine},
-zo wordt er nog geen melding gegeven wanneer een speler sterft en kan het spel
-niet herstart worden zonder de microcontroller te resetten.
-Het spel begint ook van zodra de controller opstart, in plaats van wanneer de
-spelers klaar zijn. Dit is geen wenselijke werking.
+zo kan het spel niet herstart worden zonder de microcontroller te resetten.
 
 \todo{openstaande problemen uitbreiden}
 
@@ -461,7 +458,11 @@ code of de hardware, die regelmatig samen worden gezet.
 Voor de specificatie van het project, zie tabel~\ref{tbl:specs}.
 Dit project is bijzonder ambitieus, zeker voor een team bestaande uit twee
 personen.
-\todo{Alle ``voor als we tijd over hebben'' dingen opschrijven.}
+
+Het had leuk geweest moest het oorspronkelijke idee van een schok bij verliezen
+geïmplementeerd geraakt zijn, maar hiervoor was geen tijd. Kogels zouden ook wat
+vloeiender kunnen verdwijnen. Voor extra moeilijkheid zouden de spelers rond  de
+``aarde'' kunnen draaien.
 
 \begin{table}
   \centering
