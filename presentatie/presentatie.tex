@@ -3,6 +3,60 @@
 \usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage{underscore}
+\usepackage{fontspec}
+\usepackage[normalem]{ulem}
+
+\definecolor{ublauw}{HTML}{1E64C8}
+\setbeamercolor{title}{fg=ublauw}
+\setbeamercolor{subtitle}{fg=black}
+\setbeamercolor{frametitle}{fg=ublauw}
+\setbeamercolor{framesubtitle}{fg=ublauw}
+\setbeamercolor{structure}{fg=ublauw}
+\setbeamercolor{section in toc}{fg=ublauw}
+
+\newfontfamily\panno{UGent Panno Text Medium}
+\setbeamerfont{title}{family=\fontspec{UGent Panno Text Medium}}
+\setbeamerfont{author}{family=\fontspec{UGent Panno Text Medium}}
+\setbeamerfont{institute}{family=\fontspec{UGent Panno Text Medium}}
+\setbeamerfont{date}{family=\fontspec{UGent Panno Text Medium}}
+\setbeamerfont{frametitle}{family=\fontspec{UGent Panno Text Medium}}
+\setbeamerfont{framesubtitle}{family=\fontspec{UGent Panno Text Medium}}
+\setbeamerfont{section in toc}{family=\fontspec{UGent Panno Text Medium}}
+\setbeamerfont{subtitle}{size=\scriptsize,family=\fontspec{UGent Panno Text Medium}}
+\setbeamerfont{author}{size=\scriptsize,family=\fontspec{UGent Panno Text Medium}}
+\setbeamerfont{institute}{size=\scriptsize,family=\fontspec{UGent Panno Text Medium}}
+\setbeamerfont{date}{size=\scriptsize,family=\fontspec{UGent Panno Text Medium}}
+
+\makeatletter
+\setbeamertemplate{title page}{
+  \vbox{}
+  \vfill
+  \begingroup
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{title}
+    \renewcommand{\ULthickness}{1pt}%
+    \usebeamerfont{title}\MakeUppercase{\uline{\inserttitle}}\par%
+    \ifx\insertsubtitle\@empty%
+    \else%
+    \vskip0.25em%
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+    \fi%
+  \end{beamercolorbox}%
+  \vskip1em\par
+  \begin{beamercolorbox}[sep=8pt,center]{author}
+    \usebeamerfont{author}\insertauthor
+  \end{beamercolorbox}
+  \begin{beamercolorbox}[sep=8pt,center]{institute}
+    \usebeamerfont{institute}\insertinstitute
+  \end{beamercolorbox}
+  \begin{beamercolorbox}[sep=8pt,center]{date}
+    \usebeamerfont{date}\insertdate
+  \end{beamercolorbox}\vskip0.5em
+  {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+  \endgroup
+  \vfill
+}
+\makeatother
 
 \title{Project Microcontrollers}
 \subtitle{Spacegame op POV-Display}
@@ -188,13 +242,13 @@
 \section{Mogelijke verbeteringen}
 \begin{frame}
   \frametitle{Mogelijke Verbeteringen}
-  
+
 \end{frame}
 
 \section{Conclusie}
 \begin{frame}
   \frametitle{Conclusie}
-  
+
 \end{frame}
 
 \end{document}
