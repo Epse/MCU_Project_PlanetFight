@@ -50,8 +50,12 @@ void player_move(Player *p, char updown) {
 }
 
 Sprite player_to_sprite(Player *p) {
-  Led l = led(30, 255 * p->Id, 0, 255 - (255*p->Id));
+  Led l = led(30, 255 * p->Id, START_HEALTH - p->Health, 255 - (255*p->Id));
   return sprite(p->Pos, l);
+}
+
+Led player_colour(Player *p) {
+	return led(30, 255 * p->Id, 0, 255 - (255*p->Id));
 }
 
 void player_shot(Player *p) {

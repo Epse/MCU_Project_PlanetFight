@@ -29,6 +29,10 @@ Sprite player_to_sprite(Player *p);
 // give it "U" if up, "D" if down
 void player_move(Player *p, char updown);
 
+// Returns the colour for a player,
+// not taking health into account
+Led player_colour(Player *p);
+
 Player player(uint8_t id);
 
 #endif
