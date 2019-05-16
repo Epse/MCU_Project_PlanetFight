@@ -9,7 +9,7 @@ uint8_t should_tick = 0;
 void maybe_tick() {
 	if (should_tick) {
 		should_tick = 0;
-		tick();
+		//tick();
 	}
 }
 
@@ -30,7 +30,7 @@ void render(uint16_t time) {
     sprites[i] = bullet_to_sprite(&(bullets[i]));
   }
 
-  draw(sprites, count);
+  draw(sprites, 2);
 }
 
 void add_bullet(Bullet b) {
@@ -111,8 +111,6 @@ void engine_setup() {
   // Just basically init the players lol
   playerZero = player(0);
   playerOne = player(1);
-  GraphicsSettings s = {.rotationTime = 0, .ledCount = 16};
-  set = s;
 
   // Set up TC0 for ticking
   // in CTC mode, max value 255 (which gives 30Hz update rate)

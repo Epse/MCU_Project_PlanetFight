@@ -47,12 +47,15 @@ void aggregate(Queue *sorted_queue){
     for (int i = 1; i < sorted_queue->count; i++) {
       next = &sorted_queue->data[i];
       // aggregeren?
-      if (current->timing - 200 < next->timing) {
+      if (current->timing - 100 < next->timing) {
         enqueue_led_and_index(current, next->leds_and_indexes[0]);
         shifts++;
         printIntToLCD(shifts, 1, 10);
       }
       else {
+        if (current->timing > 750 && current->timing < 1300) {
+          shifts++;
+        }
         if (shifts != 0){
           sorted_queue->data[i - shifts] = *next;
         }
@@ -62,12 +65,18 @@ void aggregate(Queue *sorted_queue){
     sorted_queue->count -= shifts;
     sorted_queue->front -= shifts;
   }
+  else if (sorted_queue->count == 1) {
+    Queue_item *current = &sorted_queue->data[0];
+    if (current->timing > 700 && current->timing < 1300) {
+      sorted_queue->count = 0;
+    }
+  }
 }
 
 void set_front(Queue *queue, uint16_t timing){
   int i = 0;
   int front = queue->front;
-  while (i < queue->count && queue->data[front].timing < timing + 50) {
+  while (i < queue->count && queue->data[front].timing < timing + 450) {
     i++;
     front--;
   }

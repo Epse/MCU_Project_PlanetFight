@@ -79,12 +79,12 @@ int main(void)
   uint8_t center_pressed_for = 0;
   #endif
   // testcode: maak sprites
-  Sprite spritejes[10];
+  Sprite sprites[10];
 
-  for (int i = 0; i < 10; i++) {
-    Position position = pos_unsafe(900 + 1350, i+2);
+  for (int i = 0; i < 10; i++){
+    Position position = pos_unsafe( i * 100, i + 1);
     Led ledje = led(31, 255, 255, 0);
-    spritejes[i] = sprite(position, ledje);
+    sprites[i] = sprite(position, ledje);
   }
 
   int x = 0;
@@ -125,19 +125,19 @@ int main(void)
   	//Tick if required to do so
   	//maybe_tick();
     // Remove this when render works
-    // x++;
-    // if (x == 15){
-    //   for (int i = 2; i < 6; i++) {
-    //     sprites[i].pos.angle += 1;
-    //     if (sprites[i].pos.angle > 3600) {
-    //       sprites[i].pos.angle = 0;
-    //     }
-    //   }
-    //   x = 0;
-    // }
-    render();
+    x++;
+    if (x == 100){
+      for (int i = 0; i < 6; i++) {
+        sprites[i].pos.angle += 1;
+        if (sprites[i].pos.angle > 3600) {
+          sprites[i].pos.angle = 0;
+        }
+      }
+      x = 0;
+    }
+    //render();
 
-    //draw(spritejes, 5);
+    draw(sprites, 2);
     refresh_graphics();
   }
 }

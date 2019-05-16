@@ -65,8 +65,6 @@ int round_count = 0;
 //boolean, om nieuwe berekeningen te doen
 uint8_t new_round()
 {
-  if (round_count == 4) {
-    round_count = 0;
     if (new_round_flag != 0) {
       new_round_flag = 0;
       round_count++;
@@ -81,8 +79,6 @@ uint8_t new_round()
     else{
       return 0;
     }
-  }
-  round_count++;
 }
 
 // ijkingspunt voor graphics
@@ -94,8 +90,8 @@ ISR(TIMER1_CAPT_vect){
     //old_ijkpunt = ijkpunt;
     rotation_time = time_span;
     time_span = 0;
-    TCNT1 = 0;
     new_round_flag = 1;
+    TCNT1 = 0;
   }
 }
 
