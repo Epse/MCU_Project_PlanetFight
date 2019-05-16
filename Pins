@@ -27,10 +27,10 @@ PC5   (1A naar motor)
 PC6
 PC7  (Center Button)
 
-PD0                   Joystick(2) Left
-PD1                   Joystick(2) Down
-PD2                   Joystick(2) Right
-PD3                   Joystick(2) Up
+PD0
+PD1
+PD2
+PD3
 PD4                   Input Capture Unit (Tijd ronddraaien meten)
 PD5
 PD6
@@ -45,10 +45,10 @@ PE5   (South Button)    Joystick(1) Down
 PE6   (East Button)     Joystick(1) Right
 PE7   (North Button)    Joystick(1) Up
 
-PF0
-PF1
-PF2
-PF3
+PF0 Joystick 2 Left (lila)
+PF1 Joystick 2 down (blauw)
+PF2 Joystick 2 right (rood)
+PF3 Joystick 2 up (groen)
 PF4
 PF5
 PF6

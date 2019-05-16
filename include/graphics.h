@@ -6,9 +6,11 @@
 #include "leddriver.h"
 #include "basics.h"
 
+#define LED_COUNT 16
+
 void set_up_graphics();
 
-//void refresh_graphics();
+void refresh_graphics();
 
 // time is time since last full rotation
 void draw(Sprite *objects, uint8_t count);

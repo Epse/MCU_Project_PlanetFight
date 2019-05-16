@@ -19,9 +19,9 @@ void end_screen(Player *playerZero, Player *playerOne) {
   Led leds[LED_COUNT];
   Led winner;
   if (playerZero->Health == 0) {
-    winner = player_colour(playerOne).led;
+    winner = player_colour(playerOne);
   } else {
-    winner = player_colour(playerZero).led;
+    winner = player_colour(playerZero);
   }
 
   for (uint8_t i = 0; i < LED_COUNT; i--) {

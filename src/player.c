@@ -3,14 +3,12 @@
 Player player(uint8_t id) {
   if (id == 0) {
     Position position = pos_unsafe(900, 4);
-    Led ledje = led(31, 255, 255, 0);
     Player player = {.Id = id, .Pos = position, .Velocity = 0,
       .Health = START_HEALTH, .Lifetime = 0};
     return player;
   }
   else {
     Position position = pos_unsafe(2700, 4);
-    Led ledje = led(31, 255, 255, 0);
     Player player = {.Id = id, .Pos = position, .Velocity = 0,
       .Health = START_HEALTH, .Lifetime = 0};
     return player;

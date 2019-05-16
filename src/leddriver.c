@@ -40,7 +40,7 @@ void led_draw(uint8_t count, Led *leds)
   }
 
   for (int i = 0; i < count; i++) {
-    write_led(led[i]);
+    write_led(leds[i]);
   }
   for (uint8_t i = 0; i < count; i++) {
     bitbang(0);

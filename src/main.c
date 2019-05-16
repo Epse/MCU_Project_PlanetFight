@@ -1,4 +1,4 @@
-#define DEBUG
+#define NODEBUG
 
 #include <stdint.h>
 #include <avr/io.h>
@@ -60,6 +60,12 @@ static inline void setup()
   _delay_ms(15010);//wacht 15 seconden -- opstartprocedure schijf
   rotatie_snelheid(28); // 30 procent van de snelheid
   clearLCD();
+
+  Sprite sprites[3];
+  sprites[0] = sprite(pos_unsafe(0, 4), led(255, 255, 255, 255));
+  sprites[1] = sprite(pos_unsafe(1000, 4), led(255, 255, 255, 255));
+  sprites[2] = sprite(pos_unsafe(2000, 4), led(255, 255, 255, 255));
+  draw(sprites, 3);
 }
 
 int main(void)
@@ -70,13 +76,6 @@ int main(void)
   uint8_t center_pressed_for = 0;
   #endif
 
-  for (int i = 0; i < 10; i++) {
-    Position position = pos_unsafe(900 + 1350, i+2);
-    Led ledje = led(31, 255, 255, 0);
-    spritejes[i] = sprite(position, ledje);
-  }
-
-  int x = 0;
   while (1)
   {
     clearLCD();
@@ -107,9 +106,9 @@ int main(void)
     //   printStringToLCD("DEBUG", 0, 0);
     // }
     #endif
-	// Tick if required to do so
-	maybe_tick();
-    // Remove this when render works
+  	// Tick if required to do so
+  	//maybe_tick();
+    //render();
     refresh_graphics();
   }
 }

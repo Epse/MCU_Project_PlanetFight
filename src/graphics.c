@@ -70,7 +70,6 @@ uint16_t get_timing(Position pos){
   uint16_t timing = (uint16_t)(prct * get_rotation_time());
   if (timing == 0) {
     p++;
-    printIntToLCD(p,1,2);
   }
   return timing;
 }

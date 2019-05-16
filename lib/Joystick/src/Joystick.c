@@ -22,7 +22,7 @@ static inline void readOne() {
 }
 
 static inline void readTwo() {
-  uint8_t stat = (uint8_t)~PIND;
+  uint8_t stat = (uint8_t)~PINF;
   stat &= (uint8_t)0b00001111;
   risenTwo = ((uint8_t)statJoyTwo ^ stat) & (uint8_t)stat;
   statJoyTwo = (JoyStatus) stat;

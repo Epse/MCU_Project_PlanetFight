@@ -1,4 +1,5 @@
 #include "engine.h"
+#include "dwenguinoLCD.h"
 
 Player playerZero;
 Player playerOne;
@@ -15,10 +16,10 @@ void maybe_tick() {
 	}
 }
 
-void render(uint16_t time) {
-	if (gameState != 1 ) {
-		return; // The other game states do their own simple rendering in tick()
-	}
+void render() {
+	//if (gameState != 1 ) {
+	//	return; // The other game states do their own simple rendering in tick()
+	//}
   // Count visible bullets
   // I know I now have to iterate over the bullets twice..
   // I'm sorry for my sins
@@ -29,13 +30,13 @@ void render(uint16_t time) {
     }
   }
   Sprite sprites[count];
-  sprites[0] = player_to_sprite(&playerOne);
-  sprites[1] = player_to_sprite(&playerZero);
+  sprites[1] = player_to_sprite(&playerOne);
+  sprites[0] = player_to_sprite(&playerZero);
   for (uint8_t i = 2; i < count; i++) {
     sprites[i] = bullet_to_sprite(&(bullets[i]));
   }
 
-  draw(sprites, count);
+  draw(sprites, 2);
 }
 
 static void add_bullet(Bullet b) {
@@ -63,6 +64,7 @@ static inline void input_dispatch(Player *player, uint8_t index) {
 	s = joystick_risen(index);
   if (joystick_is_right(s)) {
     add_bullet(bullet_shot(player->Pos, 'R'));
+		printStringToLCD("Bullet", 0, 0);
   } else if (joystick_is_right(s)) {
     add_bullet(bullet_shot(player->Pos, 'L'));
   }
@@ -74,15 +76,16 @@ static inline void handle_input() {
 }
 
 void tick() {
-	if (gameState != 1) {
-		if (gameState == 0) {
-			gameState = start_screen() ? 1 : 0;
-		}
-		else {
-			end_screen(&playerZero, &playerOne);
-		}
-	}
+	//if (gameState != 1) {
+	//	if (gameState == 0) {
+	//		gameState = start_screen();
+	//	}
+	//	else {
+	//		end_screen(&playerZero, &playerOne);
+	//	}
+	//}
   // Handle player inputs
+	clearLCD();
   joy_tick();
   handle_input();
   // Tick everything
