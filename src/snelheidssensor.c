@@ -9,11 +9,6 @@
 
 void set_up_snelheidssensor()
 {
-  initBoard();
-  initLCD();
-  clearLCD();
-  backlightOn();
-
 // global enable interrupt
 SREG |= _BV(7);
 
@@ -37,9 +32,6 @@ PORTD |= _BV(PORTD4);
 
 //Overflowvlag
 TIMSK1 |= _BV(TOIE1);
-
-TIMSK1 |= _BV(OCIE1A);
-TIMSK1 |= _BV(OCIE1B);
 }
 
 volatile uint16_t ijkpunt = 0;
@@ -73,20 +65,24 @@ int round_count = 0;
 //boolean, om nieuwe berekeningen te doen
 uint8_t new_round()
 {
-  if (new_round_flag != 0) {
-    new_round_flag = 0;
-    round_count++;
-    if (round_count >= 1) {
-      round_count = 0;
-      return 1;
+  if (round_count == 4) {
+    round_count = 0;
+    if (new_round_flag != 0) {
+      new_round_flag = 0;
+      round_count++;
+      if (round_count >= 1) {
+        round_count = 0;
+        return 1;
+      }
+      else {
+        return 0;
+      }
     }
-    else {
+    else{
       return 0;
     }
   }
-  else{
-    return 0;
-  }
+  round_count++;
 }
 
 // ijkingspunt voor graphics

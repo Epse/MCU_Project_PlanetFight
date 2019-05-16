@@ -1,6 +1,20 @@
 #include "player.h"
 
 Player player(uint8_t id) {
+  if (id == 0) {
+    Position position = pos_unsafe(900, 4);
+    Led ledje = led(31, 255, 255, 0);
+    Player player = {.Id = id, .Pos = position, .Velocity = 0,
+      .Health = START_HEALTH, .Lifetime = 0};
+    return player;
+  }
+  else {
+    Position position = pos_unsafe(2700, 4);
+    Led ledje = led(31, 255, 255, 0);
+    Player player = {.Id = id, .Pos = position, .Velocity = 0,
+      .Health = START_HEALTH, .Lifetime = 0};
+    return player;
+  }
   Position p;
   uint16_t angle = id * (A_LIMIT / 2);
   if (angle > A_LIMIT) {
@@ -50,7 +64,7 @@ void player_move(Player *p, char updown) {
 }
 
 Sprite player_to_sprite(Player *p) {
-  Led l = led(30, 255 * p->Id, START_HEALTH - p->Health, 255 - (255*p->Id));
+  Led l = led(31, 255, 255,255);//led(30, 255 * p->Id, 0, 255 - (255*p->Id));
   return sprite(p->Pos, l);
 }
 

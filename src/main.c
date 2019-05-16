@@ -26,14 +26,16 @@ static inline void setup()
   // global enable interrupt
   SREG |= _BV(7);
   led_init();
-  joy_init();
   initBoard();
   initLCD();
   clearLCD();
   backlightOn();
+  joy_init();
   engine_setup();
-  set_up_graphics();
   set_up_snelheidssensor();
+  set_up_graphics();
+
+
 
   // Set the Center button to Input
   DDRC &= ~_BV(PC7);
@@ -62,13 +64,19 @@ static inline void setup()
 
 int main(void)
 {
+
   setup();
   #ifdef DEBUG
   uint8_t center_pressed_for = 0;
   #endif
 
-  led_draw(1,&led_p1);
+  for (int i = 0; i < 10; i++) {
+    Position position = pos_unsafe(900 + 1350, i+2);
+    Led ledje = led(31, 255, 255, 0);
+    spritejes[i] = sprite(position, ledje);
+  }
 
+  int x = 0;
   while (1)
   {
     clearLCD();
@@ -93,14 +101,15 @@ int main(void)
       center_pressed_for = 0;
     }
 
-    if (normal_run) {
-      printStringToLCD("NORMAL", 0, 0);
-    } else {
-      printStringToLCD("DEBUG", 0, 0);
-    }
+    // if (normal_run) {
+    //   printStringToLCD("NORMAL", 0, 0);
+    // } else {
+    //   printStringToLCD("DEBUG", 0, 0);
+    // }
     #endif
 	// Tick if required to do so
 	maybe_tick();
     // Remove this when render works
     refresh_graphics();
+  }
 }
