@@ -19,7 +19,7 @@ void maybe_tick();
 // Update the LED status,
 // to be called as fast as possible.
 // Preferably update the rotation_time beforehand
-void render(uint16_t time_since_zero);
+void render();
 
 void engine_setup();
 
