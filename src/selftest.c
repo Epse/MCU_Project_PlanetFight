@@ -1,5 +1,7 @@
 #include "selftest.h"
 
+// I know this is ugly
+// I'm sorry, it works
 void self_test_loop() {
   // Test shit
   printStringToLCD("Self-Test Mode", 0, 0);
@@ -93,11 +95,6 @@ void self_test_loop() {
     _delay_ms(500);
 
   }
-
-  // Test Motor Driver
-  // TODO: test motor driver
-  // Test rotation sensor
-  // TODO: test rotation sensor
 
   clearLCD();
   printStringToLCD("Done", 0, 0);

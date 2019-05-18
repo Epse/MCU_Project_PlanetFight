@@ -17,9 +17,9 @@ void maybe_tick() {
 }
 
 void render() {
-	//if (gameState != 1 ) {
-	//	return; // The other game states do their own simple rendering in tick()
-	//}
+	if (gameState != 1 ) {
+		return; // The other game states do their own simple rendering in tick()
+	}
   // Count visible bullets
   // I know I now have to iterate over the bullets twice..
   // I'm sorry for my sins
@@ -32,11 +32,15 @@ void render() {
   Sprite sprites[count];
   sprites[1] = player_to_sprite(&playerOne);
   sprites[0] = player_to_sprite(&playerZero);
-  for (uint8_t i = 2; i < count; i++) {
-    sprites[i] = bullet_to_sprite(&(bullets[i]));
-  }
+	uint8_t current_index = 2;
+	for (uint8_t i = MAX_BULLETS; i > 0; i--) {
+		if (bullets[i].Lifetime > 0) {
+			sprites[current_index] = bullet_to_sprite(&(bullets[i]));
+			current_index++;
+		}
+	}
 
-  draw(sprites, 2);
+  draw(sprites, count);
 }
 
 static void add_bullet(Bullet b) {
@@ -50,6 +54,7 @@ static void add_bullet(Bullet b) {
   // Maybe eventually we might want to add a way of dumping the oldest bullet
 }
 
+// Helper function to avoid repetition
 static inline void input_dispatch(Player *player, uint8_t index) {
 	JoyStatus s = joystick_status(index);
 
@@ -76,14 +81,14 @@ static inline void handle_input() {
 }
 
 void tick() {
-	//if (gameState != 1) {
-	//	if (gameState == 0) {
-	//		gameState = start_screen();
-	//	}
-	//	else {
-	//		end_screen(&playerZero, &playerOne);
-	//	}
-	//}
+	if (gameState != 1) {
+		if (gameState == 0) {
+			gameState = start_screen();
+		}
+		else {
+			end_screen(&playerZero, &playerOne);
+		}
+	}
   // Handle player inputs
 	clearLCD();
   joy_tick();

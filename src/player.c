@@ -1,26 +1,11 @@
 #include "player.h"
 
 Player player(uint8_t id) {
-  if (id == 0) {
-    Position position = pos_unsafe(900, 4);
-    Player player = {.Id = id, .Pos = position, .Velocity = 0,
-      .Health = START_HEALTH, .Lifetime = 0};
-    return player;
-  }
-  else {
-    Position position = pos_unsafe(2700, 4);
-    Player player = {.Id = id, .Pos = position, .Velocity = 0,
-      .Health = START_HEALTH, .Lifetime = 0};
-    return player;
-  }
   Position p;
-  uint16_t angle = id * (A_LIMIT / 2);
-  if (angle > A_LIMIT) {
-    angle = 0;
-  }
-  uint8_t err = pos(&p, angle, R_LIMIT / 2);
-  if (err) {
-    // TODO: Handle error
+  if (id == 0) {
+    p = pos_unsafe(900, 4);
+  } else {
+    p = pos_unsafe(2700, 4);
   }
   Player player = {.Id = id, .Pos = p, .Velocity = 0,
     .Health = START_HEALTH, .Lifetime = 0};

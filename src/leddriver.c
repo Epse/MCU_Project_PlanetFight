@@ -4,6 +4,7 @@
 // LED_DTA_PIN: PB2
 // LED_PORT: PORTB
 
+// Stupidly write data, blocking
 static inline void bitbang(uint8_t data) {
   SPDR = data;
   while (!(SPSR & _BV(SPIF)));
@@ -25,7 +26,7 @@ void led_init()
 {
   // Set clock and data to output
   DDRB |= _BV(PB2) | _BV(PB1);
-  // Enable SPI, Master and clock to /64
+  // Enable SPI, Master and clock to /2
   SPCR = _BV(SPE) | _BV(MSTR);
   SPSR |= _BV(SPI2X);
 }
@@ -34,7 +35,6 @@ void led_init()
 // then 32 1-bits
 void led_draw(uint8_t count, Led *leds)
 {
-  // Apparently this doesn't need the init sequence wut
   for (uint8_t i = 0; i < 4; i++) {
     bitbang(0);
   }
@@ -42,6 +42,8 @@ void led_draw(uint8_t count, Led *leds)
   for (int i = 0; i < count; i++) {
     write_led(leds[i]);
   }
+
+  // This could be skipped to save time but whatever
   for (uint8_t i = 0; i < count; i++) {
     bitbang(0);
   }

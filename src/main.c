@@ -100,15 +100,15 @@ int main(void)
       center_pressed_for = 0;
     }
 
-    // if (normal_run) {
-    //   printStringToLCD("NORMAL", 0, 0);
-    // } else {
-    //   printStringToLCD("DEBUG", 0, 0);
-    // }
+    if (normal_run) {
+      printStringToLCD("NORMAL", 0, 0);
+    } else {
+      printStringToLCD("DEBUG", 0, 0);
+    }
     #endif
   	// Tick if required to do so
-  	//maybe_tick();
-    //render();
+  	maybe_tick();
+    render();
     refresh_graphics();
   }
 }
