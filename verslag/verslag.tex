@@ -409,7 +409,16 @@ ook zeer goed voor ons spel omdat we met enkele lichtpunten die heel vlot kunnen
 De volledig correcte implementatie van het queue systeem is niet verwezenlijkt bij gebrek aan planning en tijd. De grootste bouwstenen 
 zijn wel geïmplementeerd, op de meeste delen van het scherm is de werking correct, al zijn er nog een paar te vermijden zones.
 
-Met deze worden de tijdstippen waarop welke leds moeten worden aangestuurd 
+Er zijn al enkele problemen gevonden in de werking van het graphics-systeem. Een
+eerste is dat er telkens een nieuwe queue aangemaakt is, deze gekopieerd wordt
+naar de globale queue. Dit neemt vrij veel tijd in beslag en zou
+verantwoordelijk kunnen zijn voor de te vermijden zones. Er is ook een
+functieoproep gevonden waarin deze queue als argument wordt meegegeven, dit zal
+nog een kopie genereren. Dit laatste kan opgelost worden door een pointer naar
+de queue mee te geven. Ook werd ontdekt dat bepaalde stukken data die in de
+queue zitten, eigenlijk uit \emph{scope} gaan voor ze gebruikt worden. Daardoor
+is het mogelijk dat de geheugenlocaties overschreven worden met andere data, en
+het scherm rare dingen weergeeft.
 
 \subsection{Game engine}
 Intern wordt alles dat moet weergegeven worden, voorgesteld door een
