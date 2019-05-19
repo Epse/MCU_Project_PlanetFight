@@ -72,13 +72,13 @@ Er waren verder nog vele ideeën om het spel verder uit te breiden.
 De nodige functionaliteit werd opgedeeld in logische blokken die met elkaar
 communiceren en op elkaar vertrouwen voor informatie. De bekomen structuur is
 zichtbaar in figuur~\ref{fig:structuur}.
-Op deze figuur staat hardware in een ovaal en software in rechthoekjes.
+Op deze figuur staat hardware in ovalen en software in rechthoeken.
 
 Het motorsysteem staat los van alles, en genereert op basis van interrupts het
 controlesignaal voor de hardwarematige motordriver, die de hardeschijfmotor
 aanstuurt.
 
-Een optische sensor genereert interrupts, die worden geïnterpreteerd tot
+Een optische sensor genereert interrupts die worden geïnterpreteerd tot
 timinginformatie over de draaischijf. Deze worden gebruikt door het
 \emph{graphics} systeem om de juiste LED's te laten oplichten. Dit systeem wordt
 constant vanuit een lus in §main()§ opgeroepen, en geeft door welke LED's moeten
@@ -111,10 +111,11 @@ maar werd besloten om in de radiale richting naar 13 pixels te gaan.
 
 Met deze aanpak is het mogelijk om willekeurig de resolutie te kiezen
 waarmee de hoek wordt beschreven. Hoe groter deze resolutie,
-hoe meer pixels. Deze waarde werd gekozen op 1024, dit als een goede balans
+hoe meer pixels. Deze waarde werd gekozen op \num{3600}, dit als een goede balans
 tussen nauwkeurigheid van het display en haalbaarheid. Hoe hoger deze resolutie,
 hoe sneller de LED's namelijk ververst moeten worden om te zorgen dat alle
-objecten weergegeven worden.
+objecten weergegeven worden. Deze limietwaarde maakt het ook makkelijk om hoeken
+in graden om te rekenen naar hun interne waarde.
 
 \begin{figure}
   \centering
@@ -135,20 +136,20 @@ en een pulsbreedte tussen $1$ en \SI{2}{\milli\second}.
 De PWM-modules die ingebouwd zitten in de microcontroller kunnen niet opereren
 in deze frequenties en pulsbreedtelimieten,
 het protocol werd dus volledig in software geïmplementeerd.
-Zie figuur~\ref{fig:motorpwm} voor een beeld het geproduceerde signaal.
+Zie figuur~\ref{fig:motorpwm} voor een beeld van het geproduceerde signaal.
 
 Het PWM signaal wordt op pin §D0§ naar buiten gebracht. De software implementatie
 van het PWM signaal is met Timer/Counter3 in Clear Timer on Compare Match (CTC)
-modus verwezenlijkt. In het register OCR3A wordt een waarde ingesteld, wanneer de \texttt{Timer/Counter}
+modus verwezenlijkt. In het register OCR3A wordt een waarde ingesteld, wanneer de Timer/Counter
 deze waarde bereikt wordt de counter op nul gezet en wordt de interrupt §TIMER3_COMPA_vect§
 aangevraagd. Er wordt in de interrupt service routine een nieuwe waarde ingesteld
 in §OCR3A§ en de output bit op pin §D0§ wordt geflipt. Deze counter werd gekozen
 vanwege zijn 16-bits resolutie.
 
-Om nul procent vermogen aan te sturen moet het signaal 1ms hoog zijn, om het
-maximale vermogen aan te sturen moet het signaal 2 ms hoog zijn. De Timer/Counter3
+Om nul procent vermogen aan te sturen moet het signaal \SI{1}{\milli\second} hoog zijn, om het
+maximale vermogen aan te sturen moet het signaal \SI{2}{\milli\second} hoog zijn. De Timer/Counter3
 heeft een frequentie van \SI{2}{\mega\hertz}, dat is de \texttt{I/O} klok van \SI{16}{\mega\hertz} verschaald met
-prescaler $8$. Een cijfervoorbeeld van het PWM signaal dat overeenkomt met \SI{0}{\percent}
+prescaler $8$. Een voorbeeld van het PWM signaal dat overeenkomt met \SI{0}{\percent}
 motorvermogen is in tabel~\ref{tbl:PWM} zichtbaar.
 
 \begin{table}
@@ -198,11 +199,11 @@ aangezien de stekker pas mag ingeplugd worden wanneer het stuursignaal reeds
 aanwezig is.
 
 \subsection{Toerenteller schijf}
-De hoeksnelheidsmeting component uit figuur 1 levert de hoeksnelheid en een
+De hoeksnelheidsmeting component uit figuur~\ref{fig:structuur} levert de hoeksnelheid en een
 ijkpunt van de draaibeweging van de schijf. Als input krijgt de component een
 puls van een stationaire optische sensor die gemonteerd is langs de rand van de
 schijf. In de schijf zit een gaatje waardoor de optische sensor getriggerd wordt
-als dit gaatje doorheen de sensor passeert. (Figuur~\ref{fig:sensor})
+wanneer dit gaatje doorheen de sensor passeert. (Figuur~\ref{fig:sensor})
 
 \begin{figure}
   \centering
@@ -211,7 +212,7 @@ als dit gaatje doorheen de sensor passeert. (Figuur~\ref{fig:sensor})
   \label{fig:sensor}
 \end{figure}
 
-De praktische realisatie berust op de Input Capture unit van Timer/Counter1.
+De praktische realisatie berust op de Input Capture Unit van Timer/Counter1.
 Dit vereist de alternate function van poort §PD4§, namelijk §ICP1§ of Timer/Counter1
 Input Capture Trigger. Als een dalende of stijgende flank (dit is vrij te kiezen)
 geregistreerd wordt op pin §ICP1§ dan wordt de huidige waarde van Timer/Counter1
@@ -226,7 +227,8 @@ verschaald met prescaler 64.
 De Input Capture unit heeft de mogelijkheid tot het genereren van een interrupt.
 Indien ingesteld, wordt zodra de waarde in §ICR1§ gekopieerd is, de interrupt
 aangevraagd. In de interrupt routine wordt eerst de opgevangen waarde gekopieerd
-en vervolgens wordt met de waarde de tijd die verstreken is sinds de vorige interrupt
+om overschrijven te voorkomen
+en vervolgens wordt met deze waarde de tijd die verstreken is sinds de vorige interrupt
 bepaald. De eenheid van deze waarde is nog arbitrair om de hoge resolutie te bewaren,
 het is een verschaalde versie van het aantal increments.
 
@@ -255,10 +257,14 @@ De verhoudingen tussen kloksnelheid en schijfsnelheid zijn dus goed gedimensione
 \subsection{Aansturing LED's}
 De gebruikte LED's zijn ledstrips van het type \texttt{APA102}.
 Deze kunnen vrij eenvoudig via SPI data ontvangen.
-Elke LED krijgt een pakket bestaande uit 32 bits, zie
-figuur~\ref{fig:ledpakket}.
-Deze data moet byte per byte en bit per bit verzonden worden over één datalijn,
-met een kloksignaal.
+SPI is een eenvoudig protocol dat bestaat uit een datalijn en een kloklijn, data
+wordt seriëel op de datalijn geplaatst en kan uitgelezen worden vanaf de
+stijgende flank van de klok. De gebruikte microcontroller heeft
+hardwareondersteuning voor SPI, daardoor moet slechts een byte in het juiste
+register geplaatst worden en de hardware zal in de achtergrond de data verzonden
+worden, met automatisch de juiste kloksignalen. De klokfrequentie is via een
+prescaler instelbaar tot maximaal de helft van de I/O-klok. Nadat een byte is
+verzonden, wordt een vlag geactiveerd en indien gewenst een interrupt aangevraagd.
 
 De ledstrip luistert naar nieuwe commando's na een startpakket
 bestaande uit 32 0-bits. Vervolgens moet,
@@ -268,6 +274,12 @@ nogmaals 32 bits om te zorgen dat alle data ver genoeg doorgeschoven is.
 De waarde van deze bits is onbelangrijk,
 maar 0 is handig om te voorkomen dat er een LED op volle helderheid wit licht
 geeft wanneer er niet naar elke LED gegevens worden gestuurd.
+
+De inhoud van een specifiek ledpakket wordt weergegeven in
+figuur~\ref{fig:ledpakket}. Belangrijk is het om op te merken dat bij lagere
+globale helderheid de LED's zichtbaar kunnen flikkeren, dit geef echter geen
+probleem in onze toepassing aangezien de maximale helderheid nog steeds relatief
+duister oogt.
 
 \begin{figure}
   \centering
@@ -301,17 +313,104 @@ In de praktijk zal deze limiet dus waarschijnlijk nooit een probleem leveren.
 
 Dit systeem wordt aangestuurd door het volgende, het \emph{graphics} systeem.
 
-\subsection{Timing LED's}
+\subsection{Graphics}
 \label{sec:ledtiming}
-\todo{Meer uitleg over leds}
-De juiste LED's moeten op correcte momenten aan en uit geschakeld worden
-om op de juiste plaats op de cirkel pixels op te laten lichten,
-en niet te lang zodat de pixels geen lijnen worden en alle mogelijke hoeken
-bereikt worden. De \emph{game engine} geeft aan dit systeem door welke kleuren
-op welke posities moeten komen, met behulp van een \emph{sprite}, dat bestaat
-uit RGB-informatie en een positie.
+Het graphics systeem bepaalt alle tijdstippen waarop leds moeten worden aangestuurd samen met welke leds op elk van deze tijdstippen moeten worden aangestuurd.
 
-HIER AAN TE VULLEN evt met verwijzing naar volgende
+Zoals op het schema in figuur~\ref{fig:structuur} is te zien, neemt de graphics laag input van de game engine en de hoeksnelheidsmeting component.
+Van de game engine krijgt de graphics laag het volgend af te beelden scherm binnen. Dit is een array van sprites waarvan het aantal
+elementen gelijk is aan het aantal sprites die op het volgende scherm moeten getoond worden. Indien bijvoorbeeld een zwart scherm
+gewenst is, dan wordt een lege array meegegeven. Van de hoeksnelheidsmeting component wordt de meest recente rotatietijd opgevraagd.
+Dit is het aantal klokslagen van Timer/Counter1 nodig voor een volledige rotatie van de schijf.
+
+\subsubsection{Vertaling naar queue items}
+De graphics laag begint met het vertalen van alle sprites naar queue elementen.
+Een sprite is als volgt opgebouwd:
+\begin{itemize}
+	\item Kleur sprite
+	\item Positie
+	\begin{itemize}
+		\item Hoek (0 tot 3599)
+		\item Straal (0 tot 11)
+	\end{itemize}
+\end{itemize}
+
+Een queue item is als volgt opgebouwd:
+\begin{itemize}
+	\item Timing (0 tot rotatietijd)
+	\item Een array §kleur_en_index[]§
+	\begin{itemize}
+		\item Kleur en index
+			\begin{itemize}
+				\item Kleur sprite
+				\item Index (0 tot 15)
+			\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+De sprite kleur wordt rechstreeks doorgegeven. Uit de hoek wordt bepaald boven welk segment de sprite valt, of met andere woorden welke 
+index van de ledstrip moet worden aangestuurd. Uit de hoek en de straal wordt berekend wanneer de uitsparing op de gekozen straal op de 
+gespecifieerde hoek staat. De timing is relatief t.o.v. de rotatiesnelheid en gebruikt als eenheid ook de counter waarden van Timer/Counter1.
+
+Initieel is er een één op één relatie tussen sprites en queue items. Voor elke sprite wordt één queue item aangemaakt, de array ‘kleur 
+en index’en bevat dus telkens één element.
+
+Na deze stappen is de queue klaar om de nieuwe globale queue te worden
+
+
+\subsubsection{Queue van queue items}
+Er is steeds een globale queue aanwezig waarop verwerking van queue items wordt gedaan, in het volgende punt volgt hier meer uitleg 
+over. Als een nieuw scherm moet worden afgebeeld wordt een nieuwe queue klaargemaakt op de achtergrond, alvorens zijn lancering als 
+globale queue.
+
+Een queue ziet er als volgt uit:
+\begin{itemize}
+	\item Front
+	\item Count
+	\item Een array §Queue_items[]§
+\end{itemize}
+
+Count houdt bij hoeveel queue items aanwezig zijn in de array van queue items. Front houdt de index bij van de volgende queue item die 
+die moet verwerkt worden.
+
+Alle queue items worden in een queue geplaatst waarin ze om te beginnen chronologisch gesorteerd worden op timings. Hiervoor is 
+sorteeralgoritme geschreven met tijdscomplexiteit \(O\left (\frac{n^2-1}{2} \right )\) of \(O\left (
+  n^2 \right )\), voor enkele af te beelden sprites lijkt dit voorlopig voldoende efficiënt. 
+Vervolgens wordt de queue door een aggregatiestap geloodst waarin timings die elkaar zeer dicht opvolgen worden samen geplaatst onder 
+één queue item, met één timing en meerdere ‘kleur en index’ instanties. Als laatste wordt de front eigenschap ingesteld op basis van de 
+huidige TCNT1 waarde, de timing van het queue item op index front moet de eerste zijn die vanaf TCNT1 zal plaatsvinden.
+
+Na deze stappen is de queue klaar om de nieuwe globale queue te worden
+
+
+\subsubsection{Queue verwerken}
+Twee interrupts, werker A en werker B, verwerken de globale queue. Deze interrupts worden getriggerd op een compare match met TCNT1 en 
+respectievelijk OCR1A of OCR1B. Merk op dat deze interrupts net zoals de interrupt van de snelheidssensor van Timer/Counter1 afkomstig 
+zijn. Dit is handig omdat de snelheidssensor TCNT1 reset bij elke nieuwe toer, en omdat de rotatietijd van de snelheidssensor en de 
+timings van de graphics laag niet verschaald zijn tegenover elkaar. De sensor maakt van TCNT1 een tijdsas voor de graphicslaag.
+
+Werker A wordt getriggerd op de timing van het front queue item. De taak van werker A bestaat ten eerste uit alle leds en indexes van 
+het front queue item in de led_array die in de hoofdlus naar de leddriver gestuurd wordt te stoppen. Ten tweede stelt werker A de 
+volgende timing van werker B in in register OCR1B. Dit is telkens op een vaste offset vanaf OCR1A, in het project is dit 100 
+klokslagen.
+
+Werker B wordt 100 klokslagen na werker A getriggerd en zet ten eerste de aangezette leds terug uit. En vervolgens neemt hij de 
+volgende timing voor werker A uit de Queue en stopt deze in OCR1A. Na de hoogste timing wordt de laagste timing terug gegeven.
+
+
+\subsubsection{Ter info}
+De rotatietijd is ongeveer \num{13000} slagen wanneer aan 19 toeren per seconde gewerkt wordt.
+
+\subsubsection{Staving}
+Er is voor deze aanpak met queues gekozen om de hoge resolutie die mogelijk is met dit scherm uit te buiten. De resolutie in de 
+omtrekrichting is met deze aanpak 3600, omdat de hoek component van een sprite een waarde van 0 tot 3599 is. De queue aanpak leent zich 
+ook zeer goed voor ons spel omdat we met enkele lichtpunten die heel vlot kunnen bewegen genoeg hebben.
+
+\subsubsection{Kritische noot}
+De volledig correcte implementatie van het queue systeem is niet verwezenlijkt bij gebrek aan planning en tijd. De grootste bouwstenen 
+zijn wel geïmplementeerd, op de meeste delen van het scherm is de werking correct, al zijn er nog een paar te vermijden zones.
+
+Met deze worden de tijdstippen waarop welke leds moeten worden aangestuurd 
 
 \subsection{Game engine}
 Intern wordt alles dat moet weergegeven worden, voorgesteld door een
@@ -363,104 +462,6 @@ Wanneer een speler wint, krijgt het hele scherm de kleur van deze speler. Om te
 herstarten, moet de microcontroller herstart worden. De game engine houdt
 daarvoor bij in welke fase het spel zich bevindt.
 
-\subsection{Graphics}
-Het graphics systeem bepaalt alle tijdstippen waarop leds moeten worden aangestuurd samen met welke leds op elk van deze tijdstippen moeten worden aangestuurd.
-
-Zoals op het schema in figuur~\ref{fig:structuur} is te zien, neemt de graphics laag input van de game engine en de hoeksnelheidsmeting component.
-Van de game engine krijgt de graphics laag het volgend af te beelden scherm binnen. Dit is een array van sprites waarvan het aantal
-elementen gelijk is aan het aantal sprites die op het volgende scherm moeten getoond worden. Indien bijvoorbeeld een zwart scherm
-gewenst, dan wordt een lege array meegegeven. Van de hoeksnelheidsmeting component wordt de meest recente rotatietijd opgevraagd.
-Dit is het aantal klokslagen van timer/Counter1 nodig voor een volledige rotatie van de schijf.
-
-\subsubsection{Vertaling naar queue items}
-De graphics laag begint met het vertalen van alle sprites naar queue elementen.
-Een sprite is als volgt opgebouwd:
-\begin{itemize}
-	\item Kleur sprite
-	\item Positie
-	\begin{itemize}
-		\item Hoek (0 tot 3599)
-		\item Straal (0 tot 11)
-	\end{itemize}
-\end{itemize}
-
-Een queue item is als volgt opgebouwd:
-\begin{itemize}
-	\item Timing (0 tot rotatietijd)
-	\item kleur en index[]
-	\begin{itemize}
-		\item Kleur en index
-			\begin{itemize}
-				\item Kleur sprite
-				\item Index (0 tot 15)
-			\end{itemize}
-	\end{itemize}
-\end{itemize}
-
-De sprite kleur wordt rechstreeks doorgegeven. Uit de hoek wordt bepaald boven welk segment de sprite valt, of met andere woorden welke 
-index van de ledstrip moet worden aangestuurd. Uit de hoek en de straal wordt berekend wanneer de uitsparing op de gekozen straal op de 
-gespecifieerde hoek staat. De timing is relatief t.o.v. de rotatiesnelheid en gebruikt als eenheid ook de counter waarden van timer/
-Counter1.
-
-Initieel is er een één op één relatie tussen sprites en queue items. Voor elke sprite wordt één queue item aangemaakt, de array ‘kleur 
-en index’en bevat dus telkens één element.
-
-Na deze stappen is de queue klaar om de nieuwe globale queue te worden
-
-
-\subsubsection{Queue van queue items}
-Er is steeds een globale queue aanwezig waarop verwerking van queue items wordt gedaan, in het volgende punt volgt hier meer uitleg 
-over. Als een nieuw scherm moet worden afgebeeld wordt een nieuwe queue klaargemaakt op de achtergrond, alvorens zijn lancering als 
-globale queue.
-
-Een queue ziet er als volgt uit:
-\begin{itemize}
-	\item Front
-	\item Count
-	\item Queue items[]
-\end{itemize}
-
-Count houdt bij hoeveel queue items aanwezig zijn in de array van queue items. Front houdt de index bij van de volgende queue item die 
-die moet verwerkt worden.
-
-Alle queue items worden in een queue geplaatst waarin ze om te beginnen chronologisch gesorteerd worden op timings. Hiervoor is 
-sorteeralgoritme geschreven met Θ ((n^2-1) / 2) of Θ (n^2), voor enkele af te beelden sprites lijkt dit voorlopig voldoende efficiënt. 
-Vervolgens wordt de queue door een aggregatiestap geloodst waarin timings die elkaar zeer dicht opvolgen worden samen geplaatst onder 
-één queue item, met één timing en meerdere ‘kleur en index’ instanties. Als laatste wordt de front eigenschap ingesteld op basis van de 
-huidige TCNT1 waarde, de timing van het queue item op index front moet de eerste zijn die vanaf TCNT1 zal plaatsvinden.
-
-Na deze stappen is de queue klaar om de nieuwe globale queue te worden
-
-
-\subsubsection{Queue verwerken}
-Twee interrupts, werker A en werker B, verwerken de globale queue. Deze interrupts worden getriggerd op een compare match met TCNT1 en 
-respectievelijk OCR1A of OCR1B. Merk op dat deze interrupts net zoals de interrupt van de snelheidssensor van Timer/Counter1 afkomstig 
-zijn. Dit is handig omdat de snelheidssensor TCNT1 reset bij elke nieuwe toer, en omdat de rotatietijd van de snelheidssensor en de 
-timings van de graphics laag niet verschaald zijn tegenover elkaar. De sensor maakt van TCNT1 een tijdsas voor de graphicslaag.
-
-Werker A wordt getriggerd op de timing van het front queue item. De taak van werker A bestaat ten eerste uit alle leds en indexes van 
-het front queue item in de led_array die in de hoofdlus naar de leddriver gestuurd wordt te stoppen. Ten tweede stelt werker A de 
-volgende timing van werker B in in register OCR1B. Dit is telkens op een vaste offset vanaf OCR1A, in het project is dit 100 
-klokslagen.
-
-Werker B wordt 100 klokslagen na werker A getriggerd en zet ten eerste de aangezette leds terug uit. En vervolgens neemt hij de 
-volgende timing voor werker A uit de Queue en stopt deze in OCR1A. Na de hoogste timing wordt de laagste timing terug gegeven.
-
-
-\subsubsection{Ter info}
-De rotatietijd is ongeveer 13000 slagen wanneer aan 19 toeren per seconde gewerkt wordt.
-
-\subsubsection{Staving}
-Er is voor deze aanpak met queues gekozen om de hoge resolutie die mogelijk is met dit scherm uit te buiten. De resolutie in de 
-omtrekrichting is met deze aanpak 3600, omdat de hoek component van een sprite een waarde van 0 tot 3599 is. De queue aanpak leent zich 
-ook zeer goed voor ons spel omdat we met enkele lichtpunten die heel vlot kunnen bewegen genoeg hebben.
-
-\subsubsection{Kritische noot}
-De volledig correcte implementatie van het queue systeem is niet verwezenlijkt bij gebrek aan planning en tijd. De grootste bouwstenen 
-zijn wel geïmplementeerd, op de meeste delen van het scherm is de werking correct, al zijn er nog een paar te vermijden zones.
-
-Met deze worden de tijdstippen waarop welke leds moeten worden aangestuurd 
-
 \subsection{Joysticks}
 De \emph{game engine} moet weten in welke posities de joysticks staan,
 deze zijn relatief eenvoudig om uit te lezen.
@@ -476,7 +477,6 @@ Enkele gemaksfuncties werden toegevoegd om uit deze bitweergave te bepalen of
 een gekozen richting actief is.
 
 \subsection{Fysieke constructie}
-\todo{Waarom vierkante pixels?}
 De fysieke constructie is een rechtstaand licht hellend display met voldoende
 ruimte voor de elektronica en bedrading. De gehele constructie werd ontworpen
 in het CAD-pakket Siemens NX 11 en voornamelijk uitgesneden op een lasercutter,
@@ -509,8 +509,8 @@ lang, de oranje lijnen zijn tonen de segmenten.
 De sensorhouder is een klein ge-3D-print stuk dat de sensor op zijn plaats
 houdt. Dit is zichtbaar in figuur~\ref{fig:sensorhouder}.
 
-De behuizing is gemaakt uit 3mm dik MDF plaatmateriaal en is volledig demonteerbaar.
-Op de behuizing kan een scherm uit een 3mm dikke plexiplaat geplaats worden. De plaat is te zien in figuur~\ref{fig:plexiplaat}.
+De behuizing is gemaakt uit \SI{3}{\milli\metre} dik MDF plaatmateriaal en is volledig demonteerbaar.
+Op de behuizing kan een scherm uit een \SI{3}{\milli\metre} dikke plexiplaat geplaats worden. De plaat is te zien in figuur~\ref{fig:plexiplaat}.
 
 \begin{figure}
   \centering
