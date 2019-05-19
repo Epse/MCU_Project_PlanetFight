@@ -1,0 +1,68 @@
+\documentclass[a4paper]{article}
+\usepackage[dutch]{babel}
+\usepackage{hyperref}
+\usepackage{parskip}
+
+\title{Documentatie Spacegame}
+\author{Stef Pletinck \and Marieke Louage}
+
+\begin{document}
+\maketitle
+
+\section{Debug}
+\subsection{Selftest}
+Na het maken van alle verbindingen kan het programma deze testen. Deze
+functionaliteit is enkel beschikbaar als tijdens het compileren \texttt{DEBUG}
+gedefinieerd was, bijvoorbeeld via \texttt{\#{}define DEBUG}.
+
+Houdt tijdens het opstarten van de microcontroller de middelste knop ingedrukt,
+op het LCD-scherm zal \emph{Zelftest} verschijnen. Vervolgens zullen de LED's de
+kleuren wit, blauw, groen en rood overlopen, terwijl deze kleur op het scherm
+wordt aangegeven. Vervolgens kunnen de joysticks getest worden, de
+microcontroller zal voor elke joystick vragen om elke richting uit te testen en
+zal aangeven wanneer de juiste input gegeven wordt.
+
+Na het uitvoeren van een zelftest kan de microcontroller gereset worden met de
+\textsc{reset}-knop om het spel te starten.
+
+\subsection{Tick-by-tick}
+De automatische ticks kunnen tijdelijk worden uitgeschakeld door tijdens het
+uitvoeren van het spel de middelste knop ingedrukt te houden voor minstens 1
+seconde. Vanaf dan zal er bij elke druk op deze knop 1 tick verstrijken. Na
+opnieuw de knop ingedrukt houden gaat het spel weer naar normaal. Deze
+functionaliteit is enkel beschikbaar als tijdens het compileren \texttt{DEBUG}
+gedefinieerd was.
+
+\section{Het spel}
+\subsection{Opstarten}
+Eerst kan de microcontroller spanning krijgen en opstarten. Van zodra op het
+LCD-scherm cijfers verschijnen kan de voeding voor de ESC ingeschakeld worden.
+Indien de ESC een continue serie hoge bieptonen afspeelt, is dit mislukt en moet
+opnieuw begonnen worden. Indien alles gelukt is, zal na enkele seconden de
+schijf langzaam beginnen versnellen (indien nodig kunt u deze een duwtje geven).
+Wanneer deze op volle snelheid is zal het LCD-scherm blanco worden en kan
+gespeeld worden.
+
+\subsection{Het spel starten}
+Na het opstarten is het volledige display groen. Wanneer beide spelers hun
+joystick omhoog duwen, start het spel.
+
+\subsection{Bediening}
+Spelers kunnen stijgen en dalen door de joystick omhoog of omlaag te duwen. Let
+op: wanneer een speler reeds aan de binnen- of buitenkant is en verder in die
+richting duwt, zal deze langzaam beginnen te sterven tot er in de andere
+richting wordt geduwd.
+
+Spelers kunnen zowel naar links als naar rechts schieten, door de joystick in de
+gepaste richting te duwen. Kogels discrimineren niet, ze doen pijn voor
+iedereen. Kogels zakken langzaam naar het midden van de aarde, net zoals
+spelers. Kogels verdwijnen een tijdje na het afschieten vanzelf. Wanneer er 18
+kogels in het spel zijn, kan er niet meer geschoten worden tot er een kogel verdwijnt.
+
+\subsection{Einde van het spel}
+Wanneer alle levenskracht van een speler op is, zal het spel eindigen. Het
+volledige display krijgt dan de kleur van het schip van de winnaar. Om het spel
+te herstarten moet alle voeding uitgeschakeld worden en de hele opstartprocedure
+opnieuw gevolgd worden.
+
+\end{document}
