@@ -363,6 +363,104 @@ Wanneer een speler wint, krijgt het hele scherm de kleur van deze speler. Om te
 herstarten, moet de microcontroller herstart worden. De game engine houdt
 daarvoor bij in welke fase het spel zich bevindt.
 
+\subsection{Graphics}
+Het graphics systeem bepaalt alle tijdstippen waarop leds moeten worden aangestuurd samen met welke leds op elk van deze tijdstippen moeten worden aangestuurd.
+
+Zoals op het schema in figuur~\ref{fig:structuur} is te zien, neemt de graphics laag input van de game engine en de hoeksnelheidsmeting component.
+Van de game engine krijgt de graphics laag het volgend af te beelden scherm binnen. Dit is een array van sprites waarvan het aantal
+elementen gelijk is aan het aantal sprites die op het volgende scherm moeten getoond worden. Indien bijvoorbeeld een zwart scherm
+gewenst, dan wordt een lege array meegegeven. Van de hoeksnelheidsmeting component wordt de meest recente rotatietijd opgevraagd.
+Dit is het aantal klokslagen van timer/Counter1 nodig voor een volledige rotatie van de schijf.
+
+\subsubsection{Vertaling naar queue items}
+De graphics laag begint met het vertalen van alle sprites naar queue elementen.
+Een sprite is als volgt opgebouwd:
+\begin{itemize}
+	\item Kleur sprite
+	\item Positie
+	\begin{itemize}
+		\item Hoek (0 tot 3599)
+		\item Straal (0 tot 11)
+	\end{itemize}
+\end{itemize}
+
+Een queue item is als volgt opgebouwd:
+\begin{itemize}
+	\item Timing (0 tot rotatietijd)
+	\item kleur en index[]
+	\begin{itemize}
+		\item Kleur en index
+			\begin{itemize}
+				\item Kleur sprite
+				\item Index (0 tot 15)
+			\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+De sprite kleur wordt rechstreeks doorgegeven. Uit de hoek wordt bepaald boven welk segment de sprite valt, of met andere woorden welke 
+index van de ledstrip moet worden aangestuurd. Uit de hoek en de straal wordt berekend wanneer de uitsparing op de gekozen straal op de 
+gespecifieerde hoek staat. De timing is relatief t.o.v. de rotatiesnelheid en gebruikt als eenheid ook de counter waarden van timer/
+Counter1.
+
+Initieel is er een één op één relatie tussen sprites en queue items. Voor elke sprite wordt één queue item aangemaakt, de array ‘kleur 
+en index’en bevat dus telkens één element.
+
+Na deze stappen is de queue klaar om de nieuwe globale queue te worden
+
+
+\subsubsection{Queue van queue items}
+Er is steeds een globale queue aanwezig waarop verwerking van queue items wordt gedaan, in het volgende punt volgt hier meer uitleg 
+over. Als een nieuw scherm moet worden afgebeeld wordt een nieuwe queue klaargemaakt op de achtergrond, alvorens zijn lancering als 
+globale queue.
+
+Een queue ziet er als volgt uit:
+\begin{itemize}
+	\item Front
+	\item Count
+	\item Queue items[]
+\end{itemize}
+
+Count houdt bij hoeveel queue items aanwezig zijn in de array van queue items. Front houdt de index bij van de volgende queue item die 
+die moet verwerkt worden.
+
+Alle queue items worden in een queue geplaatst waarin ze om te beginnen chronologisch gesorteerd worden op timings. Hiervoor is 
+sorteeralgoritme geschreven met Θ ((n^2-1) / 2) of Θ (n^2), voor enkele af te beelden sprites lijkt dit voorlopig voldoende efficiënt. 
+Vervolgens wordt de queue door een aggregatiestap geloodst waarin timings die elkaar zeer dicht opvolgen worden samen geplaatst onder 
+één queue item, met één timing en meerdere ‘kleur en index’ instanties. Als laatste wordt de front eigenschap ingesteld op basis van de 
+huidige TCNT1 waarde, de timing van het queue item op index front moet de eerste zijn die vanaf TCNT1 zal plaatsvinden.
+
+Na deze stappen is de queue klaar om de nieuwe globale queue te worden
+
+
+\subsubsection{Queue verwerken}
+Twee interrupts, werker A en werker B, verwerken de globale queue. Deze interrupts worden getriggerd op een compare match met TCNT1 en 
+respectievelijk OCR1A of OCR1B. Merk op dat deze interrupts net zoals de interrupt van de snelheidssensor van Timer/Counter1 afkomstig 
+zijn. Dit is handig omdat de snelheidssensor TCNT1 reset bij elke nieuwe toer, en omdat de rotatietijd van de snelheidssensor en de 
+timings van de graphics laag niet verschaald zijn tegenover elkaar. De sensor maakt van TCNT1 een tijdsas voor de graphicslaag.
+
+Werker A wordt getriggerd op de timing van het front queue item. De taak van werker A bestaat ten eerste uit alle leds en indexes van 
+het front queue item in de led_array die in de hoofdlus naar de leddriver gestuurd wordt te stoppen. Ten tweede stelt werker A de 
+volgende timing van werker B in in register OCR1B. Dit is telkens op een vaste offset vanaf OCR1A, in het project is dit 100 
+klokslagen.
+
+Werker B wordt 100 klokslagen na werker A getriggerd en zet ten eerste de aangezette leds terug uit. En vervolgens neemt hij de 
+volgende timing voor werker A uit de Queue en stopt deze in OCR1A. Na de hoogste timing wordt de laagste timing terug gegeven.
+
+
+\subsubsection{Ter info}
+De rotatietijd is ongeveer 13000 slagen wanneer aan 19 toeren per seconde gewerkt wordt.
+
+\subsubsection{Staving}
+Er is voor deze aanpak met queues gekozen om de hoge resolutie die mogelijk is met dit scherm uit te buiten. De resolutie in de 
+omtrekrichting is met deze aanpak 3600, omdat de hoek component van een sprite een waarde van 0 tot 3599 is. De queue aanpak leent zich 
+ook zeer goed voor ons spel omdat we met enkele lichtpunten die heel vlot kunnen bewegen genoeg hebben.
+
+\subsubsection{Kritische noot}
+De volledig correcte implementatie van het queue systeem is niet verwezenlijkt bij gebrek aan planning en tijd. De grootste bouwstenen 
+zijn wel geïmplementeerd, op de meeste delen van het scherm is de werking correct, al zijn er nog een paar te vermijden zones.
+
+Met deze worden de tijdstippen waarop welke leds moeten worden aangestuurd 
+
 \subsection{Joysticks}
 De \emph{game engine} moet weten in welke posities de joysticks staan,
 deze zijn relatief eenvoudig om uit te lezen.
